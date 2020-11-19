@@ -12,7 +12,7 @@ include_directories(lib/include)
 
 add_executable(hello ${SOURCES} project/src/helloworld.cpp)
 add_executable(test_catch2 project/tests/test_catch2.cpp)
-add_executable(test_boost project/tests/test_boost.cpp project/tests/hello_sfml.cpp)
+add_executable(test_boost project/tests/test_boost.cpp)
 add_executable(hello_sfml project/tests/hello_sfml.cpp)
 
 target_link_libraries(test_boost ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
