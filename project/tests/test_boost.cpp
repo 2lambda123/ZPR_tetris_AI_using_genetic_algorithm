@@ -1,4 +1,7 @@
-#define BOOST_TEST_DYN_LINK
+#ifdef __linux__
+	#define BOOST_TEST_DYN_LINK
+#endif
+
 #define BOOST_TEST_MODULE MyTest
 #include <boost/test/unit_test.hpp>
 
