@@ -85,8 +85,6 @@ public: // access specifier -4 spaces
     void fooBar(); // tab is 4 spaces wide
 };
 ```
-**Stosujemy szerokość linii na poziomie 120 znaków (zakładamy, że każdy ma monitor w formacie 16:9)** <br>
 **We use 120 column lines** <br>
-**Stosujemy rozszerzenia .hpp oraz .cpp, a plik nazywamy w formacie snake_case** <br>
 **We use .hpp and .cpp file extensions** <br>
 **We name our files using snake_case format** <br>
