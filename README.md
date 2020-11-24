@@ -52,3 +52,41 @@ mkdir build
 cd build
 cmake .. -A x64
 ```
+
+## Coding style
+We use clang-format to ensure that everyone is using the same formatting rules. <br>
+We use coding style based on *Google C++ Style* <br>
+But we make following modifications <br>
+```c++
+const int kBufferSize = 128; // Google
+const int BUFFER_SIZE = 128; // our style
+
+enum class UrlTableError { // Google
+  kOk = 0,
+  kOutOfMemory,
+  kMalformedInput,
+};
+
+enum class UrlTableError { // our style
+  OK = 0,
+  OUT_OF_MEMORY,
+  MALFORMED_INPUT,
+};
+
+class MyClass { // Google
+ public:
+  ...
+  void FooBar();
+};
+
+class MyClass { // our style
+public: // access specifier -4 spaces
+    ...
+    void fooBar(); // tab is 4 spaces wide
+};
+```
+**Stosujemy szerokość linii na poziomie 120 znaków (zakładamy, że każdy ma monitor w formacie 16:9)** <br>
+**We use 120 column lines** <br>
+**Stosujemy rozszerzenia .hpp oraz .cpp, a plik nazywamy w formacie snake_case** <br>
+**We use .hpp and .cpp file extensions** <br>
+**We name our files using snake_case format** <br>

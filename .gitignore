@@ -3,5 +3,6 @@ cmake-build*
 docs/*
 !docs/config
 .idea/
+.vscode
 
 lib/win/SFML*
