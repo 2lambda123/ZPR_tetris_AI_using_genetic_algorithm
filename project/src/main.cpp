@@ -1,18 +1,29 @@
-#include "tetromino.hpp"
-#include "tetromino_generator.hpp"
+#include "tetris.hpp"
 
 #include <iostream>
 
 int main(){
-    TetrominoGenerator gen;
+    Tetris tetris;
     while(true){
-        Tetromino t = gen.getTetromino();
-        for(int i = 0; i < 4; ++i){
-            std::string temp;
-            std::cin>>temp;
-            std::cout<<t.toString();
-            t.rotateCW();
+        int o;
+        std::cin>>o;
+        switch(o){
+            case 4:
+                tetris.shiftLeft();
+                break;
+            case 6:
+                tetris.shiftRight();
+                break;
+            case 2:
+                tetris.hardDrop();
+                break;
+            case 5:
+                tetris.rotateCW();
+                break;
+            default:
+                tetris.tick();
         }
+        std::cout<<tetris.toString();
     }
     return 0;
 }

@@ -9,7 +9,7 @@ if (MSVC)
     add_compile_options(/W4 /WX)
 else()
     # lots of warnings
-    add_compile_options(-Wall -Wextra -pedantic)
+    add_compile_options(-Wall -Wextra -pedantic -g)
 endif()
 
 if (UNIX)
@@ -28,20 +28,17 @@ elseif (WIN32)
     link_directories(${Boost_LIBRARY_DIRS})
 endif()
 
-
-set(SOURCES project/src/func.cpp)
-
-set(SOURCES_TETRIS project/src/tetromino.cpp
-                    project/src/tetromino_generator.cpp)
+set(SOURCES project/src/tetris.cpp
+            project/src/tetromino.cpp
+            project/src/tetromino_generator.cpp)
 
 include_directories(project/include)
 include_directories(lib/common/include)
 
-add_executable(hello ${SOURCES} project/src/helloworld.cpp)
 add_executable(test_catch2 project/tests/test_catch2.cpp)
 add_executable(test_boost project/tests/test_boost.cpp)
 add_executable(hello_sfml project/tests/hello_sfml.cpp)
-add_executable(tetris ${SOURCES_TETRIS} project/src/main.cpp)
+add_executable(tetris ${SOURCES} project/src/main.cpp)
 
 if (UNIX)
     target_link_libraries(test_boost ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})

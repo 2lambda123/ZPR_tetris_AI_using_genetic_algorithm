@@ -9,9 +9,21 @@ using Pivot = std::pair<double, double>;
 using Square = std::pair<int, int>;
 using Squares = std::vector<Square>;
 
+Tetromino::Tetromino()
+    : color_(Color::EMPTY), shape_(Shape::NO_SHAPE), pivot_(std::pair(0, 0)), squares_({})
+{}
+
 Tetromino::Tetromino(Color color, Shape shape, Pivot pivot, Squares squares)
     : color_(color), shape_(shape), pivot_(pivot), squares_(squares)
 {}
+
+Tetromino& Tetromino::operator=(const Tetromino &tetromino){
+    this->color_ = tetromino.color_;
+    this->shape_ = tetromino.shape_;
+    this->pivot_ = tetromino.pivot_;
+    this->squares_ = tetromino.squares_;
+    return *this;
+}
 
 void Tetromino::rotateCW(){
     rotate(-M_PI/2);
@@ -19,6 +31,14 @@ void Tetromino::rotateCW(){
 
 void Tetromino::rotateCCW(){
     rotate(M_PI/2);
+}
+
+Tetromino::Color Tetromino::getColor() const{
+    return color_;
+}
+
+Tetromino::Shape Tetromino::getShape() const{
+    return shape_;
 }
 
 const Pivot& Tetromino::getPivot() const{
