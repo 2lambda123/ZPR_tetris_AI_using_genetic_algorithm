@@ -1,14 +1,16 @@
 #ifndef TETRIS_HPP
 #define TETRIS_HPP
 
-#include "tetromino.hpp"
-#include "tetromino_generator.hpp"
-
 #include <string>
 #include <utility>
 #include <vector>
 
-class Tetris{
+#include "tetromino.hpp"
+#include "tetromino_generator.hpp"
+
+using TetrisGrid = std::vector<std::vector<Tetromino::Color> >;
+
+class Tetris {
 public:
     static const int GRID_WIDTH = 10;
     static const int GRID_HEIGHT = 20;

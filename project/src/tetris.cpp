@@ -79,8 +79,8 @@ void Tetris::rotateCCW(){
     }
 }
 
-const std::vector<std::vector<Tetromino::Color> > Tetris::getGrid() const{
-    std::vector<std::vector<Tetromino::Color> > staticGrid;
+const TetrisGrid Tetris::getGrid() const{
+    TetrisGrid staticGrid;
     for(int i = 0; i < GRID_HEIGHT; ++i){
         std::vector<Tetromino::Color> line(grid_[i]);
         staticGrid.push_back(line);
@@ -96,7 +96,7 @@ const std::vector<std::vector<Tetromino::Color> > Tetris::getGrid() const{
 }
 
 std::string Tetris::toString() const{
-    std::vector<std::vector<Tetromino::Color> > staticGrid = getGrid();
+    TetrisGrid staticGrid = getGrid();
     std::string str = "";
     for(int i = GRID_HEIGHT-1; i >= 0; --i){
         for(int j = 0; j < GRID_WIDTH; ++j){
