@@ -8,9 +8,6 @@
 #include "tetromino.hpp"
 #include "tetromino_generator.hpp"
 
-using Square = std::pair<int, int>;
-using Squares = std::vector<Square>;
-
 Tetris::Tetris() {
     is_finished_ = false;
     for (int i = 0; i < GRID_HEIGHT; ++i) {
@@ -29,7 +26,7 @@ bool Tetris::tick() {
         return false;
     }
     ++tetromino_position_.second;
-    for (const Square& square : tetromino_.getSquares()) {
+    for (const Tetromino::Square& square : tetromino_.getSquares()) {
         int x = tetromino_position_.first + square.first;
         int y = tetromino_position_.second + square.second;
         // That's not how the game is supposed to end, but the whole project is in a proof of
@@ -93,13 +90,13 @@ void Tetris::rotateCCW() {
     }
 }
 
-const TetrisGrid Tetris::getGrid() const {
-    TetrisGrid static_grid;
+const Tetris::Grid Tetris::getGrid() const {
+    Grid static_grid;
     for (int i = 0; i < GRID_HEIGHT; ++i) {
         std::vector<Tetromino::Color> line(grid_[i]);
         static_grid.push_back(line);
     }
-    for (const Square& square : tetromino_.getSquares()) {
+    for (const Tetromino::Square& square : tetromino_.getSquares()) {
         int x = tetromino_position_.first + square.first;
         int y = tetromino_position_.second + square.second;
         if (y < GRID_HEIGHT) {
@@ -110,7 +107,7 @@ const TetrisGrid Tetris::getGrid() const {
 }
 
 std::string Tetris::toString() const {
-    TetrisGrid static_grid = getGrid();
+    Grid static_grid = getGrid();
     std::string str = "";
     for (int i = GRID_HEIGHT - 1; i >= 0; --i) {
         for (int j = 0; j < GRID_WIDTH; ++j) {
@@ -126,7 +123,7 @@ std::string Tetris::toString() const {
 }
 
 bool Tetris::isValidPosition() const {
-    for (const Square& square : tetromino_.getSquares()) {
+    for (const Tetromino::Square& square : tetromino_.getSquares()) {
         int x = tetromino_position_.first + square.first;
         int y = tetromino_position_.second + square.second;
         if (x < 0 || x > GRID_WIDTH - 1 || y < 0) {

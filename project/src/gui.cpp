@@ -4,19 +4,19 @@
 
 std::map<Tetromino::Color, sf::Color> GUI::color_map = {
     {Tetromino::EMPTY, sf::Color(255, 250, 250)}, {Tetromino::CYAN, sf::Color(0x00bcd4ff)},
-    {Tetromino::YELLOW, sf::Color(0xffeb3bff)}, {Tetromino::PURPLE, sf::Color(0x9c27b0ff)},
-    {Tetromino::GREEN, sf::Color(0x4caf50ff)}, {Tetromino::RED, sf::Color(0xf44336ff)},
-    {Tetromino::BLUE, sf::Color(0x2196f3ff)}, {Tetromino::ORANGE, sf::Color(0xff9800ff)}};
+    {Tetromino::YELLOW, sf::Color(0xffeb3bff)},   {Tetromino::PURPLE, sf::Color(0x9c27b0ff)},
+    {Tetromino::GREEN, sf::Color(0x4caf50ff)},    {Tetromino::RED, sf::Color(0xf44336ff)},
+    {Tetromino::BLUE, sf::Color(0x2196f3ff)},     {Tetromino::ORANGE, sf::Color(0xff9800ff)}};
 
 GUI::GUI(int width, int height)
     : window_(sf::VideoMode(width, height), "Tetris AI"),
       shape_(100.0f),
       human_board_(sf::Vector2f(10, 10), sf::Vector2i(Tetris::GRID_WIDTH, Tetris::GRID_HEIGHT),
-                  TetrisBoard::TileProperties(30.0f, 0.5f)),
+                   TetrisBoard::TileProperties(30.0f, 0.5f)),
       ai_board_(sf::Vector2f(480, 10), sf::Vector2i(Tetris::GRID_WIDTH, Tetris::GRID_HEIGHT),
-               TetrisBoard::TileProperties(30.0f, 0.5f)),
+                TetrisBoard::TileProperties(30.0f, 0.5f)),
       next_tetromino_panel_(sf::Vector2f(337, 10), sf::Vector2i(6, 18),
-               TetrisBoard::TileProperties(20.0f, 0.5f)) {
+                            TetrisBoard::TileProperties(20.0f, 0.5f)) {
     shape_.setFillColor(sf::Color::Green);
     if (!font_.loadFromFile("res/HackBoldNerdFontCompleteMono.ttf")) {
         throw std::runtime_error("Error loading font!");
@@ -31,7 +31,7 @@ GUI::GUI(int width, int height)
     ai_score_.setPosition(sf::Vector2f(480, 640));
 }
 
-void GUI::update(const TetrisGrid tetris_grid) {
+void GUI::update(const Tetris::Grid tetris_grid) {
     human_board_.setState(tetris_grid);
     ai_board_.setState(tetris_grid);
 }
@@ -62,7 +62,7 @@ TetrisBoard::TetrisBoard(const sf::Vector2f& position, const sf::Vector2i& board
     }
 }
 
-void TetrisBoard::setState(const TetrisGrid& tetris_grid) {
+void TetrisBoard::setState(const Tetris::Grid& tetris_grid) {
     for (int y = 0; y < board_tile_count_.y; ++y) {
         int x = 0;
         for (auto tile_color : tetris_grid[y]) {

@@ -4,6 +4,8 @@
 #include <utility>
 #include <vector>
 
+#include "tetromino.hpp"
+
 const std::vector<Tetromino> TetrominoGenerator::tetrominoes = {
     Tetromino(Tetromino::Color::CYAN, Tetromino::Shape::I, std::pair(1.5, 1.5),
               {std::pair(0, 2), std::pair(1, 2), std::pair(2, 2), std::pair(3, 2)}),

@@ -8,10 +8,10 @@
 #include "tetromino.hpp"
 #include "tetromino_generator.hpp"
 
-using TetrisGrid = std::vector<std::vector<Tetromino::Color> >;
-
 class Tetris {
 public:
+    using Grid = std::vector<std::vector<Tetromino::Color> >;
+
     static const int GRID_WIDTH = 10;
     static const int GRID_HEIGHT = 20;
 
@@ -22,7 +22,7 @@ public:
     void hardDrop();
     void rotateCW();
     void rotateCCW();
-    const std::vector<std::vector<Tetromino::Color> > getGrid() const;
+    const Grid getGrid() const;
     std::string toString() const;
 
 private:
@@ -30,7 +30,7 @@ private:
     TetrominoGenerator generator_;
     Tetromino tetromino_;
     std::pair<int, int> tetromino_position_;
-    std::vector<std::vector<Tetromino::Color> > grid_;
+    Grid grid_;
 
     bool isValidPosition() const;
     void generateTetromino();

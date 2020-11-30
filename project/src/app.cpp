@@ -1,7 +1,7 @@
 #include "app.hpp"
 
-#include <iostream>
 #include <SFML/Window/Keyboard.hpp>
+#include <iostream>
 
 App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_) { tick_interval_ = sf::seconds(0.5f); }
 
@@ -22,15 +22,13 @@ void App::update() {
     gui_.update(tetris_.getGrid());
 }
 
-void App::display() { 
-    gui_.draw();
-}
+void App::display() { gui_.draw(); }
 
 void App::pollEvents() {
     sf::Event event;
     while (gui_.pollEvent(event)) {
         if (event.type == sf::Event::Closed) close();
-        
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             tetris_.shiftLeft();
         }

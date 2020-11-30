@@ -22,7 +22,7 @@ public:
 
     TetrisBoard(const sf::Vector2f& position, const sf::Vector2i& board_tile_count,
                 const TileProperties& tile_prop);
-    void setState(const TetrisGrid& tetris_grid);
+    void setState(const Tetris::Grid& tetris_grid);
     void draw(sf::RenderWindow& window);
 
 private:
@@ -34,7 +34,7 @@ private:
 class GUI {
 public:
     GUI(int width, int height);
-    void update(const TetrisGrid tetris_grid);
+    void update(const Tetris::Grid tetris_grid);
     void draw();
     void close() { window_.close(); }
     bool pollEvent(sf::Event& event) { return window_.pollEvent(event); }

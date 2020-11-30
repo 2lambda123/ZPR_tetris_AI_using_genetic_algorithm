@@ -1,8 +1,8 @@
-#include "app.hpp"
-
 #include <iostream>
 
-int main(){
+#include "app.hpp"
+
+int main() {
     App app;
     app.run();
 }
