@@ -33,30 +33,25 @@ elseif (WIN32)
     link_directories(${Boost_LIBRARY_DIRS})
 endif()
 
-set(TETRIS_SOURCES project/src/tetris.cpp
-            project/src/tetromino.cpp
-            project/src/tetromino_generator.cpp
-            )
-set(APP_SOURCES project/src/app.cpp
+set(SOURCES project/src/app.cpp
                 project/src/gui.cpp)
 
 include_directories(project/include)
 include_directories(lib/common/include)
 
-add_executable(test_catch2 project/tests/test_catch2.cpp)
-add_executable(test_boost project/tests/test_boost.cpp)
-add_executable(test_sfml project/tests/test_sfml.cpp)
-add_executable(test_tetromino ${TETRIS_SOURCES} project/tests/test_tetromino.cpp)
-add_executable(app ${TETRIS_SOURCES} ${APP_SOURCES} project/src/main.cpp)
+add_library(tetris-lib project/include/tetris.hpp
+                project/src/tetris.cpp
+                project/include/tetromino.hpp
+                project/src/tetromino.cpp
+                project/include/tetromino_generator.hpp
+                project/src/tetromino_generator.cpp
+)
 
-target_link_libraries(app sfml-graphics sfml-system sfml-window)
-target_link_libraries(test_sfml sfml-graphics)
+add_subdirectory(tests)
 
-if (UNIX)
-    target_link_libraries(test_boost ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-elseif (WIN32)
-    target_link_libraries(test_boost Boost::unit_test_framework)
-endif()
+add_executable(app ${SOURCES} project/src/main.cpp)
+
+target_link_libraries(app tetris-lib sfml-graphics sfml-system sfml-window)
 
 # copy /res folder to a folder containing binary
 add_custom_command(TARGET app POST_BUILD
