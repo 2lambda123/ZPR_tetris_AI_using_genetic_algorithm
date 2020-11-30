@@ -50,7 +50,7 @@ void GUI::draw() {
 
 TetrisBoard::TetrisBoard(const sf::Vector2f& position, const sf::Vector2i& board_tile_count,
                          const TileProperties& tile_prop)
-    : board_tile_count_(board_tile_count), board_(board_tile_count.y), tile_prop_(tile_prop) {
+    : board_(board_tile_count.y), board_tile_count_(board_tile_count), tile_prop_(tile_prop) {
     for (int y = 0; y < board_tile_count.y; ++y) {
         for (int x = 0; x < board_tile_count.x; ++x) {
             board_[y].push_back(sf::RectangleShape(sf::Vector2f(tile_prop.size, tile_prop.size)));

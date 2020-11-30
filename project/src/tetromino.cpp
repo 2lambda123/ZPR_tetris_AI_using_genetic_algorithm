@@ -17,14 +17,6 @@ Tetromino::Tetromino()
 Tetromino::Tetromino(Color color, Shape shape, Pivot pivot, Squares squares)
     : color_(color), shape_(shape), pivot_(pivot), squares_(squares) {}
 
-Tetromino& Tetromino::operator=(const Tetromino& tetromino) {
-    this->color_ = tetromino.color_;
-    this->shape_ = tetromino.shape_;
-    this->pivot_ = tetromino.pivot_;
-    this->squares_ = tetromino.squares_;
-    return *this;
-}
-
 void Tetromino::rotateCW() { rotate(-M_PI / 2); }
 
 void Tetromino::rotateCCW() { rotate(M_PI / 2); }

@@ -8,7 +8,7 @@
 sudo apt install libboost-test1.67-dev
 ```
 #### Windows
-Download and install prebuilt binary (version 1.67 or higher)
+Download and install prebuilt binary (version 1.67 or higher) <br>
 https://sourceforge.net/projects/boost/files/boost-binaries/
 
 ### SFML
@@ -21,7 +21,13 @@ Download and put in lib/win <br>
 https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-64-bit.zip
 
 ### Doxygen
+#### Linux
+```sh
+sudo apt install doxygen
+```
+#### Windows
 https://www.doxygen.nl/download.html
+
 
 ## How to generate code documentation
 Go to *docs/* directory

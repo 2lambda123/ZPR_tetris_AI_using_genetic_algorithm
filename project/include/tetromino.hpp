@@ -16,7 +16,7 @@ public:
     Tetromino();
     Tetromino(Color color, Shape shape, std::pair<double, double> pivot, Squares squares);
     Tetromino(const Tetromino& tetromino) = default;
-    Tetromino& operator=(const Tetromino& tetromino);
+    Tetromino& operator=(const Tetromino& tetromino) = default;
     void rotateCW();
     void rotateCCW();
     Color getColor() const;
