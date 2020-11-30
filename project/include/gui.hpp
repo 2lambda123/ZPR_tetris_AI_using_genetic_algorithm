@@ -26,9 +26,9 @@ public:
     void draw(sf::RenderWindow& window);
 
 private:
-    Board board;
-    sf::Vector2i board_tile_count;
-    TileProperties tile_prop;
+    Board board_;
+    sf::Vector2i board_tile_count_;
+    TileProperties tile_prop_;
 };
 
 class GUI {
@@ -36,23 +36,23 @@ public:
     GUI(int width, int height);
     void update(const TetrisGrid tetris_grid);
     void draw();
-    void close() { window.close(); }
-    bool pollEvent(sf::Event& event) { return window.pollEvent(event); }
+    void close() { window_.close(); }
+    bool pollEvent(sf::Event& event) { return window_.pollEvent(event); }
 
     static std::map<Tetromino::Color, sf::Color> color_map;
 
 private:
-    sf::RenderWindow window;
-    sf::CircleShape shape;
+    sf::RenderWindow window_;
+    sf::CircleShape shape_;
 
-    const sf::Color BG_COLOR;
-    TetrisBoard human_board;
-    TetrisBoard ai_board;
-    TetrisBoard next_tetromino_panel;
+    const sf::Color BG_COLOR_;
+    TetrisBoard human_board_;
+    TetrisBoard ai_board_;
+    TetrisBoard next_tetromino_panel_;
 
-    sf::Font font;
-    sf::Text human_score;
-    sf::Text ai_score;
+    sf::Font font_;
+    sf::Text human_score_;
+    sf::Text ai_score_;
 };
 
 #endif

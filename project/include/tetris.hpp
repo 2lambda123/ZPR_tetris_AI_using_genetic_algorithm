@@ -26,10 +26,10 @@ public:
     std::string toString() const;
 
 private:
-    bool isFinished_;
+    bool is_finished_;
     TetrominoGenerator generator_;
     Tetromino tetromino_;
-    std::pair<int, int> tetrominoPosition_;
+    std::pair<int, int> tetromino_position_;
     std::vector<std::vector<Tetromino::Color> > grid_;
 
     bool isValidPosition() const;

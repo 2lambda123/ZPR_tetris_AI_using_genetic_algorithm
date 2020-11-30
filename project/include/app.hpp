@@ -1,11 +1,11 @@
 #ifndef APP_HPP
 #define APP_HPP
 
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
+
 #include "gui.hpp"
 #include "tetris.hpp"
-
-#include <SFML/System/Time.hpp>
-#include <SFML/System/Clock.hpp>
 
 class App {
 public:
@@ -13,18 +13,19 @@ public:
     void run();
     void update();
     void display();
+
 private:
     void pollEvents();
     void close();
 
-    bool closed = false;
-    const int WINDOW_WIDTH = 800;
-    const int WINDOW_HEIGHT = 900;
+    bool closed_ = false;
+    const int WINDOW_WIDTH_ = 800;
+    const int WINDOW_HEIGHT_ = 900;
 
-    GUI gui;
-    Tetris tetris;
-    sf::Clock game_clock;
-    sf::Time tick_interval;
+    GUI gui_;
+    Tetris tetris_;
+    sf::Clock game_clock_;
+    sf::Time tick_interval_;
 };
 
 #endif

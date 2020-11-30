@@ -3,11 +3,11 @@
 #include <iostream>
 #include <SFML/Window/Keyboard.hpp>
 
-App::App() : gui(WINDOW_WIDTH, WINDOW_HEIGHT) { tick_interval = sf::seconds(0.5f); }
+App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_) { tick_interval_ = sf::seconds(0.5f); }
 
 void App::run() {
-    game_clock.restart();
-    while (!closed) {
+    game_clock_.restart();
+    while (!closed_) {
         update();
         display();
     }
@@ -15,38 +15,38 @@ void App::run() {
 
 void App::update() {
     pollEvents();
-    if (game_clock.getElapsedTime() > tick_interval) {
-        tetris.tick();
-        game_clock.restart();
+    if (game_clock_.getElapsedTime() > tick_interval_) {
+        tetris_.tick();
+        game_clock_.restart();
     }
-    gui.update(tetris.getGrid());
+    gui_.update(tetris_.getGrid());
 }
 
 void App::display() { 
-    gui.draw();
+    gui_.draw();
 }
 
 void App::pollEvents() {
     sf::Event event;
-    while (gui.pollEvent(event)) {
+    while (gui_.pollEvent(event)) {
         if (event.type == sf::Event::Closed) close();
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            tetris.shiftLeft();
+            tetris_.shiftLeft();
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            tetris.shiftRight();
+            tetris_.shiftRight();
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            tetris.rotateCW();
+            tetris_.rotateCW();
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            tetris.hardDrop();
+            tetris_.hardDrop();
         }
     }
 }
 
 void App::close() {
-    closed = true;
-    gui.close();
+    closed_ = true;
+    gui_.close();
 }

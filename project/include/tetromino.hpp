@@ -5,15 +5,16 @@
 #include <utility>
 #include <vector>
 
-class Tetromino{
+class Tetromino {
 public:
     enum Color { EMPTY, CYAN, YELLOW, PURPLE, GREEN, RED, BLUE, ORANGE };
     enum Shape { NO_SHAPE, I, O, T, S, Z, J, L };
 
     Tetromino();
-    Tetromino(Color color, Shape shape, std::pair<double, double> pivot, std::vector<std::pair<int, int> > squares);
-    Tetromino(const Tetromino &tetromino) = default;
-    Tetromino& operator=(const Tetromino &tetromino);
+    Tetromino(Color color, Shape shape, std::pair<double, double> pivot,
+              std::vector<std::pair<int, int> > squares);
+    Tetromino(const Tetromino& tetromino) = default;
+    Tetromino& operator=(const Tetromino& tetromino);
     void rotateCW();
     void rotateCCW();
     Color getColor() const;

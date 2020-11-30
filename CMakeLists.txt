@@ -5,10 +5,10 @@ project(genetic-tetris)
 set(CMAKE_CXX_STANDARD 17)
 
 if (MSVC)
-    # warning level 4 and all warnings as errors
+    # warning level 4
     add_compile_options(/W4)
 else()
-    # lots of warnings
+    # lots of warnings and debugging
     add_compile_options(-Wall -Wextra -pedantic -g)
 endif()
 

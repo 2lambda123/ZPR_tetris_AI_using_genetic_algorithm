@@ -1,11 +1,11 @@
 #ifndef TETROMINO_GENERATOR_HPP
 #define TETROMINO_GENERATOR_HPP
 
-#include "tetromino.hpp"
-
 #include <vector>
 
-class TetrominoGenerator{
+#include "tetromino.hpp"
+
+class TetrominoGenerator {
 public:
     static const std::vector<Tetromino> tetrominoes;
 

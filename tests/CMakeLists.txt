@@ -1,4 +1,3 @@
-add_executable(test_catch2 test_catch2.cpp)
 add_executable(test_boost test_boost.cpp)
 add_executable(test_sfml test_sfml.cpp)
 add_executable(test_tetromino test_tetromino.cpp)
