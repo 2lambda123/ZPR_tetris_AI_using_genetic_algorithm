@@ -4,6 +4,7 @@
 #include <SFML/Window/Keyboard.hpp>
 
 App::App() : gui(WINDOW_WIDTH, WINDOW_HEIGHT) { tick_interval = sf::seconds(0.5f); }
+
 void App::run() {
     game_clock.restart();
     while (!closed) {
@@ -11,6 +12,7 @@ void App::run() {
         display();
     }
 }
+
 void App::update() {
     pollEvents();
     if (game_clock.getElapsedTime() > tick_interval) {
@@ -19,9 +21,11 @@ void App::update() {
     }
     gui.update(tetris.getGrid());
 }
+
 void App::display() { 
     gui.draw();
-     }
+}
+
 void App::pollEvents() {
     sf::Event event;
     while (gui.pollEvent(event)) {
@@ -41,6 +45,7 @@ void App::pollEvents() {
         }
     }
 }
+
 void App::close() {
     closed = true;
     gui.close();

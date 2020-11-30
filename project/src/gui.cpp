@@ -3,10 +3,10 @@
 #include <cassert>
 
 std::map<Tetromino::Color, sf::Color> GUI::color_map = {
-    {Tetromino::EMPTY, sf::Color(255, 250, 250)},  {Tetromino::CYAN, sf::Color(0, 255, 255)},
-    {Tetromino::YELLOW, sf::Color(255, 255, 102)}, {Tetromino::PURPLE, sf::Color(221, 160, 221)},
-    {Tetromino::GREEN, sf::Color(107, 142, 35)},   {Tetromino::RED, sf::Color(220, 20, 60)},
-    {Tetromino::BLUE, sf::Color(240, 248, 255)},   {Tetromino::ORANGE, sf::Color(255, 165, 0)}};
+    {Tetromino::EMPTY, sf::Color(255, 250, 250)}, {Tetromino::CYAN, sf::Color(0x00bcd4ff)},
+    {Tetromino::YELLOW, sf::Color(0xffeb3bff)}, {Tetromino::PURPLE, sf::Color(0x9c27b0ff)},
+    {Tetromino::GREEN, sf::Color(0x4caf50ff)}, {Tetromino::RED, sf::Color(0xf44336ff)},
+    {Tetromino::BLUE, sf::Color(0x2196f3ff)}, {Tetromino::ORANGE, sf::Color(0xff9800ff)}};
 
 GUI::GUI(int width, int height)
     : window(sf::VideoMode(width, height), "Tetris AI"),

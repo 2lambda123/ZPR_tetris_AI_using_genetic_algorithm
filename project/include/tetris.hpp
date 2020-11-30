@@ -26,6 +26,7 @@ public:
     std::string toString() const;
 
 private:
+    bool isFinished_;
     TetrominoGenerator generator_;
     Tetromino tetromino_;
     std::pair<int, int> tetrominoPosition_;

@@ -12,6 +12,7 @@ using Square = std::pair<int, int>;
 using Squares = std::vector<Square>;
 
 Tetris::Tetris(){
+    isFinished_ = false;
     for(int i = 0; i < GRID_HEIGHT; ++i){
         std::vector<Tetromino::Color> gridLine(GRID_WIDTH, Tetromino::Color::EMPTY);
         grid_.push_back(gridLine);
@@ -20,6 +21,9 @@ Tetris::Tetris(){
 }
 
 bool Tetris::tick(){
+    if(isFinished_){
+        return false;
+    }
     --tetrominoPosition_.second;
     if(isValidPosition()){
         return false;
@@ -28,9 +32,16 @@ bool Tetris::tick(){
     for(const Square& square : tetromino_.getSquares()){
         int x = tetrominoPosition_.first + square.first;
         int y = tetrominoPosition_.second + square.second;
+        // That's not how the game is supposed to end, but the whole project is in a proof of concept stage
+        // and it should work as of now. At least we should no longer see segmentation fault.
+        if(y >= GRID_HEIGHT){
+            isFinished_ = true;
+            return false;
+        }
         grid_[y][x] = tetromino_.getColor();
     }
-    for(int i = 0; i < GRID_HEIGHT; ++i){
+    int i = 0;
+    while(i < GRID_HEIGHT){
         bool fullLine = true;
         for(int j = 0; j < GRID_WIDTH; ++j){
             if(grid_[i][j] == Tetromino::Color::EMPTY){
@@ -41,6 +52,8 @@ bool Tetris::tick(){
             grid_.erase(grid_.begin()+i);
             std::vector<Tetromino::Color> gridLine(GRID_WIDTH, Tetromino::Color::EMPTY);
             grid_.push_back(gridLine);
+        } else{
+            ++i;
         }
     }
     generateTetromino();
@@ -62,7 +75,7 @@ void Tetris::shiftRight(){
 }
 
 void Tetris::hardDrop(){
-    while(!tick());
+    while(!isFinished_ && !tick());
 }
 
 void Tetris::rotateCW(){
