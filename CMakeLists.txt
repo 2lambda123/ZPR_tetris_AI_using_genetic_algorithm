@@ -23,7 +23,7 @@ elseif (WIN32)
         set(SFML_DIR "lib/win/64bit/SFML-2.5.1/lib/cmake/SFML")
     endif()
 
-    find_package(SFML 2.5.1 COMPONENTS graphics system REQUIRED)
+    find_package(SFML 2.5.1 COMPONENTS graphics system window REQUIRED)
 
     set(Boost_USE_STATIC_LIBS ON) 
     find_package(Boost 1.67 COMPONENTS unit_test_framework REQUIRED)
@@ -49,7 +49,7 @@ add_executable(test_sfml project/tests/test_sfml.cpp)
 add_executable(test_tetromino ${TETRIS_SOURCES} project/tests/test_tetromino.cpp)
 add_executable(app ${TETRIS_SOURCES} ${APP_SOURCES} project/src/main.cpp)
 
-target_link_libraries(app sfml-graphics sfml-system)
+target_link_libraries(app sfml-graphics sfml-system sfml-window)
 target_link_libraries(test_sfml sfml-graphics)
 
 if (UNIX)
@@ -57,3 +57,11 @@ if (UNIX)
 elseif (WIN32)
     target_link_libraries(test_boost Boost::unit_test_framework)
 endif()
+
+# copy /res folder to a folder containing binary
+add_custom_command(TARGET app POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/res
+        $<TARGET_FILE_DIR:app>/res
+        )
+

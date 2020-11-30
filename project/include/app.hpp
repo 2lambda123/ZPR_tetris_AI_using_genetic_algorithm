@@ -18,8 +18,8 @@ private:
     void close();
 
     bool closed = false;
-    const int WINDOW_WIDTH = 400;
-    const int WINDOW_HEIGHT = 800;
+    const int WINDOW_WIDTH = 800;
+    const int WINDOW_HEIGHT = 900;
 
     GUI gui;
     Tetris tetris;
