@@ -73,7 +73,8 @@ void Tetris::shiftRight() {
 }
 
 void Tetris::hardDrop() {
-    while (!is_finished_ && !tick());
+    while (!is_finished_ && !tick())
+        ;
 }
 
 void Tetris::rotateCW() {
@@ -121,6 +122,8 @@ std::string Tetris::toString() const {
     }
     return str;
 }
+
+bool Tetris::isFinished() const { return is_finished_; }
 
 bool Tetris::isValidPosition() const {
     for (const Tetromino::Square& square : tetromino_.getSquares()) {

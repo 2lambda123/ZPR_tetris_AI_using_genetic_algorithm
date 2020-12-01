@@ -24,6 +24,7 @@ public:
     void rotateCCW();
     const Grid getGrid() const;
     std::string toString() const;
+    bool isFinished() const;
 
 private:
     bool is_finished_;

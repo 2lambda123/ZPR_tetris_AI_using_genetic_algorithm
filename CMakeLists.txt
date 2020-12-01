@@ -47,6 +47,9 @@ add_library(tetris-lib project/include/tetris.hpp
                 project/src/tetromino_generator.cpp
 )
 
+add_library(gui-lib project/src/app.cpp
+                project/src/gui.cpp)
+
 add_subdirectory(tests)
 
 add_executable(app ${SOURCES} project/src/main.cpp)

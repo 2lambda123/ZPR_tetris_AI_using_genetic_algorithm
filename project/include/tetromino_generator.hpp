@@ -7,7 +7,7 @@
 
 class TetrominoGenerator {
 public:
-    static const std::vector<Tetromino> tetrominoes;
+    static const std::vector<Tetromino> TETROMINOES;
 
     TetrominoGenerator() = default;
     Tetromino getTetromino() const;

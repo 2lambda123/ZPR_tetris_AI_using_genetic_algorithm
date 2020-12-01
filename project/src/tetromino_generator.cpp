@@ -6,7 +6,7 @@
 
 #include "tetromino.hpp"
 
-const std::vector<Tetromino> TetrominoGenerator::tetrominoes = {
+const std::vector<Tetromino> TetrominoGenerator::TETROMINOES = {
     Tetromino(Tetromino::Color::CYAN, Tetromino::Shape::I, std::pair(1.5, 1.5),
               {std::pair(0, 2), std::pair(1, 2), std::pair(2, 2), std::pair(3, 2)}),
     Tetromino(Tetromino::Color::YELLOW, Tetromino::Shape::O, std::pair(1.5, 1.5),
@@ -23,6 +23,6 @@ const std::vector<Tetromino> TetrominoGenerator::tetrominoes = {
               {std::pair(0, 1), std::pair(1, 1), std::pair(2, 1), std::pair(2, 2)})};
 
 Tetromino TetrominoGenerator::getTetromino() const {
-    int random = std::rand() % tetrominoes.size();
-    return Tetromino(tetrominoes[random]);
+    int random = std::rand() % TETROMINOES.size();
+    return Tetromino(TETROMINOES[random]);
 }
