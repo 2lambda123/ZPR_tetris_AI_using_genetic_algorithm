@@ -1,35 +1,74 @@
 # Genetic Tetris
 
 ## Installing dependencies
+### For clean Ubuntu 20.04 installation
+```sh
+sudo add-apt-repository universe
+sudo apt update
+sudo apt install cmake
+sudo apt install doxygen
+sudo apt install g++
+sudo apt install libboost-test1.67-dev
+sudo apt install libsfml-dev
+```
 
+## Dependencies
 ### Boost.Test
-#### Linux
+**Linux**
 ```sh
 sudo apt install libboost-test1.67-dev
 ```
-#### Windows
+**Windows**
 Download and install prebuilt binary (version 1.67 or higher) <br>
 https://sourceforge.net/projects/boost/files/boost-binaries/
 
-### SFML
-#### Linux
+### CMake
+**Linux**
 ```sh
-sudo apt install libsfml-dev
+sudo apt install cmake
 ```
-#### Windows
-Download and put in lib/win <br>
-https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-64-bit.zip
+**Windows**
+https://cmake.org/download/
 
 ### Doxygen
-#### Linux
+**Linux**
 ```sh
 sudo apt install doxygen
 ```
-#### Windows
+**Windows**
 https://www.doxygen.nl/download.html
 
+### SFML
+**Linux**
+```sh
+sudo apt install libsfml-dev
+```
+**Windows**
+Download and put in lib/win <br>
+https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-64-bit.zip
 
-## How to generate code documentation
+
+## Project compilation
+### Linux
+```sh
+mkdir build
+cd ./build
+cmake ..
+make -j4
+```
+`./app` to run main app (use arrow keys to play, **DOWN** to force drop, **UP** to rotate) <br>
+`./tests/main` to run tests
+
+### Windows
+This will generate Visual Studio solution
+```sh
+mkdir build
+cd build
+cmake .. -A x64
+```
+
+
+## Generating code documentation
 Go to *docs/* directory
 From *docs/*
 ```sh
@@ -42,22 +81,6 @@ To generate *pdf* go to *latex/* directory and run:
 make pdf
 ```
 
-## Project compilation
-### Linux
-```sh
-mkdir build
-cd build
-cmake ..
-make -j4
-```
-
-### Windows
-This will generate Visual Studio solution
-```sh
-mkdir build
-cd build
-cmake .. -A x64
-```
 
 ## Coding style
 We use clang-format to ensure that everyone is using the same formatting rules. <br>
