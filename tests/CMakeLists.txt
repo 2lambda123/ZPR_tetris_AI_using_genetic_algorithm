@@ -7,7 +7,6 @@ add_executable(main main.cpp)
 include_directories(project/include)
 
 target_link_libraries(test_sfml sfml-graphics)
-target_link_libraries(tetris_gui_integration sfml-graphics)
 target_link_libraries(tetris_gui_integration gui-lib)
 
 if (UNIX)
@@ -22,3 +21,10 @@ target_link_libraries(tetris_no_gui tetris-lib)
 target_link_libraries(tetris_gui_integration tetris-lib)
 
 target_link_libraries(main tetris-lib)
+
+# copy /res folder to a folder containing binary
+add_custom_command(TARGET tetris_gui_integration POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/res
+        $<TARGET_FILE_DIR:tetris_gui_integration>/res
+        )

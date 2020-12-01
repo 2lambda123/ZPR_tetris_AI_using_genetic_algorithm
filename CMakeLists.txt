@@ -49,12 +49,13 @@ add_library(tetris-lib project/include/tetris.hpp
 
 add_library(gui-lib project/src/app.cpp
                 project/src/gui.cpp)
+target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window)
 
 add_subdirectory(tests)
 
 add_executable(app ${SOURCES} project/src/main.cpp)
 
-target_link_libraries(app tetris-lib sfml-graphics sfml-system sfml-window)
+target_link_libraries(app tetris-lib gui-lib)
 
 # copy /res folder to a folder containing binary
 add_custom_command(TARGET app POST_BUILD
