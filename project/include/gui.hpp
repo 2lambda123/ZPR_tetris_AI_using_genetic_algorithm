@@ -34,7 +34,7 @@ private:
 class GUI {
 public:
     GUI(int width, int height);
-    void update(const Tetris::Grid tetris_grid);
+    void update(const Tetris::Grid& human, const Tetris::Grid& ai);
     void draw();
     void close() { window_.close(); }
     bool pollEvent(sf::Event& event) { return window_.pollEvent(event); }

@@ -31,9 +31,9 @@ GUI::GUI(int width, int height)
     ai_score_.setPosition(sf::Vector2f(480, 640));
 }
 
-void GUI::update(const Tetris::Grid tetris_grid) {
-    human_board_.setState(tetris_grid);
-    ai_board_.setState(tetris_grid);
+void GUI::update(const Tetris::Grid& human, const Tetris::Grid& ai) {
+    human_board_.setState(human);
+    ai_board_.setState(ai);
 }
 
 void GUI::draw() {

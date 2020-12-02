@@ -45,6 +45,7 @@ add_library(tetris-lib project/include/tetris.hpp
                 project/src/tetromino.cpp
                 project/include/tetromino_generator.hpp
                 project/src/tetromino_generator.cpp
+                project/include/genetic_ai.hpp
 )
 
 add_library(gui-lib project/src/app.cpp
@@ -55,7 +56,7 @@ add_subdirectory(tests)
 
 add_executable(app ${SOURCES} project/src/main.cpp)
 
-target_link_libraries(app tetris-lib gui-lib)
+target_link_libraries(app tetris-lib gui-lib pthread)
 
 # copy /res folder to a folder containing binary
 add_custom_command(TARGET app POST_BUILD

@@ -6,6 +6,7 @@
 
 #include "gui.hpp"
 #include "tetris.hpp"
+#include "genetic_ai.hpp"
 
 class App {
 public:
@@ -23,7 +24,8 @@ private:
     const int WINDOW_HEIGHT_ = 900;
 
     GUI gui_;
-    Tetris tetris_;
+    Tetris tetris_human_;
+    Tetris tetris_ai_;
     sf::Clock game_clock_;
     sf::Time tick_interval_;
 };

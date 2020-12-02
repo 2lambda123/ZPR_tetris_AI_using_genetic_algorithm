@@ -17,7 +17,7 @@ int main() {
             tetris.tick();
             clock.restart();
         }
-        gui.update(tetris.getGrid());
+        gui.update(tetris.getGrid(), tetris.getGrid());
         gui.draw();
     }
     return 0;
