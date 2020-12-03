@@ -46,6 +46,7 @@ add_library(tetris-lib project/include/tetris.hpp
                 project/include/tetromino_generator.hpp
                 project/src/tetromino_generator.cpp
                 project/include/genetic_ai.hpp
+                project/src/genetic_ai.cpp
 )
 
 add_library(gui-lib project/src/app.cpp

@@ -9,12 +9,12 @@
 #include "tetromino_generator.hpp"
 
 Tetris::Tetris() {
-    is_finished_ = false;
     for (int i = 0; i < GRID_HEIGHT; ++i) {
         std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
         grid_.push_back(grid_line);
     }
-    generateTetromino();
+    generateTetromino(); // is_finished_ needs to be true before this statement otherwise notifying on tetromino change will break
+    is_finished_ = false;
 }
 
 bool Tetris::tick() {
@@ -142,5 +142,13 @@ bool Tetris::isValidPosition() const {
 
 void Tetris::generateTetromino() {
     tetromino_ = generator_.getTetromino();
-    tetromino_position_ = std::pair((GRID_WIDTH / 2) - 2, GRID_HEIGHT + 1);
+    // tetromino_position_ = std::pair<int, int>((GRID_WIDTH / 2) - 2, GRID_HEIGHT + 1);
+    tetromino_position_ = TETROMINO_INITIAL_POS;
+}
+
+void ObservableTetris::generateTetromino() {
+    Tetris::generateTetromino();
+    if (!is_finished_) { // don't notify at the start of the game
+        notify(); // notify genetic algorithm that a tetromino has changed (it should then execute hardDrop())
+    }
 }

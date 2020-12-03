@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 
+#include "observer.hpp"
 #include "tetromino.hpp"
 #include "tetromino_generator.hpp"
 
@@ -14,6 +15,7 @@ public:
 
     static const int GRID_WIDTH = 10;
     static const int GRID_HEIGHT = 20;
+    static constexpr std::pair<int, int> TETROMINO_INITIAL_POS = { (GRID_WIDTH / 2) - 2, GRID_HEIGHT + 1 };
 
     Tetris();
     bool tick();
@@ -27,14 +29,24 @@ public:
     bool isFinished() const;
 
 private:
-    bool is_finished_;
     TetrominoGenerator generator_;
     Tetromino tetromino_;
     std::pair<int, int> tetromino_position_;
     Grid grid_;
 
     bool isValidPosition() const;
-    void generateTetromino();
+
+protected:
+    bool is_finished_ = true;
+    virtual void generateTetromino();
+};
+
+class ObservableTetris : public Tetris, public Subject {
+public:
+    ObservableTetris() : Tetris() {}
+
+private:
+    void generateTetromino() override;
 };
 
 #endif

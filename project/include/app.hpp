@@ -24,8 +24,9 @@ private:
     const int WINDOW_HEIGHT_ = 900;
 
     GUI gui_;
-    Tetris tetris_human_;
+    ObservableTetris tetris_human_;
     Tetris tetris_ai_;
+    GeneticAI genetic_ai_;
     sf::Clock game_clock_;
     sf::Time tick_interval_;
 };
