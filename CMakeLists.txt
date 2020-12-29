@@ -33,31 +33,34 @@ elseif (WIN32)
     link_directories(${Boost_LIBRARY_DIRS})
 endif()
 
-set(SOURCES project/src/app.cpp
-                project/src/gui.cpp)
-
 include_directories(project/include)
 include_directories(lib/common/include)
 
 add_library(tetris-lib project/include/tetris.hpp
-                project/src/tetris.cpp
-                project/include/tetromino.hpp
-                project/src/tetromino.cpp
-                project/include/tetromino_generator.hpp
-                project/src/tetromino_generator.cpp
-                project/include/genetic_ai.hpp
-                project/src/genetic_ai.cpp
+        project/src/tetris.cpp
+        project/include/tetromino.hpp
+        project/src/tetromino.cpp
+        project/include/tetromino_generator.hpp
+        project/src/tetromino_generator.cpp
 )
 
-add_library(gui-lib project/src/app.cpp
-                project/src/gui.cpp)
+add_library(gui-lib
+        project/include/app.hpp
+        project/src/app.cpp
+        project/include/gui.hpp
+        project/src/gui.cpp)
+
+add_library(ai-lib
+        project/include/AI/ai.hpp
+        project/src/AI/ai.cpp project/include/AI/classic_genetic_algo.hpp)
+
 target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window)
 
 add_subdirectory(tests)
 
-add_executable(app ${SOURCES} project/src/main.cpp)
+add_executable(app project/src/main.cpp)
 
-target_link_libraries(app tetris-lib gui-lib pthread)
+target_link_libraries(app tetris-lib gui-lib ai-lib pthread)
 
 # copy /res folder to a folder containing binary
 add_custom_command(TARGET app POST_BUILD

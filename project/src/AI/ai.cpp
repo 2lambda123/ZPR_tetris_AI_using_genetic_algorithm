@@ -1,6 +1,6 @@
-#include "genetic_ai.hpp"
+#include "AI/ai.hpp"
 
-void GeneticAI::operator()() {
+void AI::operator()() {
     while (!finish_) {
         drop_ = false;
         while (!drop_) {
@@ -12,26 +12,23 @@ void GeneticAI::operator()() {
                 drop_ = true;
             }
         }
-        move();
-        tetris_.hardDrop();
+        move(tetris_, best_move_);
         if (tetris_.isFinished()) {
             finish_ = true;
         }
     }
 }
 
-void GeneticAI::update() {
+void AI::update() {
     drop_ = true;
 }
 
-void GeneticAI::move() {
+void AI::move(Tetris &tetris, const Move &move) {
     for (int i = 0; i < best_move_.rotations_; ++i) {
         tetris_.rotateCW();
     }
-    std::cout << "move_x: " << best_move_.move_x_ << std::endl;
     int tip_x = Tetris::TETROMINO_INITIAL_POS.first;
     int move_x = best_move_.move_x_;
-    //int move_x = -1;
     if (move_x > tip_x) {
         for (int i = move_x; i > tip_x; --i) {
             tetris_.shiftRight();
@@ -42,4 +39,5 @@ void GeneticAI::move() {
             tetris_.shiftLeft();
         }
     }
+    tetris.hardDrop();
 }

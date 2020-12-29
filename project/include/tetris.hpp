@@ -27,12 +27,15 @@ public:
     const Grid getGrid() const;
     std::string toString() const;
     bool isFinished() const;
+    unsigned int getScore() const { return score_; }
 
 private:
     TetrominoGenerator generator_;
     Tetromino tetromino_;
     std::pair<int, int> tetromino_position_;
     Grid grid_;
+
+    unsigned int score_ = 0;
 
     bool isValidPosition() const;
 

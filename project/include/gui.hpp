@@ -10,6 +10,9 @@
 class TetrisBoard {
     using Board = std::vector<std::vector<sf::RectangleShape>>;
 
+    //const sf::Color FINISHED_HUE_CHANGE = sf::Color(-20, -20, -20);
+    const sf::Color FINISHED_HUE_CHANGE = sf::Color(-50, -50, -50);
+
 public:
     struct TileProperties {
         TileProperties(float size, float padding) : size(size), padding(padding) {
@@ -25,7 +28,12 @@ public:
     void setState(const Tetris::Grid& tetris_grid);
     void draw(sf::RenderWindow& window);
 
+    bool isStateFinished() const;
+
+    void setStateFinished(bool finished);
+
 private:
+    bool state_finished_ = false;
     Board board_;
     sf::Vector2i board_tile_count_;
     TileProperties tile_prop_;
@@ -34,7 +42,7 @@ private:
 class GUI {
 public:
     GUI(int width, int height);
-    void update(const Tetris::Grid& human, const Tetris::Grid& ai);
+    void update(const Tetris &tetris_human, const Tetris &tetris_ai);
     void draw();
     void close() { window_.close(); }
     bool pollEvent(sf::Event& event) { return window_.pollEvent(event); }
@@ -42,12 +50,12 @@ public:
     static std::map<Tetromino::Color, sf::Color> color_map;
 
 private:
-    sf::RenderWindow window_;
-    sf::CircleShape shape_;
+    const sf::Color BG_COLOR = sf::Color(207, 185, 151);
 
-    const sf::Color BG_COLOR_;
-    TetrisBoard human_board_;
-    TetrisBoard ai_board_;
+    sf::RenderWindow window_;
+
+    TetrisBoard board_human_;
+    TetrisBoard board_ai_;
     TetrisBoard next_tetromino_panel_;
 
     sf::Font font_;
