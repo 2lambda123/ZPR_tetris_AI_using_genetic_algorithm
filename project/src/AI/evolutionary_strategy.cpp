@@ -1,13 +1,22 @@
 #include "AI/evolutionary_strategy.hpp"
 
+#include "rapidjson/document.h"
+#include <rapidjson/ostreamwrapper.h>
+#include <rapidjson/istreamwrapper.h>
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+
+#include <fstream>
 
 void EvolutionaryStrategy::operator()() {
-    evolution_thread = std::thread([this](){ evolve(); });
+    evolution_thread = std::thread([this]() { evolve(); });
     controlLoop();
 }
 
-void EvolutionaryStrategy::operator()(const std::string& input_json, const std::string& output_json) {
-    evolution_thread = std::thread([this, input_json, output_json](){ evolve(input_json, output_json); });
+void EvolutionaryStrategy::operator()(const std::string& input_json,
+                                      const std::string& output_json) {
+    evolution_thread =
+        std::thread([this, input_json, output_json]() { evolve(input_json, output_json); });
     controlLoop();
 }
 
@@ -32,12 +41,58 @@ void EvolutionaryStrategy::finish() {
 }
 
 void EvolutionaryStrategy::saveToJSON(const std::string& file, std::vector<Genome>& genomes) {
+    using namespace rapidjson;
     std::cout << "Saving genomes to JSON: " << file << std::endl;
+    Document d;
+    Value genomes_json(kArrayType);
+    for (const auto& g : genomes) {
+        Value g_json(kObjectType);
+        Value id(g.id);
+        Value rows_cleared(g.rows_cleared);
+        Value max_height(g.max_height);
+        Value cumulative_height(g.cumulative_height);
+        Value relative_height(g.relative_height);
+        Value holes(g.holes);
+        Value roughness(g.roughness);
+        g_json.AddMember("id", id, d.GetAllocator());
+        g_json.AddMember("rows_cleared", rows_cleared, d.GetAllocator());
+        g_json.AddMember("max_height", max_height, d.GetAllocator());
+        g_json.AddMember("cumulative_height", cumulative_height, d.GetAllocator());
+        g_json.AddMember("relative_height", relative_height, d.GetAllocator());
+        g_json.AddMember("holes", holes, d.GetAllocator());
+        g_json.AddMember("roughness", roughness, d.GetAllocator());
+        genomes_json.PushBack(g_json, d.GetAllocator());
+    }
+    std::ofstream ofs(file);
+    OStreamWrapper osw(ofs);
+    Writer<OStreamWrapper> writer(osw);
+    genomes_json.Accept(writer);
 }
 
 std::vector<Genome> EvolutionaryStrategy::loadFromJSON(const std::string& file) {
+    using namespace rapidjson;
     std::cout << "Loading genomes from JSON: " << file << std::endl;
-    return initialPop();
+    std::vector<Genome> pop;
+    std::ifstream ifs(file);
+    IStreamWrapper isw(ifs);
+    Document d;
+    d.ParseStream(isw);
+    assert(d.IsArray());
+    assert(d.Size() == POP_SIZE);
+    for (Value::ConstValueIterator itr = d.Begin(); itr != d.End(); ++itr) {
+        Genome g;
+        auto g_json = itr->GetObject();
+        g.id = g_json["id"].GetDouble();
+        g.rows_cleared = g_json["rows_cleared"].GetDouble();
+        g.max_height = g_json["max_height"].GetDouble();
+        g.cumulative_height = g_json["cumulative_height"].GetDouble();
+        g.relative_height = g_json["relative_height"].GetDouble();
+        g.holes = g_json["holes"].GetDouble();
+        g.roughness = g_json["roughness"].GetDouble();
+        pop.push_back(g);
+    }
+    assert(pop.size() == POP_SIZE);
+    return pop;
 }
 
 void EvolutionaryStrategy::evolve() {
@@ -51,15 +106,16 @@ void EvolutionaryStrategy::evolve() {
 void EvolutionaryStrategy::evolve(const std::string& input_json, const std::string& output_json) {
     t = 0;
     std::vector<Genome> pop;
-    if (input_json != "")
+    if (input_json != "") {
         pop = loadFromJSON(input_json);
+        evaluation(pop);
+    }
     else
         pop = initialPop();
     while (!finish_) {
         pop = next_generation(pop);
     }
-    if (output_json != "")
-        saveToJSON(input_json, pop);
+    if (output_json != "") saveToJSON(output_json, pop);
 }
 
 std::vector<Genome> EvolutionaryStrategy::next_generation(std::vector<Genome>& pop) {
@@ -77,8 +133,7 @@ std::vector<Genome> EvolutionaryStrategy::initialPop() {
     return initial_pop;
 }
 
-std::vector<Genome> EvolutionaryStrategy::selection(
-    std::vector<Genome>& pop) {
+std::vector<Genome> EvolutionaryStrategy::selection(std::vector<Genome>& pop) {
     std::vector<Genome> selected;
     selected.reserve(POP_SIZE);
     selected.push_back(best);
@@ -88,8 +143,7 @@ std::vector<Genome> EvolutionaryStrategy::selection(
     return selected;
 }
 
-std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(
-    const std::vector<Genome> selected) {
+std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(const std::vector<Genome> selected) {
     std::vector<Genome> next_pop(selected);
     while (next_pop.size() < POP_SIZE - 1) {
         float p = random_0_1();
@@ -112,7 +166,8 @@ std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(
 void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
     score_sum = 0.0f;
     for (auto& c : next_pop) {
-        Tetris tmp(tetris_);
+        //Tetris tmp(tetris_);
+        Tetris tmp;
         Move best_move;
         for (int i = 0; i < MOVES_TO_SIMULATE; i++) {
             best_move = generateBestMove(c, tmp);
@@ -127,19 +182,9 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
         prev_ps = c.ps;
     }
 
-    // for whatever reason std::max_element didn't work (probably don't know how to use it)
-    for (auto e : next_pop) {
-        if (e.score > best.score) {
-            Tetris tetris;
-            best = e;
-            for (int i = 0; i < MOVES_TO_SIMULATE; i++) {
-                auto best_move = generateBestMove(best, tetris);
-                best_move.apply(tetris);
-            }
-            best_grid_state = tetris.toString();
-        }
-
-    }
+    best = *std::max_element(next_pop.begin(), next_pop.end(), [](const Genome& a, const Genome& b) {
+        return a.score < b.score;
+    });
 }
 
 Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris) {
@@ -151,7 +196,8 @@ Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris
             Tetris tmp(tetris);
             Move move(mx, rot);
             move.apply(tmp);
-            float fitness = genome.max_height * move.getMaxHeight() + genome.holes * move.getHoles();
+            float fitness =
+                genome.max_height * move.getMaxHeight() + genome.holes * move.getHoles();
             fitness = std::clamp(fitness, -20.0f, 20.0f) + 20.0f;
             if (fitness > best_fitness) {
                 best_fitness = fitness;
@@ -168,6 +214,4 @@ void EvolutionaryStrategy::displayState() {
     std::cout << "Generation " << t << ": " << std::endl;
     std::cout << "\tmean fitness: " << mean_fitness_ << std::endl;
     printf("\tbest: (score=%f max_height=%f holes=%f)\n", best.score, best.max_height, best.holes);
-    std::cout << best_grid_state << std::endl;
 }
-

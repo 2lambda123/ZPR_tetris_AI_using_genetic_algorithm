@@ -67,7 +67,6 @@ private:
     void displayState();
 
     Genome best;
-    std::string best_grid_state;
     float mean_fitness_ = 0.0f;
     float score_sum = 0.0f;
     int t = 0;
