@@ -4,9 +4,10 @@
 #include <iostream>
 #include <thread>
 #include <AI/classic_genetic_algo.hpp>
+#include <AI/evolutionary_strategy.hpp>
 
 App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_) {
-    ai_ = std::make_unique<ClassicGeneticAlgo>(std::ref(tetris_ai_));
+    ai_ = std::make_unique<EvolutionaryStrategy>(std::ref(tetris_ai_));
     tick_interval_ = sf::seconds(0.5f);
     tetris_human_.add(ai_.get());
 }

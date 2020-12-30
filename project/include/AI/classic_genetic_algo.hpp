@@ -25,7 +25,8 @@ public:
                 return a.fitness > b.fitness;
             });
             best_move_ = pop[0].move;
-            move(tetris_, best_move_);
+            //move(tetris_, best_move_);
+            best_move_.apply(tetris_);
             if (tetris_.isFinished()) {
                 finish_ = true;
             }
@@ -117,7 +118,7 @@ private:
         float current_max_height = getMaxHeight(tetris_);
         for (auto& c : next_pop) {
             Tetris tmp(tetris_);
-            move(tmp, c.move);
+            c.move.apply(tmp);
             float max_height = getMaxHeight(tmp);
             c.fitness = 4 - (max_height - current_max_height);
             fitness_sum_ += c.fitness;

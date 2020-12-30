@@ -1,34 +1,29 @@
 #include "AI/ai.hpp"
 
-void AI::operator()() {
-    while (!finish_) {
-        drop_ = false;
-        while (!drop_) {
-            best_move_ = Move();
-            if (!human_finished_) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(300));
-            }
-            else {
-                drop_ = true;
-            }
-        }
-        move(tetris_, best_move_);
-        if (tetris_.isFinished()) {
-            finish_ = true;
-        }
-    }
+const int8_t Move::MIN_MOVE = -1;
+const int8_t Move::MAX_MOVE = Tetris::GRID_WIDTH - 1;
+const int8_t Move::MIN_ROT = 0;
+const int8_t Move::MAX_ROT = 3;
+
+Move::Move(int8_t moveX, int8_t rotations) : move_x_(moveX), rotations_(rotations) {}
+
+Move::Move(const Move &other) {
+    move_x_ = other.move_x_;
+    rotations_ = other.rotations_;
 }
 
-void AI::update() {
-    drop_ = true;
+Move& Move::operator=(const Move &other) {
+    move_x_ = other.move_x_;
+    rotations_ = other.rotations_;
+    return *this;
 }
 
-void AI::move(Tetris &tetris, const Move &move) {
-    for (int i = 0; i < move.getRotation(); ++i) {
+void Move::apply(Tetris &tetris) {
+    for (int i = 0; i < getRotation(); ++i) {
         tetris.rotateCW();
     }
     int tip_x = Tetris::TETROMINO_INITIAL_POS.first;
-    int move_x = move.getMoveX();
+    int move_x = getMoveX();
     if (move_x > tip_x) {
         for (int i = move_x; i > tip_x; --i) {
             tetris.shiftRight();
@@ -40,4 +35,39 @@ void AI::move(Tetris &tetris, const Move &move) {
         }
     }
     tetris.hardDrop();
+}
+
+void Move::setMoveX(int8_t value) { move_x_ = std::clamp(value, MIN_MOVE, MAX_MOVE); }
+void Move::setRotation(int8_t value) { rotations_ = std::clamp(value, MIN_ROT, MAX_ROT); }
+
+void Move::incrementMoveX() {
+    if (move_x_ + 1 > MAX_MOVE)
+        move_x_ = MIN_MOVE;
+    else
+        move_x_++;
+}
+
+void Move::decrementMoveX() {
+    if (move_x_ - 1 < MIN_MOVE)
+        move_x_ = MAX_MOVE;
+    else
+        move_x_--;
+}
+
+void Move::incrementRotation() {
+    if (rotations_ + 1 > MAX_ROT)
+        rotations_ = MIN_ROT;
+    else
+        rotations_++;
+}
+
+void Move::decrementRotation() {
+    if (rotations_ - 1 < MIN_ROT)
+        rotations_ = MAX_ROT;
+    else
+        rotations_--;
+}
+
+void AI::update() {
+    drop_ = true;
 }
