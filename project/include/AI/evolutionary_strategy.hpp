@@ -1,12 +1,20 @@
 #ifndef GENETIC_TETRIS_EVOLUTIONARY_STRATEGY_HPP
 #define GENETIC_TETRIS_EVOLUTIONARY_STRATEGY_HPP
 
+#include <mutex>
+
 #include "ai.hpp"
 
 class EvolutionaryStrategy : public AI {
 public:
-    EvolutionaryStrategy(Tetris& tetris): AI(tetris) {}
+    EvolutionaryStrategy(Tetris& tetris) : AI(tetris) {}
+    ~EvolutionaryStrategy() override {
+        finish_ = true;
+        evolution_thread.join();
+    }
     void operator()() override;
+    void drop() override { drop_mutex_.unlock(); }
+    void update() override { drop_mutex_.unlock(); }
 
 private:
     struct Genome {
@@ -80,6 +88,9 @@ private:
     float mean_fitness_ = 0.0f;
     float score_sum = 0.0f;
     int t = 0;
+
+    std::thread evolution_thread;
+    std::mutex drop_mutex_;
 };
 
 #endif  // GENETIC_TETRIS_EVOLUTIONARY_STRATEGY_HPP

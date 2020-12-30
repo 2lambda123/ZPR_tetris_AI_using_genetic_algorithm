@@ -3,19 +3,17 @@
 long EvolutionaryStrategy::Genome::next_id = 0;
 
 void EvolutionaryStrategy::operator()() {
-    std::thread evolution(&EvolutionaryStrategy::evolve, this);
-    while (!finish_) {
-        drop_ = false;
-        //t = 0;
-        //auto pop = initialPop();
+    evolution_thread = std::thread(&EvolutionaryStrategy::evolve, this);
 
-        while (!drop_) {}
+    drop_mutex_.lock();
+    while (!finish_) {
+        drop_mutex_.lock();
         Genome best_cpy = best;
         Move move = generateBestMove(best_cpy, tetris_);
         move.apply(tetris_);
         if (tetris_.isFinished()) {
             finish_ = true;
-            evolution.join();
+            evolution_thread.join();
         }
     }
 }

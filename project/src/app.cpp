@@ -3,17 +3,16 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
 #include <thread>
-#include <AI/classic_genetic_algo.hpp>
 #include <AI/evolutionary_strategy.hpp>
 
 App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_) {
     ai_ = std::make_unique<EvolutionaryStrategy>(std::ref(tetris_ai_));
-    tick_interval_ = sf::seconds(0.5f);
     tetris_human_.add(ai_.get());
 }
 
 void App::run() {
     game_clock_.restart();
+    ai_clock_.restart();
     std::thread ai_thread(std::ref(*ai_.get()));
     while (!closed_) {
         update();
@@ -26,11 +25,14 @@ void App::run() {
 
 void App::update() {
     pollEvents();
+    if (tetris_human_.isFinished()) {
+        if (ai_clock_.getElapsedTime() > ai_move_interval_) {
+            ai_->drop();
+            ai_clock_.restart();
+        }
+    }
     if (game_clock_.getElapsedTime() > tick_interval_) {
         tetris_human_.tick();
-        if (tetris_human_.isFinished()) {
-            ai_->humanFinished();
-        }
         game_clock_.restart();
     }
     gui_.update(tetris_human_, tetris_ai_);
