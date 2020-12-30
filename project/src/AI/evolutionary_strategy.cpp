@@ -1,10 +1,17 @@
 #include "AI/evolutionary_strategy.hpp"
 
-long EvolutionaryStrategy::Genome::next_id = 0;
 
 void EvolutionaryStrategy::operator()() {
-    evolution_thread = std::thread(&EvolutionaryStrategy::evolve, this);
+    evolution_thread = std::thread([this](){ evolve(); });
+    controlLoop();
+}
 
+void EvolutionaryStrategy::operator()(const std::string& input_json, const std::string& output_json) {
+    evolution_thread = std::thread([this, input_json, output_json](){ evolve(input_json, output_json); });
+    controlLoop();
+}
+
+void EvolutionaryStrategy::controlLoop() {
     drop_mutex_.lock();
     while (!finish_) {
         drop_mutex_.lock();
@@ -17,26 +24,60 @@ void EvolutionaryStrategy::operator()() {
     }
 }
 
+void EvolutionaryStrategy::finish() {
+    if (finish_) return;
+    finish_ = true;
+    evolution_thread.join();
+    drop();
+}
+
+void EvolutionaryStrategy::saveToJSON(const std::string& file, std::vector<Genome>& genomes) {
+    std::cout << "Saving genomes to JSON: " << file << std::endl;
+}
+
+std::vector<Genome> EvolutionaryStrategy::loadFromJSON(const std::string& file) {
+    std::cout << "Loading genomes from JSON: " << file << std::endl;
+    return initialPop();
+}
+
 void EvolutionaryStrategy::evolve() {
     t = 0;
     auto pop = initialPop();
     while (!finish_) {
-        auto selected = selection(pop);
-        auto next_pop = crossoverAndMutation(selected);
-        evaluation(next_pop);
-        pop = next_pop;
-        displayState();
-        t++;
+        pop = next_generation(pop);
     }
 }
 
-std::vector<EvolutionaryStrategy::Genome> EvolutionaryStrategy::initialPop() {
+void EvolutionaryStrategy::evolve(const std::string& input_json, const std::string& output_json) {
+    t = 0;
+    std::vector<Genome> pop;
+    if (input_json != "")
+        pop = loadFromJSON(input_json);
+    else
+        pop = initialPop();
+    while (!finish_) {
+        pop = next_generation(pop);
+    }
+    if (output_json != "")
+        saveToJSON(input_json, pop);
+}
+
+std::vector<Genome> EvolutionaryStrategy::next_generation(std::vector<Genome>& pop) {
+    auto selected = selection(pop);
+    auto next_pop = crossoverAndMutation(selected);
+    evaluation(next_pop);
+    displayState();
+    t++;
+    return next_pop;
+}
+
+std::vector<Genome> EvolutionaryStrategy::initialPop() {
     std::vector<Genome> initial_pop(POP_SIZE);
     evaluation(initial_pop);
     return initial_pop;
 }
 
-std::vector<EvolutionaryStrategy::Genome> EvolutionaryStrategy::selection(
+std::vector<Genome> EvolutionaryStrategy::selection(
     std::vector<Genome>& pop) {
     std::vector<Genome> selected;
     selected.reserve(POP_SIZE);
@@ -47,7 +88,7 @@ std::vector<EvolutionaryStrategy::Genome> EvolutionaryStrategy::selection(
     return selected;
 }
 
-std::vector<EvolutionaryStrategy::Genome> EvolutionaryStrategy::crossoverAndMutation(
+std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(
     const std::vector<Genome> selected) {
     std::vector<Genome> next_pop(selected);
     while (next_pop.size() < POP_SIZE - 1) {
@@ -120,9 +161,3 @@ void EvolutionaryStrategy::displayState() {
     printf("\tbest: (score=%f max_height=%f holes=%f)\n", best.score, best.max_height, best.holes);
 }
 
-void EvolutionaryStrategy::finish() {
-    if (finish_) return;
-    finish_ = true;
-    evolution_thread.join();
-    drop();
-}

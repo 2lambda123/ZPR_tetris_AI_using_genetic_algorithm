@@ -6,9 +6,9 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#include "tetris.hpp"
-#include "tetromino.hpp"
-#include "tetromino_generator.hpp"
+#include "tetris/tetris.hpp"
+#include "tetris/tetromino.hpp"
+#include "tetris/tetromino_generator.hpp"
 
 BOOST_AUTO_TEST_CASE(tetrominoes_exist) {
     std::cout << "Test #1: All tetrominoes exist...\n";

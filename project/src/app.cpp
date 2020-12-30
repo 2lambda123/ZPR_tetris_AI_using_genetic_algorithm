@@ -5,20 +5,19 @@
 #include <iostream>
 #include <thread>
 
-App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_) {
-    ai_ = std::make_unique<EvolutionaryStrategy>(std::ref(tetris_ai_));
-    tetris_human_.add(ai_.get());
+App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_), ai_(std::ref(tetris_ai_)) {
+    tetris_human_.add(&ai_);
 }
 
 void App::run() {
     game_clock_.restart();
     ai_clock_.restart();
-    std::thread ai_thread(std::ref(*ai_.get()));
+    std::thread ai_thread([this]() { ai_("res/input.json", "res/output.json"); });
     while (!closed_) {
         update();
         display();
     }
-    ai_->finish();
+    ai_.finish();
     ai_thread.join();
 }
 
@@ -26,7 +25,7 @@ void App::update() {
     pollEvents();
     if (tetris_human_.isFinished()) {
         if (ai_clock_.getElapsedTime() > ai_move_interval_) {
-            ai_->drop();
+            ai_.drop();
             ai_clock_.restart();
         }
     }
@@ -55,7 +54,7 @@ void App::pollEvents() {
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             tetris_human_.hardDrop();
-            ai_->drop();
+            ai_.drop();
         }
     }
 }

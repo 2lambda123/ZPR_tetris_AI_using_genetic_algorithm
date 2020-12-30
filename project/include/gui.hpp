@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 
-#include "tetris.hpp"
+#include "tetris/tetris.hpp"
 
 class TetrisBoard {
     using Board = std::vector<std::vector<sf::RectangleShape>>;

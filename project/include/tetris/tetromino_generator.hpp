@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "tetromino.hpp"
+#include "tetris/tetromino.hpp"
 
 class TetrominoGenerator {
 public:

@@ -1,10 +1,10 @@
-#include "tetromino_generator.hpp"
+#include "tetris/tetromino_generator.hpp"
 
 #include <cstdlib>
 #include <utility>
 #include <vector>
 
-#include "tetromino.hpp"
+#include "tetris/tetromino.hpp"
 
 const std::vector<Tetromino> TetrominoGenerator::TETROMINOES = {
     Tetromino(Tetromino::Color::CYAN, Tetromino::Shape::I, std::pair(1.5, 1.5),

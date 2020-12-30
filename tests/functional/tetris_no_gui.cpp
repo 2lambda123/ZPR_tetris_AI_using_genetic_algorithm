@@ -1,6 +1,6 @@
-#include "tetris.hpp"
-
 #include <iostream>
+
+#include "tetris/tetris.hpp"
 
 int main(){
     Tetris tetris;

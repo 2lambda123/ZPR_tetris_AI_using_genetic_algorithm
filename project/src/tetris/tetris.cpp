@@ -1,12 +1,12 @@
-#include "tetris.hpp"
+#include "tetris/tetris.hpp"
 
 #include <algorithm>
 #include <string>
 #include <utility>
 #include <vector>
 
-#include "tetromino.hpp"
-#include "tetromino_generator.hpp"
+#include "tetris/tetromino.hpp"
+#include "tetris/tetromino_generator.hpp"
 
 Tetris::Tetris() {
     for (int i = 0; i < GRID_HEIGHT; ++i) {

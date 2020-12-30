@@ -8,7 +8,7 @@
 
 #include "move.hpp"
 #include "observer.hpp"
-#include "tetris.hpp"
+#include "tetris/tetris.hpp"
 
 class AI : public Observer {
 public:

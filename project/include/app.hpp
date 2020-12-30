@@ -1,12 +1,13 @@
 #ifndef APP_HPP
 #define APP_HPP
 
+#include <AI/evolutionary_strategy.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
 #include "AI/ai.hpp"
 #include "gui.hpp"
-#include "tetris.hpp"
+#include "tetris/tetris.hpp"
 
 class App {
 public:
@@ -31,7 +32,8 @@ private:
     ObservableTetris tetris_human_;
     Tetris tetris_ai_;
 
-    std::unique_ptr<AI> ai_;
+    //std::unique_ptr<AI> ai_;
+    EvolutionaryStrategy ai_;
 
     sf::Clock game_clock_;
     sf::Clock ai_clock_;

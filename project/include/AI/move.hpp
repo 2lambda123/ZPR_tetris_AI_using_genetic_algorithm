@@ -5,7 +5,7 @@
 #include <chrono>
 #include <iostream>
 
-#include "tetris.hpp"
+#include "tetris/tetris.hpp"
 
 class Move {
 public:

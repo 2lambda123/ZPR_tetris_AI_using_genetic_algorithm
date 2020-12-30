@@ -1,5 +1,5 @@
 #include "gui.hpp"
-#include "tetris.hpp"
+#include "tetris/tetris.hpp"
 
 int main() {
     bool closed = false;
