@@ -22,11 +22,11 @@ public:
     std::vector<Genome> loadFromJSON(const std::string& file);
 
 private:
-    const std::size_t POP_SIZE = 50;
+    const std::size_t POP_SIZE = 40;
     const std::size_t SELECTED_TO_CROSS_AND_MUTATE = 30;
     const float MUTATION_STRENGTH = 0.05f;
     const float PROB_CROSSOVER = 0.9f;
-    const int MOVES_TO_SIMULATE = 5;
+    const int MOVES_TO_SIMULATE = 7;
 
     void evolve();
     void evolve(const std::string& input_json, const std::string& output_json);
@@ -67,6 +67,7 @@ private:
     void displayState();
 
     Genome best;
+    std::string best_grid_state;
     float mean_fitness_ = 0.0f;
     float score_sum = 0.0f;
     int t = 0;

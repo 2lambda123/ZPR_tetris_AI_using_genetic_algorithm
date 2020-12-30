@@ -129,7 +129,16 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
 
     // for whatever reason std::max_element didn't work (probably don't know how to use it)
     for (auto e : next_pop) {
-        if (e.score > best.score) best = e;
+        if (e.score > best.score) {
+            Tetris tetris;
+            best = e;
+            for (int i = 0; i < MOVES_TO_SIMULATE; i++) {
+                auto best_move = generateBestMove(best, tetris);
+                best_move.apply(tetris);
+            }
+            best_grid_state = tetris.toString();
+        }
+
     }
 }
 
@@ -159,5 +168,6 @@ void EvolutionaryStrategy::displayState() {
     std::cout << "Generation " << t << ": " << std::endl;
     std::cout << "\tmean fitness: " << mean_fitness_ << std::endl;
     printf("\tbest: (score=%f max_height=%f holes=%f)\n", best.score, best.max_height, best.holes);
+    std::cout << best_grid_state << std::endl;
 }
 
