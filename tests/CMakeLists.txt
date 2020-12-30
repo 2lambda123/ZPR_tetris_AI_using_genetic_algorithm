@@ -1,26 +1,23 @@
-add_executable(test_boost test_boost.cpp)
-add_executable(test_sfml test_sfml.cpp)
-add_executable(tetris_no_gui tetris_no_gui.cpp)
-add_executable(tetris_gui_integration tetris_gui_integration.cpp)
-add_executable(main main.cpp)
+add_executable(test_sfml functional/test_sfml.cpp)
+add_executable(tetris_no_gui functional/tetris_no_gui.cpp)
+add_executable(tetris_gui_integration functional/tetris_gui_integration.cpp)
+add_executable(test_boost unit/test_boost.cpp)
+add_executable(test_tetris unit/test_tetris.cpp)
+add_executable(test_ai unit/test_ai.cpp)
 
 include_directories(project/include)
 
 target_link_libraries(test_sfml sfml-graphics)
 target_link_libraries(tetris_gui_integration gui-lib)
 
-if (UNIX)
-    target_link_libraries(test_boost ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-    target_link_libraries(main ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-elseif (WIN32)
-    target_link_libraries(test_boost Boost::unit_test_framework)
-    target_link_libraries(main Boost::unit_test_framework)
-endif()
+target_link_libraries(test_boost Boost::unit_test_framework)
+target_link_libraries(test_tetris Boost::unit_test_framework)
+target_link_libraries(test_ai Boost::unit_test_framework)
 
 target_link_libraries(tetris_no_gui tetris-lib)
 target_link_libraries(tetris_gui_integration tetris-lib)
 
-target_link_libraries(main tetris-lib)
+target_link_libraries(test_tetris tetris-lib)
 
 # copy /res folder to a folder containing binary
 add_custom_command(TARGET tetris_gui_integration POST_BUILD

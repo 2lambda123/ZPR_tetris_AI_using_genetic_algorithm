@@ -24,19 +24,19 @@ void AI::update() {
 }
 
 void AI::move(Tetris &tetris, const Move &move) {
-    for (int i = 0; i < best_move_.rotations_; ++i) {
-        tetris_.rotateCW();
+    for (int i = 0; i < move.getRotation(); ++i) {
+        tetris.rotateCW();
     }
     int tip_x = Tetris::TETROMINO_INITIAL_POS.first;
-    int move_x = best_move_.move_x_;
+    int move_x = move.getMoveX();
     if (move_x > tip_x) {
         for (int i = move_x; i > tip_x; --i) {
-            tetris_.shiftRight();
+            tetris.shiftRight();
         }
     }
     else if (move_x < tip_x) {
         for (int i = move_x; i < tip_x; ++i) {
-            tetris_.shiftLeft();
+            tetris.shiftLeft();
         }
     }
     tetris.hardDrop();

@@ -6,12 +6,6 @@
 #include <cassert>
 
 class ClassicGeneticAlgo : public AI {
-    struct Chromosome {
-        Move move;
-        float fitness = 0.0f;
-        float ps;
-    };
-
 public:
     ClassicGeneticAlgo(Tetris& tetris): AI(tetris) {}
     void operator()() override {
@@ -39,9 +33,15 @@ public:
     }
 
 private:
+    struct Chromosome {
+        Move move;
+        float fitness = 0.0f;
+        float ps;
+    };
+
     const int POP_SIZE = 50;
     const int SELECTED_TO_CROSS_AND_MUTATE = 30;
-    const float PROB_CROSSOVER = 0.95f;
+    const float PROB_CROSSOVER = 0.9f;
 
     std::vector<Chromosome> initialPop() {
         std::vector<Chromosome> initial_pop(POP_SIZE);
@@ -52,6 +52,7 @@ private:
     std::vector<Chromosome> selection(std::vector<Chromosome>& pop) {
         std::vector<Chromosome> selected;
         selected.reserve(POP_SIZE);
+        selected.push_back(best);
         while (selected.size() < SELECTED_TO_CROSS_AND_MUTATE) {
             selected.push_back(rouletteSelection(pop));
         }
@@ -60,9 +61,8 @@ private:
 
     Chromosome rouletteSelection(const std::vector<Chromosome>& pop) {
         while (true) {
-            float p = rand() / double(RAND_MAX);
+            float p = random_0_1();
             for (const auto& c : pop) {
-                assert(c.fitness > 0.0f);
                 if (p < c.ps) {
                     return c;
                 }
@@ -72,30 +72,44 @@ private:
 
     std::vector<Chromosome> crossoverAndMutation(const std::vector<Chromosome> selected) {
         std::vector<Chromosome> next_pop(selected);
-        while (next_pop.size() < POP_SIZE) {
-            float p = rand() / double(RAND_MAX);
+        while (next_pop.size() < POP_SIZE - 1) {
+            float p = random_0_1();
             if (p < PROB_CROSSOVER) {
+                /*
                 auto father = rouletteSelection(selected);
                 auto mother = rouletteSelection(selected);
                 Chromosome child;
-                assert(father.move.move_x_ <= 9);
-                child.move.move_x_ = father.move.move_x_;
-                child.move.rotations_ = mother.move.rotations_;
+                child.move.setMoveX(father.move.getMoveX());
+                child.move.setRotation(mother.move.getRotation());
+                next_pop.push_back(child);
+                 */
+                auto child = rouletteSelection(selected);
                 next_pop.push_back(child);
             }
             else {
                 auto mutant = rouletteSelection(selected);
-                p = rand() / double(RAND_MAX);
+                p = random_0_1();
                 if (p < 0.5f) {
-                    mutant.move.move_x_ = std::rand() % (Tetris::GRID_WIDTH + 1) - 1;
+                    p = random_0_1();
+                    p < 0.5f ? mutant.move.incrementMoveX() : mutant.move.decrementMoveX();
                 }
                 else {
-                    mutant.move.rotations_ = std::rand() % 4;
+                    auto val = rand() % 4;
+                    mutant.move.setRotation(2);
+                    /*
+                    p = random_0_1();
+                    p < 0.5f ? mutant.move.incrementRotation() : mutant.move.decrementRotation();
+                     */
                 }
                 next_pop.push_back(mutant);
             }
         }
+        next_pop.push_back(best);
         return next_pop;
+    }
+
+    float random_0_1() {
+        return rand() / double(RAND_MAX);
     }
 
     void evaluation(std::vector<Chromosome>& next_pop) {
@@ -114,6 +128,18 @@ private:
             c.ps = prev_ps + c.fitness / fitness_sum_;
             prev_ps = c.ps;
         }
+        /*
+        auto best = *std::max_element(next_pop.begin(), next_pop.end(), [](Chromosome a, Chromosome b) {
+            return a.fitness > b.fitness;
+        });
+        std::cout << best.fitness << std::endl;
+         */
+        best = next_pop[0];
+        for (auto e : next_pop) {
+            if (e.fitness > best.fitness)
+                best = e;
+        }
+        std::cout << best.fitness;
     }
 
     float getMaxHeight(Tetris& tetris) {
@@ -134,8 +160,10 @@ private:
         mean_fitness_ = fitness_sum_ / POP_SIZE;
         std::cout << "Generation " << t << ": " << std::endl;
         std::cout << "\tmean fitness: " << mean_fitness_ << std::endl;
+        printf("\tbest: (move_x=%d, rot=%d, fitness=%f)", best.move.getMoveX(), best.move.getRotation(), best.fitness);
     }
 
+    Chromosome best;
     float mean_fitness_ = 0.0f;
     float fitness_sum_ = 0.0f;
     int t = 0;
