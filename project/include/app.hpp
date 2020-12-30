@@ -4,9 +4,9 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
+#include "AI/ai.hpp"
 #include "gui.hpp"
 #include "tetris.hpp"
-#include "AI/ai.hpp"
 
 class App {
 public:

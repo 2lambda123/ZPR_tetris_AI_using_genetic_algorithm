@@ -6,10 +6,9 @@
 #include <iostream>
 #include <thread>
 
+#include "move.hpp"
 #include "observer.hpp"
 #include "tetris.hpp"
-#include "move.hpp"
-
 
 class AI : public Observer {
 public:
@@ -17,7 +16,7 @@ public:
     virtual ~AI() {}
 
     virtual void operator()() = 0;
-    void finish() { finish_ = true; }
+    virtual void finish() { finish_ = true; }
     virtual void drop() = 0;
 
 protected:

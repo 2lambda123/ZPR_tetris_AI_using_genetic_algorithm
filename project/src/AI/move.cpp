@@ -1,18 +1,18 @@
 #include "AI/move.hpp"
 
-const int8_t Move::MIN_MOVE = -1;
-const int8_t Move::MAX_MOVE = Tetris::GRID_WIDTH - 1;
-const int8_t Move::MIN_ROT = 0;
-const int8_t Move::MAX_ROT = 3;
+const int Move::MIN_MOVE = -1;
+const int Move::MAX_MOVE = Tetris::GRID_WIDTH - 1;
+const int Move::MIN_ROT = 0;
+const int Move::MAX_ROT = 3;
 
-Move::Move(int8_t moveX, int8_t rotations) : move_x_(moveX), rotations_(rotations) {}
+Move::Move(int moveX, int rotations) : move_x_(moveX), rotations_(rotations) {}
 
 Move::Move(const Move &other) {
     move_x_ = other.move_x_;
     rotations_ = other.rotations_;
 }
 
-Move& Move::operator=(const Move &other) {
+Move &Move::operator=(const Move &other) {
     move_x_ = other.move_x_;
     rotations_ = other.rotations_;
     return *this;
@@ -28,17 +28,17 @@ void Move::apply(Tetris &tetris) {
         for (int i = move_x; i > tip_x; --i) {
             tetris.shiftRight();
         }
-    }
-    else if (move_x < tip_x) {
+    } else if (move_x < tip_x) {
         for (int i = move_x; i < tip_x; ++i) {
             tetris.shiftLeft();
         }
     }
     tetris.hardDrop();
+    calculateTetrisProperties(tetris);
 }
 
-void Move::setMoveX(int8_t value) { move_x_ = std::clamp(value, MIN_MOVE, MAX_MOVE); }
-void Move::setRotation(int8_t value) { rotations_ = std::clamp(value, MIN_ROT, MAX_ROT); }
+void Move::setMoveX(int value) { move_x_ = std::clamp(value, MIN_MOVE, MAX_MOVE); }
+void Move::setRotation(int value) { rotations_ = std::clamp(value, MIN_ROT, MAX_ROT); }
 
 void Move::incrementMoveX() {
     if (move_x_ + 1 > MAX_MOVE)
@@ -68,4 +68,8 @@ void Move::decrementRotation() {
         rotations_--;
 }
 
-void Move::calculateTetrisProperties() {}
+void Move::calculateTetrisProperties(const Tetris& tetris) {
+    auto grid = tetris.getGrid();
+    max_height_ = calculateMaxHeight(grid);
+    holes_ = calculateHoles(grid);
+}

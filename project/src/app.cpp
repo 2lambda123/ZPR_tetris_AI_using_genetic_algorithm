@@ -1,9 +1,9 @@
 #include "app.hpp"
 
+#include <AI/evolutionary_strategy.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
 #include <thread>
-#include <AI/evolutionary_strategy.hpp>
 
 App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_) {
     ai_ = std::make_unique<EvolutionaryStrategy>(std::ref(tetris_ai_));
@@ -18,7 +18,6 @@ void App::run() {
         update();
         display();
     }
-    ai_->drop();
     ai_->finish();
     ai_thread.join();
 }
@@ -65,3 +64,4 @@ void App::close() {
     closed_ = true;
     gui_.close();
 }
+

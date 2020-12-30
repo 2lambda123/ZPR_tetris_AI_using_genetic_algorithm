@@ -9,39 +9,69 @@
 
 class Move {
 public:
-    static const int8_t MIN_MOVE;
-    static const int8_t MAX_MOVE;
-    static const int8_t MIN_ROT;
-    static const int8_t MAX_ROT;
+    static const int MIN_MOVE;
+    static const int MAX_MOVE;
+    static const int MIN_ROT;
+    static const int MAX_ROT;
 
     Move() {
         rotations_ = std::rand() % 4;
         move_x_ = std::rand() % (Tetris::GRID_WIDTH + 1) - 1;
     }
-    Move(int8_t moveX, int8_t rotations);
+    Move(int moveX, int rotations);
 
     Move(const Move &other);
     Move &operator=(const Move &other);
 
     void apply(Tetris &tetris);
 
-    int8_t getMoveX() const { return move_x_; }
-    int8_t getRotation() const { return rotations_; }
-    void setMoveX(int8_t value);
-    void setRotation(int8_t value);
+    int getMoveX() const { return move_x_; }
+    int getRotation() const { return rotations_; }
+    void setMoveX(int value);
+    void setRotation(int value);
     void incrementMoveX();
     void decrementMoveX();
     void incrementRotation();
     void decrementRotation();
 
+    int getMaxHeight() const { return max_height_; }
+    int getHoles() const { return holes_; }
+
 private:
-    void calculateTetrisProperties();
+    void calculateTetrisProperties(const Tetris& tetris);
 
-    int8_t move_x_;
-    int8_t rotations_;
+    int calculateMaxHeight(const Tetris::Grid& grid) {
+        int rows = grid.size();
+        int cols = grid[0].size();
+        for (int y = rows - 1; y >= 0; y--) {
+            for (int x = 0; x < cols; x++) {
+                if (grid[y][x] != Tetromino::EMPTY) {
+                    return y + 1;
+                }
+            }
+        }
+        return 0;
+    }
 
-    uint8_t max_height;
-    uint16_t holes;
+    int calculateHoles(const Tetris::Grid& grid) {
+        int holes = 0;
+        int rows = grid.size();
+        int cols = grid[0].size();
+        for (int y = rows - 2; y >= 0; y--) {
+            for (int x = 0; x < cols; x++) {
+                if (grid[y][x] == Tetromino::EMPTY && grid[y+1][x] != Tetromino::EMPTY) {
+                    holes++;
+                }
+            }
+        }
+        return holes;
+    }
+
+    int move_x_;
+    int rotations_;
+
+    int max_height_;
+    int holes_;
 };
 
 #endif  // GENETIC_TETRIS_MOVE_HPP

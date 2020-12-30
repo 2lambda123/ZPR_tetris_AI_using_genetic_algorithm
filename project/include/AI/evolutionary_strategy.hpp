@@ -8,13 +8,11 @@
 class EvolutionaryStrategy : public AI {
 public:
     EvolutionaryStrategy(Tetris& tetris) : AI(tetris) {}
-    ~EvolutionaryStrategy() override {
-        finish_ = true;
-        evolution_thread.join();
-    }
+
     void operator()() override;
     void drop() override { drop_mutex_.unlock(); }
     void update() override { drop_mutex_.unlock(); }
+    void finish() override;
 
 private:
     struct Genome {
@@ -42,11 +40,11 @@ private:
         Move best_move;
     };
 
-    const int POP_SIZE = 50;
-    const int SELECTED_TO_CROSS_AND_MUTATE = 30;
+    const std::size_t POP_SIZE = 50;
+    const std::size_t SELECTED_TO_CROSS_AND_MUTATE = 30;
     const float MUTATION_STRENGTH = 0.05f;
     const float PROB_CROSSOVER = 0.9f;
-    const int MOVES_TO_SIMULATE = 20;
+    const int MOVES_TO_SIMULATE = 5;
 
     void evolve();
     std::vector<Genome> initialPop();

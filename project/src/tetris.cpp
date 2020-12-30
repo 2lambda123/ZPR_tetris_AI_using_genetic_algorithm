@@ -13,7 +13,8 @@ Tetris::Tetris() {
         std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
         grid_.push_back(grid_line);
     }
-    generateTetromino(); // is_finished_ needs to be true before this statement otherwise notifying on tetromino change will break
+    generateTetromino();  // is_finished_ needs to be true before this statement otherwise notifying
+                          // on tetromino change will break
     is_finished_ = false;
 }
 
@@ -148,7 +149,8 @@ void Tetris::generateTetromino() {
 
 void ObservableTetris::generateTetromino() {
     Tetris::generateTetromino();
-    if (!is_finished_) { // don't notify at the start of the game
-        notify(); // notify genetic algorithm that a tetromino has changed (it should then execute hardDrop())
+    if (!is_finished_) {  // don't notify at the start of the game
+        notify();  // notify genetic algorithm that a tetromino has changed (it should then execute
+                   // hardDrop())
     }
 }

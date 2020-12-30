@@ -10,7 +10,7 @@
 class TetrisBoard {
     using Board = std::vector<std::vector<sf::RectangleShape>>;
 
-    //const sf::Color FINISHED_HUE_CHANGE = sf::Color(-20, -20, -20);
+    // const sf::Color FINISHED_HUE_CHANGE = sf::Color(-20, -20, -20);
     const sf::Color FINISHED_HUE_CHANGE = sf::Color(-50, -50, -50);
 
 public:
@@ -42,7 +42,7 @@ private:
 class GUI {
 public:
     GUI(int width, int height);
-    void update(const Tetris &tetris_human, const Tetris &tetris_ai);
+    void update(const Tetris& tetris_human, const Tetris& tetris_ai);
     void draw();
     void close() { window_.close(); }
     bool pollEvent(sf::Event& event) { return window_.pollEvent(event); }

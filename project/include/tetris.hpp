@@ -15,7 +15,8 @@ public:
 
     static const int GRID_WIDTH = 10;
     static const int GRID_HEIGHT = 20;
-    static constexpr std::pair<int, int> TETROMINO_INITIAL_POS = { (GRID_WIDTH / 2) - 2, GRID_HEIGHT + 1 };
+    static constexpr std::pair<int, int> TETROMINO_INITIAL_POS = {(GRID_WIDTH / 2) - 2,
+                                                                  GRID_HEIGHT + 1};
 
     Tetris();
     bool tick();

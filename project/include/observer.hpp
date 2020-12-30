@@ -18,8 +18,9 @@ public:
         }
     }
     virtual ~Subject() {}
+
 private:
-    std::vector<Observer*> obs_;    
+    std::vector<Observer*> obs_;
 };
 
 #endif
