@@ -36,6 +36,7 @@ public:
 
     int getMaxHeight() const { return max_height_; }
     int getCumulativeHeight() const { return cumulative_height_; }
+    int getRelativeHeight() const { return relative_height_; }
     int getHoles() const { return holes_; }
 
 private:
@@ -49,6 +50,7 @@ private:
 
     int max_height_;
     int cumulative_height_;
+    int relative_height_;
     int holes_;
 };
 

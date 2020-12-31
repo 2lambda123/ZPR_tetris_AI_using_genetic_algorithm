@@ -20,7 +20,6 @@ public:
     virtual void drop() = 0;
 
 protected:
-    Move best_move_;
     Tetris &tetris_;
 
     volatile bool finish_ = false;

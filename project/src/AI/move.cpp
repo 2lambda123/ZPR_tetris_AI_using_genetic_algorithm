@@ -1,5 +1,7 @@
 #include "AI/move.hpp"
 
+#include <cassert>
+
 const int Move::MIN_MOVE = -1;
 const int Move::MAX_MOVE = Tetris::GRID_WIDTH - 1;
 const int Move::MIN_ROT = 0;
@@ -70,9 +72,31 @@ void Move::decrementRotation() {
 
 void Move::calculateGridProperties(const Tetris& tetris) {
     auto grid = tetris.getGrid();
-    max_height_ = calculateMaxHeight(grid);
-    cumulative_height_ = calculateCumulativeHeight(grid);
+    //max_height_ = calculateMaxHeight(grid);
+    //cumulative_height_ = calculateCumulativeHeight(grid);
     holes_ = calculateHoles(grid);
+    max_height_ = 0;
+    cumulative_height_ = 0;
+    int rows = grid.size();
+    int cols = grid[0].size();
+    int min_height = rows;
+    for (int x = 0; x < cols; x++) {
+        for (int y = rows - 1; y >= 0; y--) {
+            if (grid[y][x] != Tetromino::EMPTY) {
+                cumulative_height_ += y + 1;
+                if (y + 1 > max_height_)
+                    max_height_ = y + 1;
+                break;
+            }
+            else {
+                if (y < min_height)
+                    min_height = y;
+            }
+        }
+    }
+    relative_height_ = max_height_ - min_height;
+    assert(max_height_ == calculateMaxHeight(grid));
+    assert(cumulative_height_ == calculateCumulativeHeight(grid));
 }
 
 int Move::calculateMaxHeight(const Tetris::Grid& grid) {

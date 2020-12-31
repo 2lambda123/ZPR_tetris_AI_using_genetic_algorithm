@@ -138,7 +138,6 @@ std::vector<Genome> EvolutionaryStrategy::initialPop() {
 }
 
 std::vector<Genome> EvolutionaryStrategy::selection(std::vector<Genome>& pop) {
-    std::cout << "selection" << std::endl;
     std::vector<Genome> selected;
     selected.reserve(POP_SIZE);
     selected.push_back(best);
@@ -149,7 +148,6 @@ std::vector<Genome> EvolutionaryStrategy::selection(std::vector<Genome>& pop) {
 }
 
 std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(const std::vector<Genome> selected) {
-    std::cout << "crossover and mutation" << std::endl;
     std::vector<Genome> next_pop(selected);
     while (next_pop.size() < POP_SIZE - 1) {
         float p = random_0_1();
@@ -170,7 +168,6 @@ std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(const std::vector
 }
 
 void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
-    std::cout << "evaluation" << std::endl;
     score_sum = 0.0f;
     for (auto& c : next_pop) {
         //Tetris tmp(tetris_);
@@ -191,7 +188,8 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
             c.score = 10000.0f -
                       best_move.getMaxHeight() -
                       best_move.getHoles() -
-                      best_move.getCumulativeHeight();
+                      best_move.getCumulativeHeight() -
+                      best_move.getRelativeHeight();
         }
         assert(c.score >= 0.0f);
         score_sum += c.score;
@@ -221,7 +219,8 @@ Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris
             float fitness =
                 genome.max_height * move.getMaxHeight() +
                 genome.holes * move.getHoles() +
-                genome.cumulative_height * move.getCumulativeHeight();
+                genome.cumulative_height * move.getCumulativeHeight() +
+                genome.relative_height * move.getRelativeHeight();
             assert(initial_best < fitness);
             if (fitness > best_fitness) {
                 best_fitness = fitness;
