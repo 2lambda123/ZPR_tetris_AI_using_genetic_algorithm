@@ -16,7 +16,10 @@ public:
     void controlLoop();
 
     void drop() override { drop_mutex_.unlock(); }
-    void update() override { drop_mutex_.unlock(); }
+    void update(GenTetrisEvent e) override {
+        if (e == GenTetrisEvent::TETROMINO_DROPPED)
+            drop_mutex_.unlock();
+    }
     void finish() override;
     void saveToJSON(const std::string& file, std::vector<Genome>& genomes);
     std::vector<Genome> loadFromJSON(const std::string& file);

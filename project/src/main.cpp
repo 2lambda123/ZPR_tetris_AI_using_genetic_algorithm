@@ -3,6 +3,6 @@
 #include "app.hpp"
 
 int main() {
-    App app;
+    gentetris::App app;
     app.run();
 }

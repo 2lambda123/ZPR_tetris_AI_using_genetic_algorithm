@@ -150,7 +150,8 @@ void Tetris::generateTetromino() {
 void ObservableTetris::generateTetromino() {
     Tetris::generateTetromino();
     if (!is_finished_) {  // don't notify at the start of the game
-        notify();  // notify genetic algorithm that a tetromino has changed (it should then execute
+        notifyObservers(
+            GenTetrisEvent::TETROMINO_DROPPED);  // notify genetic algorithm that a tetromino has changed (it should then execute
                    // hardDrop())
     }
 }

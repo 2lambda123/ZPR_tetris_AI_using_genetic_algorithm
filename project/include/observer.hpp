@@ -3,18 +3,23 @@
 
 #include <vector>
 
+enum class GenTetrisEvent {
+    TETROMINO_DROPPED,
+    PLAY_BUTTON_CLICKED,
+};
+
 class Observer {
 public:
-    virtual void update() = 0;
+    virtual void update(GenTetrisEvent e) = 0;
     virtual ~Observer() {}
 };
 
 class Subject {
 public:
-    void add(Observer* o) { obs_.push_back(o); }
-    void notify() {
+    void addObserver(Observer* o) { obs_.push_back(o); }
+    void notifyObservers(GenTetrisEvent e) {
         for (Observer* o : obs_) {
-            o->update();
+            o->update(e);
         }
     }
     virtual ~Subject() {}

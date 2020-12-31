@@ -1,4 +1,4 @@
-#include "gui.hpp"
+#include "gui/gui.hpp"
 #include "tetris/tetris.hpp"
 
 int main() {

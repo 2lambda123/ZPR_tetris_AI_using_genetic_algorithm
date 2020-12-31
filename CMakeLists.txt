@@ -47,8 +47,8 @@ add_library(tetris-lib project/include/tetris/tetris.hpp
 add_library(gui-lib
         project/include/app.hpp
         project/src/app.cpp
-        project/include/gui.hpp
-        project/src/gui.cpp)
+        project/include/gui/gui.hpp
+        project/src/gui/gui.cpp project/include/gui/utils.hpp project/src/gui/utils.cpp)
 
 add_library(ai-lib
         project/include/AI/ai.hpp

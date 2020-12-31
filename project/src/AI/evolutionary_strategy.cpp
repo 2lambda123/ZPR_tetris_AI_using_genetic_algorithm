@@ -36,8 +36,8 @@ void EvolutionaryStrategy::controlLoop() {
 void EvolutionaryStrategy::finish() {
     if (finish_) return;
     finish_ = true;
-    evolution_thread.join();
     drop();
+    evolution_thread.join();
 }
 
 void EvolutionaryStrategy::saveToJSON(const std::string& file, std::vector<Genome>& genomes) {
