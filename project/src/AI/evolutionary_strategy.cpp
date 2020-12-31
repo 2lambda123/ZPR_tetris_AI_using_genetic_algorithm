@@ -9,12 +9,16 @@
 #include <fstream>
 
 void EvolutionaryStrategy::operator()() {
+    finish_ = false;
+    drop_mutex_.unlock();
     evolution_thread = std::thread([this]() { evolve(); });
     controlLoop();
 }
 
 void EvolutionaryStrategy::operator()(const std::string& input_json,
                                       const std::string& output_json) {
+    finish_ = false;
+    drop_mutex_.unlock();
     evolution_thread =
         std::thread([this, input_json, output_json]() { evolve(input_json, output_json); });
     controlLoop();

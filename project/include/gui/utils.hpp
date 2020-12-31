@@ -20,9 +20,6 @@ const std::map<Tetromino::Color, sf::Color> TETROMINO_COLOR_MAP = {
 class TetrisBoard {
     using Board = std::vector<std::vector<sf::RectangleShape>>;
 
-    // const sf::Color FINISHED_HUE_CHANGE = sf::Color(-20, -20, -20);
-    const sf::Color FINISHED_HUE_CHANGE = sf::Color(50, 50, 50, 0);
-
 public:
     struct TileProperties {
         TileProperties(float size, float padding) : size(size), padding(padding) {
@@ -37,26 +34,32 @@ public:
                 const TileProperties& tile_prop);
     void setState(const Tetris::Grid& tetris_grid);
     void draw(sf::RenderWindow& window);
+    void reset() { setStateFinished(false); }
 
     bool isStateFinished() const;
-
     void setStateFinished(bool finished);
 
 private:
+    const sf::Color FINISHED_HUE_CHANGE = sf::Color(50, 50, 50, 0);
+
     bool state_finished_ = false;
     Board board_;
     sf::Vector2i board_tile_count_;
     TileProperties tile_prop_;
 };
 
-class Button : public sf::Drawable, public Subject {
+class Button : public sf::Drawable, public Subject, public Observer {
 public:
     Button(const sf::Vector2f& pos, const sf::Vector2f& size);
     void setText(const std::string& text, const sf::Font& font, int size = 24);
     void update();
     void handleEvent(const sf::Event& e, const sf::Window& window);
+
 protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+public:
+    void update(GenTetrisEvent e) override;
 
 private:
     const std::string BUTTON_CLICK_SOUND = "res/button_click.wav";
@@ -71,6 +74,7 @@ private:
     sf::Color text_color_ = sf::Color::White;
     sf::Color bg_color_ = sf::Color(0x708090ff);
     sf::Text text_;
+    sf::Font font_;
     sf::RectangleShape rect_;
 
     sf::SoundBuffer buffer_;

@@ -25,6 +25,7 @@ GUI::GUI(int width, int height)
     ai_score_.setPosition(sf::Vector2f(480, 640));
     play_button_.setText("PLAY", font_);
     play_button_.addObserver(this);
+    addObserver(&play_button_);
 }
 
 void GUI::update(const Tetris &tetris_human, const Tetris &tetris_ai) {
@@ -59,6 +60,9 @@ bool GUI::pollEvent(sf::Event& event) {
 }
 void GUI::update(GenTetrisEvent e) {
     if (e == GenTetrisEvent::PLAY_BUTTON_CLICKED) {
+        notifyObservers(e);
+    }
+    else if (e == GenTetrisEvent::GAME_STARTED) {
         notifyObservers(e);
     }
 }

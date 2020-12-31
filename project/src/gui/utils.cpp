@@ -61,7 +61,8 @@ void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 }
 
 void Button::setText(const std::string &text, const sf::Font &font, int size) {
-    text_.setFont(font);
+    font_ = font;
+    text_.setFont(font_);
     text_.setCharacterSize(size);
     text_.setString(text);
     auto bounds = text_.getLocalBounds();
@@ -97,7 +98,11 @@ void Button::handleEvent(const sf::Event &e, const sf::Window &window) {
         }
     }
 }
-
+void Button::update(GenTetrisEvent e) {
+    if (e == GenTetrisEvent::GAME_STARTED) {
+        setText("RESTART", font_);
+    }
+}
 
 }
 

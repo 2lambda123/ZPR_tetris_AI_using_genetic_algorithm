@@ -6,6 +6,7 @@
 enum class GenTetrisEvent {
     TETROMINO_DROPPED,
     PLAY_BUTTON_CLICKED,
+    GAME_STARTED,
 };
 
 class Observer {

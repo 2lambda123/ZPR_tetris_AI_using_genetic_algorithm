@@ -12,7 +12,7 @@
 
 namespace gentetris {
 
-class App : public Observer {
+class App : public Observer, public Subject {
 public:
     App();
     void run();
@@ -38,8 +38,8 @@ private:
 
     void pollSfmlEvents();
     void close();
-    //void reset();
     void start();
+    void reset();
 
     GUI gui_;
 

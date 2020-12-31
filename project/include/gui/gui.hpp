@@ -20,6 +20,10 @@ public:
     void draw();
     void close() { window_.close(); }
     bool pollEvent(sf::Event& event);
+    void reset() {
+        board_human_.reset();
+        board_ai_.reset();
+    }
 
 
 private:
