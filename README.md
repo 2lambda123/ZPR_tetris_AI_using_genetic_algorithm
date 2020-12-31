@@ -1,5 +1,5 @@
 # Genetic Tetris
-
+![projectState](/res/state.png)
 ## Installing dependencies
 ### For clean Ubuntu 20.04 installation
 ```sh
