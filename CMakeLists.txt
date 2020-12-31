@@ -54,7 +54,7 @@ add_library(ai-lib
         project/include/AI/ai.hpp
         project/include/AI/evolutionary_strategy.hpp project/src/AI/evolutionary_strategy.cpp project/include/AI/move.hpp project/src/AI/move.cpp project/include/AI/genome.hpp project/src/AI/genome.cpp)
 
-target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window)
+target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window sfml-audio)
 
 add_subdirectory(tests)
 

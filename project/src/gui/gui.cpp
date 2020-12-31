@@ -35,6 +35,7 @@ void GUI::update(const Tetris &tetris_human, const Tetris &tetris_ai) {
     board_ai_.setState(tetris_ai.getGrid());
     human_score_.setString("Human: " + std::to_string(tetris_human.getScore()));
     ai_score_.setString("AI: " + std::to_string(tetris_ai.getScore()));
+    play_button_.update();
 }
 
 void GUI::draw() {
@@ -51,7 +52,7 @@ void GUI::draw() {
 bool GUI::pollEvent(sf::Event& event) {
     bool event_polled = window_.pollEvent(event);
     if (event_polled) {
-        play_button_.update(event);
+        play_button_.handleEvent(event, window_);
         return true;
     }
     return false;

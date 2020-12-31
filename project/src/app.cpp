@@ -10,9 +10,15 @@ namespace gentetris {
 App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_), ai_(std::ref(tetris_ai_)) {
     gui_.addObserver(this);
     tetris_human_.addObserver(&ai_);
+    if (!background_music.openFromFile(BACKGROUND_MUSIC_FILE)) {
+        throw std::runtime_error("Cannot open " + BACKGROUND_MUSIC_FILE);
+    }
+    background_music.setLoop(true);
+    background_music.setVolume(BACKGROUND_MUSIC_VOLUME);
 }
 
 void App::run() {
+    background_music.play();
     while (state_ != State::CLOSED) {
         update();
         display();
@@ -70,8 +76,6 @@ void App::update(GenTetrisEvent e){
     if (e == GenTetrisEvent::PLAY_BUTTON_CLICKED) {
         if (state_ == State::MENU)
             start();
-
-        std::cout << "app: play button clicked" << std::endl;
     }
 }
 

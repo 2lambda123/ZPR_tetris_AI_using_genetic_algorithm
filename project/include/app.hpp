@@ -2,6 +2,7 @@
 #define APP_HPP
 
 #include <AI/evolutionary_strategy.hpp>
+#include <SFML/Audio/Music.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
@@ -26,18 +27,19 @@ private:
     const sf::Time tick_interval_ = sf::seconds(0.5f);
     const sf::Time ai_move_interval_ = sf::seconds(0.1f);
 
+    const std::string BACKGROUND_MUSIC_FILE = "res/tetris_theme.ogg";
+    const float BACKGROUND_MUSIC_VOLUME = 25.0f;
+
     enum class State {
         MENU,
         STARTED,
         CLOSED,
-    };
+    } state_ = State::MENU;
 
     void pollSfmlEvents();
     void close();
     //void reset();
     void start();
-
-    State state_ = State::MENU;
 
     GUI gui_;
 
@@ -50,6 +52,9 @@ private:
     sf::Clock ai_clock_;
 
     std::thread ai_thread_;
+
+    sf::Music background_music;
+
 };
 
 }
