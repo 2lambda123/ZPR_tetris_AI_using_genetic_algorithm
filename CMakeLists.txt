@@ -52,15 +52,20 @@ add_library(gui-lib
 
 add_library(ai-lib
         project/include/AI/ai.hpp
-        project/include/AI/evolutionary_strategy.hpp project/src/AI/evolutionary_strategy.cpp project/include/AI/move.hpp project/src/AI/move.cpp project/include/AI/genome.hpp project/src/AI/genome.cpp)
+        project/include/AI/evolutionary_strategy.hpp
+        project/src/AI/evolutionary_strategy.cpp
+        project/include/AI/move.hpp project/src/AI/move.cpp
+        project/include/AI/genome.hpp
+        project/src/AI/genome.cpp)
 
 target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window sfml-audio)
+target_link_libraries(ai-lib tetris-lib)
 
 add_subdirectory(tests)
 
 add_executable(app project/src/main.cpp)
 
-target_link_libraries(app tetris-lib gui-lib ai-lib pthread)
+target_link_libraries(app gui-lib ai-lib pthread)
 
 # copy /res folder to a folder containing binary
 add_custom_command(TARGET app POST_BUILD

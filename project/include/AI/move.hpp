@@ -35,42 +35,20 @@ public:
     void decrementRotation();
 
     int getMaxHeight() const { return max_height_; }
+    int getCumulativeHeight() const { return cumulative_height_; }
     int getHoles() const { return holes_; }
 
 private:
-    void calculateTetrisProperties(const Tetris& tetris);
-
-    int calculateMaxHeight(const Tetris::Grid& grid) {
-        int rows = grid.size();
-        int cols = grid[0].size();
-        for (int y = rows - 1; y >= 0; y--) {
-            for (int x = 0; x < cols; x++) {
-                if (grid[y][x] != Tetromino::EMPTY) {
-                    return y + 1;
-                }
-            }
-        }
-        return 0;
-    }
-
-    int calculateHoles(const Tetris::Grid& grid) {
-        int holes = 0;
-        int rows = grid.size();
-        int cols = grid[0].size();
-        for (int y = rows - 2; y >= 0; y--) {
-            for (int x = 0; x < cols; x++) {
-                if (grid[y][x] == Tetromino::EMPTY && grid[y+1][x] != Tetromino::EMPTY) {
-                    holes++;
-                }
-            }
-        }
-        return holes;
-    }
+    void calculateGridProperties(const Tetris& tetris);
+    int calculateMaxHeight(const Tetris::Grid& grid);
+    int calculateCumulativeHeight(const Tetris::Grid& grid);
+    int calculateHoles(const Tetris::Grid& grid);
 
     int move_x_;
     int rotations_;
 
     int max_height_;
+    int cumulative_height_;
     int holes_;
 };
 

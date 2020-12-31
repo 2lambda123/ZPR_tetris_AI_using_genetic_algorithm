@@ -1,6 +1,7 @@
 #ifndef GENETIC_TETRIS_EVOLUTIONARY_STRATEGY_HPP
 #define GENETIC_TETRIS_EVOLUTIONARY_STRATEGY_HPP
 
+#include <cassert>
 #include <mutex>
 
 #include "ai.hpp"
@@ -29,7 +30,7 @@ private:
     const std::size_t SELECTED_TO_CROSS_AND_MUTATE = 30;
     const float MUTATION_STRENGTH = 0.05f;
     const float PROB_CROSSOVER = 0.9f;
-    const int MOVES_TO_SIMULATE = 7;
+    const int MOVES_TO_SIMULATE = 30;
 
     void evolve();
     void evolve(const std::string& input_json, const std::string& output_json);
@@ -41,6 +42,7 @@ private:
         while (true) {
             float p = random_0_1();
             for (const auto& c : pop) {
+                assert(c.ps >= 0.0f);
                 if (p < c.ps) {
                     return c;
                 }
@@ -52,19 +54,6 @@ private:
     void evaluation(std::vector<Genome>& next_pop);
 
     Move generateBestMove(const Genome& genome, Tetris& tetris);
-
-    int getMaxHeight(Tetris& tetris) {
-        int max_height = 0;
-        const auto& grid = tetris.getGrid();
-        int rows = grid.size();
-        int cols = grid[0].size();
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                if (grid[y][x] != Tetromino::EMPTY && y + 1 > max_height) max_height = y + 1;
-            }
-        }
-        return max_height;
-    }
 
     static float random_0_1() { return rand() / double(RAND_MAX); }
     void displayState();

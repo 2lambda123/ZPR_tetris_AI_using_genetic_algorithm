@@ -138,6 +138,7 @@ std::vector<Genome> EvolutionaryStrategy::initialPop() {
 }
 
 std::vector<Genome> EvolutionaryStrategy::selection(std::vector<Genome>& pop) {
+    std::cout << "selection" << std::endl;
     std::vector<Genome> selected;
     selected.reserve(POP_SIZE);
     selected.push_back(best);
@@ -148,6 +149,7 @@ std::vector<Genome> EvolutionaryStrategy::selection(std::vector<Genome>& pop) {
 }
 
 std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(const std::vector<Genome> selected) {
+    std::cout << "crossover and mutation" << std::endl;
     std::vector<Genome> next_pop(selected);
     while (next_pop.size() < POP_SIZE - 1) {
         float p = random_0_1();
@@ -168,6 +170,7 @@ std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(const std::vector
 }
 
 void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
+    std::cout << "evaluation" << std::endl;
     score_sum = 0.0f;
     for (auto& c : next_pop) {
         //Tetris tmp(tetris_);
@@ -176,8 +179,21 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
         for (int i = 0; i < MOVES_TO_SIMULATE; i++) {
             best_move = generateBestMove(c, tmp);
             best_move.apply(tmp);
+            if (tmp.isFinished()) {
+                break;
+            }
         }
-        c.score = 100 - best_move.getMaxHeight() - best_move.getHoles();
+        if (tmp.isFinished()) {
+           c.score = 0.0f;
+        }
+        else {
+            // + 200 is needed because as for now we are using roulette selection
+            c.score = 10000.0f -
+                      best_move.getMaxHeight() -
+                      best_move.getHoles() -
+                      best_move.getCumulativeHeight();
+        }
+        assert(c.score >= 0.0f);
         score_sum += c.score;
     }
     float prev_ps = 0.0f;
@@ -193,21 +209,24 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
 
 Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris) {
     Move best_move;
-    float best_fitness = 0.0f;
-    int i = 0;
+    float initial_best = -10000000.0f;
+    float best_fitness = initial_best;
     for (int mx = Move::MIN_MOVE; mx <= Move::MAX_MOVE; mx++) {
         for (int rot = Move::MIN_ROT; rot <= Move::MAX_ROT; rot++) {
             Tetris tmp(tetris);
             Move move(mx, rot);
             move.apply(tmp);
+            if (tmp.isFinished())
+                continue;
             float fitness =
-                genome.max_height * move.getMaxHeight() + genome.holes * move.getHoles();
-            fitness = std::clamp(fitness, -20.0f, 20.0f) + 20.0f;
+                genome.max_height * move.getMaxHeight() +
+                genome.holes * move.getHoles() +
+                genome.cumulative_height * move.getCumulativeHeight();
+            assert(initial_best < fitness);
             if (fitness > best_fitness) {
                 best_fitness = fitness;
                 best_move = move;
             }
-            i++;
         }
     }
     return best_move;
