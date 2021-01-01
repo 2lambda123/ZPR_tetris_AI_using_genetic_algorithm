@@ -38,11 +38,10 @@ public:
     int getCumulativeHeight() const { return cumulative_height_; }
     int getRelativeHeight() const { return relative_height_; }
     int getHoles() const { return holes_; }
+    int getRoughness() const { return roughness_; }
 
 private:
     void calculateGridProperties(const Tetris& tetris);
-    int calculateMaxHeight(const Tetris::Grid& grid);
-    int calculateCumulativeHeight(const Tetris::Grid& grid);
     int calculateHoles(const Tetris::Grid& grid);
 
     int move_x_;
@@ -52,6 +51,7 @@ private:
     int cumulative_height_;
     int relative_height_;
     int holes_;
+    int roughness_;
 };
 
 #endif  // GENETIC_TETRIS_MOVE_HPP

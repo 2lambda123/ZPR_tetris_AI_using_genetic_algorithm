@@ -72,18 +72,18 @@ void Move::decrementRotation() {
 
 void Move::calculateGridProperties(const Tetris& tetris) {
     auto grid = tetris.getGrid();
-    //max_height_ = calculateMaxHeight(grid);
-    //cumulative_height_ = calculateCumulativeHeight(grid);
     holes_ = calculateHoles(grid);
-    max_height_ = 0;
-    cumulative_height_ = 0;
+    max_height_ = cumulative_height_ = roughness_ = 0;
     int rows = grid.size();
     int cols = grid[0].size();
     int min_height = rows;
+    int prev_height, cur_height;
     for (int x = 0; x < cols; x++) {
+        cur_height = 0;
         for (int y = rows - 1; y >= 0; y--) {
             if (grid[y][x] != Tetromino::EMPTY) {
                 cumulative_height_ += y + 1;
+                cur_height = y + 1;
                 if (y + 1 > max_height_)
                     max_height_ = y + 1;
                 break;
@@ -93,38 +93,12 @@ void Move::calculateGridProperties(const Tetris& tetris) {
                     min_height = y;
             }
         }
+        if (x > 0) {
+            roughness_ += std::abs(cur_height - prev_height);
+        }
+        prev_height = cur_height;
     }
     relative_height_ = max_height_ - min_height;
-    assert(max_height_ == calculateMaxHeight(grid));
-    assert(cumulative_height_ == calculateCumulativeHeight(grid));
-}
-
-int Move::calculateMaxHeight(const Tetris::Grid& grid) {
-    int rows = grid.size();
-    int cols = grid[0].size();
-    for (int y = rows - 1; y >= 0; y--) {
-        for (int x = 0; x < cols; x++) {
-            if (grid[y][x] != Tetromino::EMPTY) {
-                return y + 1;
-            }
-        }
-    }
-    return 0;
-}
-
-int Move::calculateCumulativeHeight(const Tetris::Grid &grid) {
-    int cumulative_height = 0;
-    int rows = grid.size();
-    int cols = grid[0].size();
-    for (int x = 0; x < cols; x++) {
-        for (int y = rows - 1; y >= 0; y--) {
-            if (grid[y][x] != Tetromino::EMPTY) {
-                cumulative_height += y + 1;
-                break;
-            }
-        }
-    }
-    return cumulative_height;
 }
 
 int Move::calculateHoles(const Tetris::Grid& grid) {

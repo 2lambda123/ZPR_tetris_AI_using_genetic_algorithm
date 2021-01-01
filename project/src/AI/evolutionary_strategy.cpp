@@ -3,7 +3,6 @@
 #include "rapidjson/document.h"
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/istreamwrapper.h>
-#include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 
 #include <fstream>
@@ -12,6 +11,7 @@ void EvolutionaryStrategy::operator()() {
     finish_ = false;
     drop_mutex_.unlock();
     evolution_thread = std::thread([this]() { evolve(); });
+    state_ = State::START;
     controlLoop();
 }
 
@@ -21,6 +21,7 @@ void EvolutionaryStrategy::operator()(const std::string& input_json,
     drop_mutex_.unlock();
     evolution_thread =
         std::thread([this, input_json, output_json]() { evolve(input_json, output_json); });
+    state_ = State::START;
     controlLoop();
 }
 
@@ -40,8 +41,11 @@ void EvolutionaryStrategy::controlLoop() {
 void EvolutionaryStrategy::finish() {
     if (finish_) return;
     finish_ = true;
-    drop();
-    evolution_thread.join();
+    if (state_ == State::START) {
+        drop();
+        evolution_thread.join();
+    }
+    state_ = State::STOP;
 }
 
 void EvolutionaryStrategy::saveToJSON(const std::string& file, std::vector<Genome>& genomes) {
@@ -187,9 +191,10 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
             // + 200 is needed because as for now we are using roulette selection
             c.score = 10000.0f -
                       best_move.getMaxHeight() -
-                      best_move.getHoles() -
                       best_move.getCumulativeHeight() -
-                      best_move.getRelativeHeight();
+                      best_move.getRelativeHeight() -
+                      best_move.getHoles() -
+                      best_move.getRoughness();
         }
         assert(c.score >= 0.0f);
         score_sum += c.score;
@@ -218,9 +223,10 @@ Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris
                 continue;
             float fitness =
                 genome.max_height * move.getMaxHeight() +
-                genome.holes * move.getHoles() +
                 genome.cumulative_height * move.getCumulativeHeight() +
-                genome.relative_height * move.getRelativeHeight();
+                genome.relative_height * move.getRelativeHeight() +
+                genome.holes * move.getHoles() +
+                genome.roughness * move.getRoughness();
             assert(initial_best < fitness);
             if (fitness > best_fitness) {
                 best_fitness = fitness;
@@ -235,5 +241,6 @@ void EvolutionaryStrategy::displayState() {
     mean_fitness_ = score_sum / POP_SIZE;
     std::cout << "Generation " << t << ": " << std::endl;
     std::cout << "\tmean fitness: " << mean_fitness_ << std::endl;
-    printf("\tbest: (score=%f max_height=%f holes=%f)\n", best.score, best.max_height, best.holes);
+    printf("\tbest: (score=%f max_h=%f cumulative_h=%f relative_h=%f holes=%f)\n",
+           best.score, best.max_height, best.cumulative_height, best.relative_height, best.holes);
 }

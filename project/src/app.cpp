@@ -49,7 +49,7 @@ void App::pollSfmlEvents() {
     sf::Event event;
     while (gui_.pollEvent(event)) {
         if (event.type == sf::Event::Closed) close();
-        if (state_ == State::STARTED) {
+        if (state_ == State::STARTED && !tetris_human_.isFinished()) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                 tetris_human_.shiftLeft();
             }
@@ -61,6 +61,10 @@ void App::pollSfmlEvents() {
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
                 tetris_human_.hardDrop();
+            }
+        }
+        if (!tetris_ai_.isFinished()) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
                 ai_.drop();
             }
         }
@@ -68,10 +72,12 @@ void App::pollSfmlEvents() {
 }
 
 void App::close() {
-    state_ = State::CLOSED;
     gui_.close();
-    ai_.finish();
-    ai_thread_.join();
+    if (state_ == State::STARTED) {
+        ai_.finish();
+        ai_thread_.join();
+    }
+    state_ = State::CLOSED;
 }
 void App::update(GenTetrisEvent e){
     if (e == GenTetrisEvent::PLAY_BUTTON_CLICKED) {
@@ -86,10 +92,10 @@ void App::update(GenTetrisEvent e){
 }
 
 void App::start(){
-    state_ = State::STARTED;
     game_clock_.restart();
     ai_clock_.restart();
     ai_thread_ = std::thread([this]() { ai_("res/input.json", "res/output.json"); });
+    state_ = State::STARTED;
 }
 
 void App::reset(){

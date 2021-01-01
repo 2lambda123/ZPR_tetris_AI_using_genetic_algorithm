@@ -30,7 +30,12 @@ private:
     const std::size_t SELECTED_TO_CROSS_AND_MUTATE = 30;
     const float MUTATION_STRENGTH = 0.05f;
     const float PROB_CROSSOVER = 0.9f;
-    const int MOVES_TO_SIMULATE = 30;
+    const int MOVES_TO_SIMULATE = 40;
+
+    enum class State {
+        STOP,
+        START,
+    } state_ = State::STOP;
 
     void evolve();
     void evolve(const std::string& input_json, const std::string& output_json);
