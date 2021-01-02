@@ -2,6 +2,7 @@
 #define GENETIC_TETRIS_EVOLUTIONARY_STRATEGY_HPP
 
 #include <cassert>
+#include <condition_variable>
 #include <mutex>
 
 #include "ai.hpp"
@@ -16,10 +17,14 @@ public:
 
     void controlLoop();
 
-    void drop() override { drop_mutex_.unlock(); }
+    void drop() override {
+        drop_ = true;
+        drop_cond_.notify_one();
+    }
     void update(GenTetrisEvent e) override {
-        if (e == GenTetrisEvent::TETROMINO_DROPPED)
-            drop_mutex_.unlock();
+        if (e == GenTetrisEvent::TETROMINO_DROPPED) {
+            drop();
+        }
     }
     void finish() override;
     void saveToJSON(const std::string& file, std::vector<Genome>& genomes);
@@ -68,8 +73,10 @@ private:
     float score_sum = 0.0f;
     int t = 0;
 
-    std::thread evolution_thread;
-    std::mutex drop_mutex_;
+    std::thread evolution_thread_;
+    std::mutex m_;
+    std::condition_variable drop_cond_;
+    bool drop_ = false;
 };
 
 #endif  // GENETIC_TETRIS_EVOLUTIONARY_STRATEGY_HPP

@@ -8,33 +8,34 @@
 #include <fstream>
 
 void EvolutionaryStrategy::operator()() {
-    finish_ = false;
-    drop_mutex_.unlock();
-    evolution_thread = std::thread([this]() { evolve(); });
-    state_ = State::START;
+    state_ = State::STOP;
+    evolution_thread_ = std::thread([this]() { evolve(); });
     controlLoop();
 }
 
 void EvolutionaryStrategy::operator()(const std::string& input_json,
                                       const std::string& output_json) {
-    finish_ = false;
-    drop_mutex_.unlock();
-    evolution_thread =
+    state_ = State::STOP;
+    evolution_thread_ =
         std::thread([this, input_json, output_json]() { evolve(input_json, output_json); });
-    state_ = State::START;
     controlLoop();
 }
 
 void EvolutionaryStrategy::controlLoop() {
-    drop_mutex_.lock();
+    finish_ = false;
+    state_ = State::START;
     while (!finish_) {
-        drop_mutex_.lock();
+        std::unique_lock<std::mutex> lk(m_);
+        drop_cond_.wait(lk, [this]() { return drop_; });
+        drop_ = false;
         Genome best_cpy = best;
         Move move = generateBestMove(best_cpy, tetris_);
         move.apply(tetris_);
+        lk.unlock();
         if (tetris_.isFinished()) {
             finish();
         }
+
     }
 }
 
@@ -43,7 +44,7 @@ void EvolutionaryStrategy::finish() {
     finish_ = true;
     if (state_ == State::START) {
         drop();
-        evolution_thread.join();
+        evolution_thread_.join();
     }
     state_ = State::STOP;
 }

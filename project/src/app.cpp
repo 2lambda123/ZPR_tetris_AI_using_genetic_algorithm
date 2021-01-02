@@ -19,6 +19,7 @@ App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_), ai_(std::ref(tetris_ai_)) {
 }
 
 void App::run() {
+    start();
     background_music.play();
     while (state_ != State::CLOSED) {
         update();
@@ -63,7 +64,7 @@ void App::pollSfmlEvents() {
                 tetris_human_.hardDrop();
             }
         }
-        if (!tetris_ai_.isFinished()) {
+        if (state_ == State::STARTED && !tetris_ai_.isFinished()) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
                 ai_.drop();
             }
