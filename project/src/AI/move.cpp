@@ -71,7 +71,7 @@ void Move::decrementRotation() {
 }
 
 void Move::calculateGridProperties(const Tetris& tetris) {
-    auto grid = tetris.getGrid();
+    auto grid = tetris.getRawGrid();
     holes_ = calculateHoles(grid);
     max_height_ = cumulative_height_ = roughness_ = 0;
     int rows = grid.size();

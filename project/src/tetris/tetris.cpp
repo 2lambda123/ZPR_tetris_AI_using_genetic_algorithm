@@ -9,7 +9,7 @@
 #include "tetris/tetromino_generator.hpp"
 
 Tetris::Tetris() : score_(0) {
-    for (int i = 0; i < GRID_VISIBLE_HEIGHT; ++i) {
+    for (int i = 0; i < GRID_FULL_HEIGHT; ++i) {
         std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
         grid_.push_back(grid_line);
     }
@@ -32,17 +32,19 @@ bool Tetris::tick() {
     for (const Tetromino::Square& square : tetromino_.getSquares()) {
         int x = tetromino_position_.first + square.first;
         int y = tetromino_position_.second + square.second;
-        // That's not how the game is supposed to end, but the whole project is in a proof of
-        // concept stage and it should work as of now. At least we should no longer see segmentation
-        // fault.
-        if (y >= GRID_VISIBLE_HEIGHT) {
+
+        //      The condition below should never evaluate to true and is kinda pointless,
+        //      but I'm leaving it in case somebody changed GRID_VISIBLE_HEIGHT
+        //      and / or GRID_FULL_HEIGHT to some strange values.
+        if (y >= GRID_FULL_HEIGHT) {
             is_finished_ = true;
             return false;
         }
+
         grid_[y][x] = tetromino_.getColor();
     }
     int i = 0;
-    while (i < GRID_VISIBLE_HEIGHT) {
+    while (i < GRID_FULL_HEIGHT) {
         bool is_filled_line = true;
         for (int j = 0; j < GRID_WIDTH; ++j) {
             if (grid_[i][j] == Tetromino::Color::EMPTY) {
@@ -76,13 +78,11 @@ void Tetris::shiftRight() {
 }
 
 void Tetris::hardDrop() {
-    while (!is_finished_ && !tick())
-        ;
+    tetromino_position_ = getHardDropPosition();
+    tick();
 }
 
-void Tetris::softDrop() {
-
-}
+void Tetris::softDrop() {}
 
 void Tetris::rotateCW() {
     tetromino_.rotateCW();
@@ -98,7 +98,9 @@ void Tetris::rotateCCW() {
     }
 }
 
-Tetris::Grid Tetris::getGrid() const {
+Tetris::Grid Tetris::getRawGrid() const { return grid_; }
+
+Tetris::Grid Tetris::getDisplayGrid() const {
     Grid static_grid;
     for (int i = 0; i < GRID_VISIBLE_HEIGHT; ++i) {
         std::vector<Tetromino::Color> line(grid_[i]);
@@ -123,7 +125,7 @@ Tetris::Grid Tetris::getGrid() const {
 }
 
 std::string Tetris::toString() const {
-    Grid static_grid = getGrid();
+    Grid static_grid = getDisplayGrid();
     std::string str = "";
     for (int i = GRID_VISIBLE_HEIGHT - 1; i >= 0; --i) {
         for (int j = 0; j < GRID_WIDTH; ++j) {
@@ -147,7 +149,7 @@ bool Tetris::isValidPosition(Position tetromino_position) const {
         if (x < 0 || x > GRID_WIDTH - 1 || y < 0) {
             return false;
         }
-        if (x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_VISIBLE_HEIGHT &&
+        if (x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_FULL_HEIGHT &&
             grid_[y][x] != Tetromino::Color::EMPTY) {
             return false;
         }
@@ -155,26 +157,35 @@ bool Tetris::isValidPosition(Position tetromino_position) const {
     return true;
 }
 
-Tetris::Position Tetris::getHardDropPosition() const{
+Tetris::Position Tetris::getHardDropPosition() const {
     Position drop_pos = tetromino_position_;
-    do{
+    do {
         --drop_pos.second;
-    }while(isValidPosition(drop_pos));
+    } while (isValidPosition(drop_pos));
     ++drop_pos.second;
     return drop_pos;
 }
 
 void Tetris::generateTetromino() {
     tetromino_ = generator_.getTetromino();
-    // tetromino_position_ = std::pair<int, int>((GRID_WIDTH / 2) - 2, GRID_VISIBLE_HEIGHT + 1);
     tetromino_position_ = TETROMINO_INITIAL_POS;
+    if (tetromino_.getShape() == Tetromino::Shape::I) {
+        --tetromino_position_.second;
+    }
+    if (!isValidPosition(tetromino_position_)) {
+        is_finished_ = true;
+        return;
+    }
+    if (isValidPosition({tetromino_position_.first, tetromino_position_.second - 1})) {
+        --tetromino_position_.second;
+    }
 }
 
 void ObservableTetris::generateTetromino() {
     Tetris::generateTetromino();
     if (!is_finished_) {  // don't notify at the start of the game
         notifyObservers(
-            GenTetrisEvent::TETROMINO_DROPPED);  // notify genetic algorithm that a tetromino has changed (it should then execute
-                   // hardDrop())
+            GenTetrisEvent::TETROMINO_DROPPED);  // notify genetic algorithm that a tetromino has
+                                                 // changed (it should then execute hardDrop())
     }
 }

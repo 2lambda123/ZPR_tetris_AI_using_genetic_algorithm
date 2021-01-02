@@ -18,7 +18,7 @@ public:
     static const int GRID_VISIBLE_HEIGHT = 20;
     static const int GRID_FULL_HEIGHT = 40;
     static constexpr Position TETROMINO_INITIAL_POS = {(GRID_WIDTH / 2) - 2,
-                                                                  GRID_VISIBLE_HEIGHT + 1};
+                                                       (GRID_FULL_HEIGHT / 2) - 1};
 
     Tetris();
     bool tick();
@@ -28,7 +28,8 @@ public:
     void softDrop();
     void rotateCW();
     void rotateCCW();
-    Grid getGrid() const;
+    Grid getRawGrid() const;
+    Grid getDisplayGrid() const;
     std::string toString() const;
     bool isFinished() const;
     unsigned int getScore() const { return score_; }
@@ -40,7 +41,6 @@ protected:
 private:
     bool isValidPosition(Position tetromino_position) const;
     Position getHardDropPosition() const;
-
 
     TetrominoGenerator generator_;
     Tetromino tetromino_;

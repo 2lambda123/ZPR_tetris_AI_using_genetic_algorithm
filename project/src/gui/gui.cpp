@@ -32,8 +32,8 @@ void GUI::update(const Tetris &tetris_human, const Tetris &tetris_ai) {
     if (tetris_human.isFinished() && !board_human_.isStateFinished())
         board_human_.setStateFinished(true);
     if (tetris_ai.isFinished() && !board_ai_.isStateFinished()) board_ai_.setStateFinished(true);
-    board_human_.setState(tetris_human.getGrid());
-    board_ai_.setState(tetris_ai.getGrid());
+    board_human_.setState(tetris_human.getDisplayGrid());
+    board_ai_.setState(tetris_ai.getDisplayGrid());
     human_score_.setString("Human: " + std::to_string(tetris_human.getScore()));
     ai_score_.setString("AI: " + std::to_string(tetris_ai.getScore()));
     play_button_.update();
