@@ -7,31 +7,34 @@
 
 class Tetromino {
 public:
+    using Pivot = std::pair<double, double>;
     using Square = std::pair<int, int>;
     using Squares = std::vector<Square>;
+    using Rotations = std::vector<Squares>;
 
-    enum Color { EMPTY, CYAN, YELLOW, PURPLE, GREEN, RED, BLUE, ORANGE };
-    enum Shape { NO_SHAPE, I, O, T, S, Z, J, L };
+    enum class Color { EMPTY, CYAN, YELLOW, PURPLE, GREEN, RED, BLUE, ORANGE, GHOST };
+    enum class Shape { NO_SHAPE, I, O, T, S, Z, J, L };
+
+    static Squares rotate(const Squares& squares, const Pivot& pivot, double rad);
 
     Tetromino();
-    Tetromino(Color color, Shape shape, std::pair<double, double> pivot, Squares squares);
+    Tetromino(Color color, Shape shape, Pivot pivot, const Squares& squares);
     Tetromino(const Tetromino& tetromino) = default;
     Tetromino& operator=(const Tetromino& tetromino) = default;
     void rotateCW();
     void rotateCCW();
     Color getColor() const;
     Shape getShape() const;
-    const std::pair<double, double>& getPivot() const;
     const Squares& getSquares() const;
+    int getCurrentRotation() const;
+    int setCurrentRotation(int rotation);
     std::string toString() const;
 
 private:
     Color color_;
     Shape shape_;
-    std::pair<double, double> pivot_;
-    Squares squares_;
-
-    void rotate(double rad);
+    Rotations rotations_;
+    int current_rotation_;
 };
 
 #endif

@@ -8,11 +8,13 @@
 #include "tetris/tetromino.hpp"
 #include "tetris/tetromino_generator.hpp"
 
-Tetris::Tetris() {
-    for (int i = 0; i < GRID_HEIGHT; ++i) {
+Tetris::Tetris() : score_(0) {
+    for (int i = 0; i < GRID_VISIBLE_HEIGHT; ++i) {
         std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
         grid_.push_back(grid_line);
     }
+    is_finished_ = true;
+
     generateTetromino();  // is_finished_ needs to be true before this statement otherwise notifying
                           // on tetromino change will break
     is_finished_ = false;
@@ -23,7 +25,7 @@ bool Tetris::tick() {
         return false;
     }
     --tetromino_position_.second;
-    if (isValidPosition()) {
+    if (isValidPosition(tetromino_position_)) {
         return false;
     }
     ++tetromino_position_.second;
@@ -33,14 +35,14 @@ bool Tetris::tick() {
         // That's not how the game is supposed to end, but the whole project is in a proof of
         // concept stage and it should work as of now. At least we should no longer see segmentation
         // fault.
-        if (y >= GRID_HEIGHT) {
+        if (y >= GRID_VISIBLE_HEIGHT) {
             is_finished_ = true;
             return false;
         }
         grid_[y][x] = tetromino_.getColor();
     }
     int i = 0;
-    while (i < GRID_HEIGHT) {
+    while (i < GRID_VISIBLE_HEIGHT) {
         bool is_filled_line = true;
         for (int j = 0; j < GRID_WIDTH; ++j) {
             if (grid_[i][j] == Tetromino::Color::EMPTY) {
@@ -61,14 +63,14 @@ bool Tetris::tick() {
 
 void Tetris::shiftLeft() {
     --tetromino_position_.first;
-    if (!isValidPosition()) {
+    if (!isValidPosition(tetromino_position_)) {
         ++tetromino_position_.first;
     }
 }
 
 void Tetris::shiftRight() {
     ++tetromino_position_.first;
-    if (!isValidPosition()) {
+    if (!isValidPosition(tetromino_position_)) {
         --tetromino_position_.first;
     }
 }
@@ -78,30 +80,42 @@ void Tetris::hardDrop() {
         ;
 }
 
+void Tetris::softDrop() {
+
+}
+
 void Tetris::rotateCW() {
     tetromino_.rotateCW();
-    while (!isValidPosition()) {
+    while (!isValidPosition(tetromino_position_)) {
         tetromino_.rotateCW();
     }
 }
 
 void Tetris::rotateCCW() {
     tetromino_.rotateCCW();
-    while (!isValidPosition()) {
+    while (!isValidPosition(tetromino_position_)) {
         tetromino_.rotateCCW();
     }
 }
 
-const Tetris::Grid Tetris::getGrid() const {
+Tetris::Grid Tetris::getGrid() const {
     Grid static_grid;
-    for (int i = 0; i < GRID_HEIGHT; ++i) {
+    for (int i = 0; i < GRID_VISIBLE_HEIGHT; ++i) {
         std::vector<Tetromino::Color> line(grid_[i]);
         static_grid.push_back(line);
+    }
+    Position ghost_piece_pos = getHardDropPosition();
+    for (const Tetromino::Square& square : tetromino_.getSquares()) {
+        int x = ghost_piece_pos.first + square.first;
+        int y = ghost_piece_pos.second + square.second;
+        if (y < GRID_VISIBLE_HEIGHT) {
+            static_grid[y][x] = Tetromino::Color::GHOST;
+        }
     }
     for (const Tetromino::Square& square : tetromino_.getSquares()) {
         int x = tetromino_position_.first + square.first;
         int y = tetromino_position_.second + square.second;
-        if (y < GRID_HEIGHT) {
+        if (y < GRID_VISIBLE_HEIGHT) {
             static_grid[y][x] = tetromino_.getColor();
         }
     }
@@ -111,7 +125,7 @@ const Tetris::Grid Tetris::getGrid() const {
 std::string Tetris::toString() const {
     Grid static_grid = getGrid();
     std::string str = "";
-    for (int i = GRID_HEIGHT - 1; i >= 0; --i) {
+    for (int i = GRID_VISIBLE_HEIGHT - 1; i >= 0; --i) {
         for (int j = 0; j < GRID_WIDTH; ++j) {
             if (static_grid[i][j] == Tetromino::Color::EMPTY) {
                 str += "_";
@@ -126,14 +140,14 @@ std::string Tetris::toString() const {
 
 bool Tetris::isFinished() const { return is_finished_; }
 
-bool Tetris::isValidPosition() const {
+bool Tetris::isValidPosition(Position tetromino_position) const {
     for (const Tetromino::Square& square : tetromino_.getSquares()) {
-        int x = tetromino_position_.first + square.first;
-        int y = tetromino_position_.second + square.second;
+        int x = tetromino_position.first + square.first;
+        int y = tetromino_position.second + square.second;
         if (x < 0 || x > GRID_WIDTH - 1 || y < 0) {
             return false;
         }
-        if (x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_HEIGHT &&
+        if (x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_VISIBLE_HEIGHT &&
             grid_[y][x] != Tetromino::Color::EMPTY) {
             return false;
         }
@@ -141,9 +155,18 @@ bool Tetris::isValidPosition() const {
     return true;
 }
 
+Tetris::Position Tetris::getHardDropPosition() const{
+    Position drop_pos = tetromino_position_;
+    do{
+        --drop_pos.second;
+    }while(isValidPosition(drop_pos));
+    ++drop_pos.second;
+    return drop_pos;
+}
+
 void Tetris::generateTetromino() {
     tetromino_ = generator_.getTetromino();
-    // tetromino_position_ = std::pair<int, int>((GRID_WIDTH / 2) - 2, GRID_HEIGHT + 1);
+    // tetromino_position_ = std::pair<int, int>((GRID_WIDTH / 2) - 2, GRID_VISIBLE_HEIGHT + 1);
     tetromino_position_ = TETROMINO_INITIAL_POS;
 }
 

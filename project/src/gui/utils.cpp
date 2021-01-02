@@ -10,7 +10,7 @@ TetrisBoard::TetrisBoard(const sf::Vector2f &position, const sf::Vector2i &board
     for (int y = 0; y < board_tile_count.y; ++y) {
         for (int x = 0; x < board_tile_count.x; ++x) {
             board_[y].push_back(sf::RectangleShape(sf::Vector2f(tile_prop.size, tile_prop.size)));
-            board_[y][x].setFillColor(TETROMINO_COLOR_MAP.at(Tetromino::EMPTY));
+            board_[y][x].setFillColor(TETROMINO_COLOR_MAP.at(Tetromino::Color::EMPTY));
             sf::Vector2f tile_pos(tile_prop.padding + position.x + x * tile_prop.padded_size,
                                   tile_prop.padding + position.y + y * tile_prop.padded_size);
             board_[y][x].setPosition(tile_pos);

@@ -7,9 +7,9 @@ namespace gentetris {
 
 GUI::GUI(int width, int height)
     : window_(sf::VideoMode(width, height), "Tetris AI"),
-      board_human_(sf::Vector2f(10, 10), sf::Vector2i(Tetris::GRID_WIDTH, Tetris::GRID_HEIGHT),
+      board_human_(sf::Vector2f(10, 10), sf::Vector2i(Tetris::GRID_WIDTH, Tetris::GRID_VISIBLE_HEIGHT),
                    TetrisBoard::TileProperties(30.0f, 0.5f)),
-      board_ai_(sf::Vector2f(480, 10), sf::Vector2i(Tetris::GRID_WIDTH, Tetris::GRID_HEIGHT),
+      board_ai_(sf::Vector2f(480, 10), sf::Vector2i(Tetris::GRID_WIDTH, Tetris::GRID_VISIBLE_HEIGHT),
                 TetrisBoard::TileProperties(30.0f, 0.5f)),
       next_tetromino_panel_(sf::Vector2f(337, 10), sf::Vector2i(6, 18),
                             TetrisBoard::TileProperties(20.0f, 0.5f)),

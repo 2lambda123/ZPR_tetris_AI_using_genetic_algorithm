@@ -81,7 +81,7 @@ void Move::calculateGridProperties(const Tetris& tetris) {
     for (int x = 0; x < cols; x++) {
         cur_height = 0;
         for (int y = rows - 1; y >= 0; y--) {
-            if (grid[y][x] != Tetromino::EMPTY) {
+            if (grid[y][x] != Tetromino::Color::EMPTY) {
                 cumulative_height_ += y + 1;
                 cur_height = y + 1;
                 if (y + 1 > max_height_)
@@ -107,7 +107,7 @@ int Move::calculateHoles(const Tetris::Grid& grid) {
     int cols = grid[0].size();
     for (int y = rows - 2; y >= 0; y--) {
         for (int x = 0; x < cols; x++) {
-            if (grid[y][x] == Tetromino::EMPTY && grid[y+1][x] != Tetromino::EMPTY) {
+            if (grid[y][x] == Tetromino::Color::EMPTY && grid[y+1][x] != Tetromino::Color::EMPTY) {
                 holes++;
             }
         }

@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(tetrominoes_squares_placement) {
 BOOST_AUTO_TEST_CASE(tetris_will_finish) {
     std::cout << "Test #4: Game of Tetris will finish in a finite number of hard drops...\n";
     Tetris tetris;
-    for (int i = 0; i <= Tetris::GRID_HEIGHT; ++i) {
+    for (int i = 0; i <= Tetris::GRID_VISIBLE_HEIGHT; ++i) {
         tetris.hardDrop();
     }
     BOOST_REQUIRE(tetris.isFinished());

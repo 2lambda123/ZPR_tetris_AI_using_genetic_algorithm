@@ -12,10 +12,16 @@
 namespace gentetris {
 
 const std::map<Tetromino::Color, sf::Color> TETROMINO_COLOR_MAP = {
-    {Tetromino::EMPTY, sf::Color(255, 250, 250)}, {Tetromino::CYAN, sf::Color(0x00bcd4ff)},
-    {Tetromino::YELLOW, sf::Color(0xffeb3bff)},   {Tetromino::PURPLE, sf::Color(0x9c27b0ff)},
-    {Tetromino::GREEN, sf::Color(0x4caf50ff)},    {Tetromino::RED, sf::Color(0xf44336ff)},
-    {Tetromino::BLUE, sf::Color(0x2196f3ff)},     {Tetromino::ORANGE, sf::Color(0xff9800ff)}};
+    {Tetromino::Color::EMPTY, sf::Color(255, 250, 250)},
+    {Tetromino::Color::CYAN, sf::Color(0x00bcd4ff)},
+    {Tetromino::Color::YELLOW, sf::Color(0xffeb3bff)},
+    {Tetromino::Color::PURPLE, sf::Color(0x9c27b0ff)},
+    {Tetromino::Color::GREEN, sf::Color(0x4caf50ff)},
+    {Tetromino::Color::RED, sf::Color(0xf44336ff)},
+    {Tetromino::Color::BLUE, sf::Color(0x2196f3ff)},
+    {Tetromino::Color::ORANGE, sf::Color(0xff9800ff)},
+    {Tetromino::Color::GHOST, sf::Color(0xcfd8dcff)}
+};
 
 class TetrisBoard {
     using Board = std::vector<std::vector<sf::RectangleShape>>;
