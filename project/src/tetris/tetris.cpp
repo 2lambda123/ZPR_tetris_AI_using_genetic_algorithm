@@ -20,7 +20,7 @@ Tetris::Tetris() : score_(0) {
     is_finished_ = false;
 }
 
-bool Tetris::tick() {
+bool Tetris::tick(bool isSoftDrop) {
     if (is_finished_) {
         return false;
     }

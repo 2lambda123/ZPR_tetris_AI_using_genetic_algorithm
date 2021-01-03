@@ -49,20 +49,48 @@ void App::pollSfmlEvents() {
     while (gui_.pollEvent(event)) {
         if (event.type == sf::Event::Closed) close();
         if (state_ == State::STARTED && !tetris_human_.isFinished()) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                tetris_human_.shiftLeft();
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-                tetris_human_.shiftRight();
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                tetris_human_.rotateCW();
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                tetris_human_.hardDrop();
+            if (event.type == sf::Event::KeyPressed){
+                switch(event.key.code){
+                    case sf::Keyboard::Up:
+                    case sf::Keyboard::X:
+                    case sf::Keyboard::Numpad1:
+                    case sf::Keyboard::Numpad5:
+                    case sf::Keyboard::Numpad9:
+                        tetris_human_.rotateCW();
+                        break;
+                    case sf::Keyboard::LControl:
+                    case sf::Keyboard::RControl:
+                    case sf::Keyboard::Z:
+                    case sf::Keyboard::Numpad3:
+                    case sf::Keyboard::Numpad7:
+                        tetris_human_.rotateCCW();
+                        break;
+                    case sf::Keyboard::Space:
+                    case sf::Keyboard::Numpad8:
+                        tetris_human_.hardDrop();
+                        break;
+                    case sf::Keyboard::Escape:
+                    case sf::Keyboard::F1:
+//                        TODO: pause
+                        break;
+                    case sf::Keyboard::Down:
+                    case sf::Keyboard::Numpad2:
+                        tetris_human_.tick(true);
+                        break;
+                    case sf::Keyboard::Left:
+                    case sf::Keyboard::Numpad4:
+                        tetris_human_.shiftLeft();
+                        break;
+                    case sf::Keyboard::Right:
+                    case sf::Keyboard::Numpad6:
+                        tetris_human_.shiftRight();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
-        if (tetris_human_.isFinished() && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        if (tetris_human_.isFinished() && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             ai_.drop();
         }
     }

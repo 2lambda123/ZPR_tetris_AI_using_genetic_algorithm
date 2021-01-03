@@ -45,6 +45,10 @@ std::deque<Tetromino> TetrominoGenerator::getQueue() const{
     return std::deque<Tetromino>(queue_.begin(), queue_.begin()+QUEUE_LENGTH);
 }
 
+/**
+ * Uses 7-bag Random Generator
+ * https://tetris.fandom.com/wiki/Random_Generator
+ */
 void TetrominoGenerator::generateTetrominoes(){
     while(queue_.size() < QUEUE_LENGTH){
         std::vector<Tetromino> bag(TETROMINOES);

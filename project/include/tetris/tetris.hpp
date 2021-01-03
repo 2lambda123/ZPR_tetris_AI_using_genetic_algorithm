@@ -21,7 +21,7 @@ public:
                                                        (GRID_FULL_HEIGHT / 2) - 1};
 
     Tetris();
-    bool tick();
+    bool tick(bool isSoftDrop = false);
     void shiftLeft();
     void shiftRight();
     void hardDrop();

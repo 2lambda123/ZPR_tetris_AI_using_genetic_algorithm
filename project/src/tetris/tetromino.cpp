@@ -25,7 +25,7 @@ Tetromino::Tetromino(Color color, Shape shape, Pivot pivot, const Squares& squar
     : color_(color), shape_(shape), current_rotation_(0) {
     rotations_ = {squares};
     for (int i = 1; i < 4; ++i) {
-        double rad = i * (M_PI / 2);
+        double rad = i * (-M_PI / 2);
         Squares rotated_squares = rotate(squares, pivot, rad);
         rotations_.push_back(rotated_squares);
     }
