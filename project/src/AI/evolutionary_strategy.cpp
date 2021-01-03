@@ -23,14 +23,18 @@ void EvolutionaryStrategy::operator()(const std::string& input_json,
 
 void EvolutionaryStrategy::controlLoop() {
     finish_ = false;
+    drop_ = false;
     state_ = State::START;
     while (!finish_) {
         std::unique_lock<std::mutex> lk(m_);
-        drop_cond_.wait(lk, [this]() { return drop_; });
-        drop_ = false;
-        Genome best_cpy = best;
-        Move move = generateBestMove(best_cpy, tetris_);
-        move.apply(tetris_);
+        drop_cond_.wait(lk, [this]() { return drop_ || finish_; });
+        if (finish_) return;
+        if (drop_) {
+            Genome best_cpy = best;
+            Move move = generateBestMove(best_cpy, tetris_);
+            move.apply(tetris_);
+            drop_ = false;
+        }
         lk.unlock();
         if (tetris_.isFinished()) {
             finish();
@@ -43,8 +47,10 @@ void EvolutionaryStrategy::finish() {
     if (finish_) return;
     finish_ = true;
     if (state_ == State::START) {
-        drop();
-        evolution_thread_.join();
+        if (!tetris_.isFinished())
+            drop_cond_.notify_one();
+        if (evolution_thread_.joinable())
+            evolution_thread_.join();
     }
     state_ = State::STOP;
 }

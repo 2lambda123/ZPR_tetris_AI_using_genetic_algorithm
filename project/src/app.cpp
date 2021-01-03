@@ -10,7 +10,6 @@ namespace gentetris {
 App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_), ai_(std::ref(tetris_ai_)) {
     gui_.addObserver(this);
     addObserver(&gui_);
-    tetris_human_.addObserver(&ai_);
     if (!background_music.openFromFile(BACKGROUND_MUSIC_FILE)) {
         throw std::runtime_error("Cannot open " + BACKGROUND_MUSIC_FILE);
     }
@@ -19,7 +18,6 @@ App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_), ai_(std::ref(tetris_ai_)) {
 }
 
 void App::run() {
-    start();
     background_music.play();
     while (state_ != State::CLOSED) {
         update();
@@ -64,10 +62,8 @@ void App::pollSfmlEvents() {
                 tetris_human_.hardDrop();
             }
         }
-        if (state_ == State::STARTED && !tetris_ai_.isFinished()) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                ai_.drop();
-            }
+        if (tetris_human_.isFinished() && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+            ai_.drop();
         }
     }
 }
@@ -76,19 +72,18 @@ void App::close() {
     gui_.close();
     if (state_ == State::STARTED) {
         ai_.finish();
-        ai_thread_.join();
+        if (ai_thread_.joinable()) {
+            ai_thread_.join();
+        }
     }
     state_ = State::CLOSED;
 }
 void App::update(GenTetrisEvent e){
     if (e == GenTetrisEvent::PLAY_BUTTON_CLICKED) {
         if (state_ == State::MENU) {
-            start();
             notifyObservers(GenTetrisEvent::GAME_STARTED);
         }
-        else if (state_ == State::STARTED) {
-            reset();
-        }
+        reset();
     }
 }
 
@@ -101,8 +96,11 @@ void App::start(){
 
 void App::reset(){
     ai_.finish();
-    ai_thread_.join();
+    if (ai_thread_.joinable()) {
+        ai_thread_.join();
+    }
     tetris_human_ = ObservableTetris();
+    tetris_human_.addObserver(&ai_);
     tetris_ai_ = Tetris();
     gui_.reset();
     start();
