@@ -15,7 +15,7 @@ namespace gentetris {
 class GUI : public Observer, public Subject {
 public:
     void update(GenTetrisEvent e) override;
-    GUI(int width, int height);
+    GUI(int width, int height, int fps);
     void update(const Tetris& tetris_human, const Tetris& tetris_ai);
     void draw();
     void close() { window_.close(); }

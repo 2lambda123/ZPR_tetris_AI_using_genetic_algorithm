@@ -23,6 +23,9 @@ public:
 private:
     const int WINDOW_WIDTH_ = 800;
     const int WINDOW_HEIGHT_ = 900;
+    const int FPS_ = 60;
+
+    const int SOFT_DROP_INTERVAL_ = 3;
 
     const sf::Time tick_interval_ = sf::seconds(0.5f);
     const sf::Time ai_move_interval_ = sf::seconds(0.1f);
@@ -55,6 +58,7 @@ private:
 
     sf::Music background_music;
 
+    unsigned int tick_count_;
 };
 
 }

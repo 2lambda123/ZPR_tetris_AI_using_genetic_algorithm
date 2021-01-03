@@ -7,7 +7,7 @@
 
 namespace gentetris {
 
-App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_), ai_(std::ref(tetris_ai_)) {
+App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_), ai_(std::ref(tetris_ai_)), tick_count_(0) {
     gui_.addObserver(this);
     addObserver(&gui_);
     if (!background_music.openFromFile(BACKGROUND_MUSIC_FILE)) {
@@ -22,6 +22,7 @@ void App::run() {
     while (state_ != State::CLOSED) {
         update();
         display();
+        ++tick_count_;
     }
 }
 
@@ -47,10 +48,12 @@ void App::display() { gui_.draw(); }
 void App::pollSfmlEvents() {
     sf::Event event;
     while (gui_.pollEvent(event)) {
-        if (event.type == sf::Event::Closed) close();
+        if (event.type == sf::Event::Closed) {
+            close();
+        }
         if (state_ == State::STARTED && !tetris_human_.isFinished()) {
-            if (event.type == sf::Event::KeyPressed){
-                switch(event.key.code){
+            if (event.type == sf::Event::KeyPressed) {
+                switch (event.key.code) {
                     case sf::Keyboard::Up:
                     case sf::Keyboard::X:
                     case sf::Keyboard::Numpad1:
@@ -71,11 +74,7 @@ void App::pollSfmlEvents() {
                         break;
                     case sf::Keyboard::Escape:
                     case sf::Keyboard::F1:
-//                        TODO: pause
-                        break;
-                    case sf::Keyboard::Down:
-                    case sf::Keyboard::Numpad2:
-                        tetris_human_.tick(true);
+                        // TODO: pause
                         break;
                     case sf::Keyboard::Left:
                     case sf::Keyboard::Numpad4:
@@ -90,9 +89,18 @@ void App::pollSfmlEvents() {
                 }
             }
         }
-        if (tetris_human_.isFinished() && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            ai_.drop();
+    }
+    if (state_ == State::STARTED && !tetris_human_.isFinished()) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
+            sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2)) {
+            if (tick_count_ % SOFT_DROP_INTERVAL_ == 0) {
+                tetris_human_.tick(true);
+                game_clock_.restart();
+            }
         }
+    }
+    if (tetris_human_.isFinished() && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        ai_.drop();
     }
 }
 
@@ -106,7 +114,7 @@ void App::close() {
     }
     state_ = State::CLOSED;
 }
-void App::update(GenTetrisEvent e){
+void App::update(GenTetrisEvent e) {
     if (e == GenTetrisEvent::PLAY_BUTTON_CLICKED) {
         if (state_ == State::MENU) {
             notifyObservers(GenTetrisEvent::GAME_STARTED);
@@ -115,14 +123,14 @@ void App::update(GenTetrisEvent e){
     }
 }
 
-void App::start(){
+void App::start() {
     game_clock_.restart();
     ai_clock_.restart();
     ai_thread_ = std::thread([this]() { ai_("res/input.json", "res/output.json"); });
     state_ = State::STARTED;
 }
 
-void App::reset(){
+void App::reset() {
     ai_.finish();
     if (ai_thread_.joinable()) {
         ai_thread_.join();
@@ -134,4 +142,4 @@ void App::reset(){
     start();
 }
 
-}
+}  // namespace gentetris

@@ -5,7 +5,7 @@
 
 namespace gentetris {
 
-GUI::GUI(int width, int height)
+GUI::GUI(int width, int height, int fps)
     : window_(sf::VideoMode(width, height), "Tetris AI"),
       board_human_(sf::Vector2f(10, 10), sf::Vector2i(Tetris::GRID_WIDTH, Tetris::GRID_VISIBLE_HEIGHT),
                    TetrisBoard::TileProperties(30.0f, 0.5f)),
@@ -14,6 +14,7 @@ GUI::GUI(int width, int height)
       next_tetromino_panel_(sf::Vector2f(337, 10), sf::Vector2i(6, 18),
                             TetrisBoard::TileProperties(20.0f, 0.5f)),
       play_button_(sf::Vector2f(300, 700), sf::Vector2f(200, 50)) {
+    window_.setFramerateLimit(fps);
     if (!font_.loadFromFile(FONT_FILE)) {
         throw std::runtime_error("Error loading font!");
     }
