@@ -167,7 +167,7 @@ Tetris::Position Tetris::getHardDropPosition() const {
 }
 
 void Tetris::generateTetromino() {
-    tetromino_ = generator_.getTetromino();
+    tetromino_ = generator_.getNextTetromino();
     tetromino_position_ = TETROMINO_INITIAL_POS;
     if (tetromino_.getShape() == Tetromino::Shape::I) {
         --tetromino_position_.second;

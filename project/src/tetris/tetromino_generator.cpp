@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <utility>
 #include <vector>
+#include <deque>
 
 #include "tetris/tetromino.hpp"
 
@@ -23,7 +24,34 @@ const std::vector<Tetromino> TetrominoGenerator::TETROMINOES = {
               {std::pair(0, 2), std::pair(1, 2), std::pair(1, 1), std::pair(2, 1)}),
 };
 
-Tetromino TetrominoGenerator::getTetromino() const {
-    int random = std::rand() % TETROMINOES.size();
-    return Tetromino(TETROMINOES[random]);
+TetrominoGenerator::TetrominoGenerator() : last_tetromino_(Tetromino()){
+    generateTetrominoes();
+}
+
+Tetromino TetrominoGenerator::getNextTetromino() {
+    last_tetromino_ = queue_.front();
+    queue_.pop_front();
+    if(queue_.size() < QUEUE_LENGTH){
+        generateTetrominoes();
+    }
+    return last_tetromino_;
+}
+
+Tetromino TetrominoGenerator::getLastTetromino() const{
+    return last_tetromino_;
+}
+
+std::deque<Tetromino> TetrominoGenerator::getQueue() const{
+    return std::deque<Tetromino>(queue_.begin(), queue_.begin()+QUEUE_LENGTH);
+}
+
+void TetrominoGenerator::generateTetrominoes(){
+    while(queue_.size() < QUEUE_LENGTH){
+        std::vector<Tetromino> bag(TETROMINOES);
+        while(!bag.empty()){
+            unsigned int item_idx = rand() % bag.size();
+            queue_.push_back(bag[item_idx]);
+            bag.erase(bag.begin()+item_idx);
+        }
+    }
 }
