@@ -63,7 +63,7 @@ void App::pollSfmlEvents() {
             }
         }
         if (tetris_human_.isFinished() && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            tetris_ai_.hardDrop();
+            ai_.drop();
         }
     }
 }
@@ -80,10 +80,10 @@ void App::close() {
 }
 void App::update(GenTetrisEvent e){
     if (e == GenTetrisEvent::PLAY_BUTTON_CLICKED) {
-        reset();
         if (state_ == State::MENU) {
             notifyObservers(GenTetrisEvent::GAME_STARTED);
         }
+        reset();
     }
 }
 
