@@ -44,7 +44,9 @@ void EvolutionaryStrategy::finish() {
     finish_ = true;
     if (state_ == State::START) {
         drop();
-        evolution_thread_.join();
+        if (evolution_thread_.joinable()) {
+            evolution_thread_.join();
+        }
     }
     state_ = State::STOP;
 }

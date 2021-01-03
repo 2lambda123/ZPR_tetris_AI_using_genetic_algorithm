@@ -13,7 +13,7 @@ else()
 endif()
 
 if (UNIX)
-    find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
+    find_package(SFML 2.5 COMPONENTS graphics system window audio REQUIRED)
     find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 elseif (WIN32)
     set(SFML_STATIC_LIBRARIES TRUE)
@@ -23,7 +23,7 @@ elseif (WIN32)
         set(SFML_DIR "lib/win/64bit/SFML-2.5.1/lib/cmake/SFML")
     endif()
 
-    find_package(SFML 2.5.1 COMPONENTS graphics system window REQUIRED)
+    find_package(SFML 2.5.1 COMPONENTS graphics system window audio REQUIRED)
 
     set(Boost_USE_STATIC_LIBS ON) 
     find_package(Boost 1.67 COMPONENTS unit_test_framework REQUIRED)
@@ -65,7 +65,12 @@ add_subdirectory(tests)
 
 add_executable(app project/src/main.cpp)
 
-target_link_libraries(app gui-lib ai-lib pthread)
+if (UNIX)
+    target_link_libraries(app gui-lib ai-lib pthread)
+elseif (WIN32)
+    target_link_libraries(app gui-lib ai-lib)
+endif ()
+
 
 # copy /res folder to a folder containing binary
 add_custom_command(TARGET app POST_BUILD

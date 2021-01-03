@@ -19,7 +19,6 @@ App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_), ai_(std::ref(tetris_ai_)) {
 }
 
 void App::run() {
-    start();
     background_music.play();
     while (state_ != State::CLOSED) {
         update();
@@ -76,7 +75,9 @@ void App::close() {
     gui_.close();
     if (state_ == State::STARTED) {
         ai_.finish();
-        ai_thread_.join();
+        if (ai_thread_.joinable()) {
+            ai_thread_.join();
+        }
     }
     state_ = State::CLOSED;
 }
@@ -101,7 +102,9 @@ void App::start(){
 
 void App::reset(){
     ai_.finish();
-    ai_thread_.join();
+    if (ai_thread_.joinable()) {
+        ai_thread_.join();
+    }
     tetris_human_ = ObservableTetris();
     tetris_ai_ = Tetris();
     gui_.reset();
