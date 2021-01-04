@@ -5,12 +5,10 @@
 #include <map>
 #include <vector>
 
-#include "tetris/tetris.hpp"
 #include "gui/utils.hpp"
+#include "tetris/tetris.hpp"
 
 namespace gentetris {
-
-
 
 class GUI : public Observer, public Subject {
 public:
@@ -24,7 +22,6 @@ public:
         board_human_.reset();
         board_ai_.reset();
     }
-
 
 private:
     const sf::Color BG_COLOR = sf::Color(207, 185, 151);
@@ -40,9 +37,14 @@ private:
     Button play_button_;
 
     sf::Font font_;
+
     sf::Text human_score_;
+    sf::Text human_level_;
+    sf::Text human_level_progress_;
+    sf::Text human_level_speed_;
     sf::Text ai_score_;
 };
 
-}
+}  // namespace gentetris
+
 #endif

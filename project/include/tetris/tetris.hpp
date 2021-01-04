@@ -20,6 +20,9 @@ public:
     static constexpr Position TETROMINO_INITIAL_POS = {(GRID_WIDTH / 2) - 2,
                                                        (GRID_FULL_HEIGHT / 2) - 1};
 
+    static const int MAX_LEVEL = 15;
+    static const int LINES_PER_LEVEL = 10;
+
     Tetris();
     bool tick(bool isSoftDrop = false);
     void shiftLeft();
@@ -32,7 +35,10 @@ public:
     Grid getDisplayGrid() const;
     std::string toString() const;
     bool isFinished() const;
-    unsigned int getScore() const { return score_; }
+    unsigned int getScore() const;
+    unsigned int getLevel() const;
+    unsigned int getLevelProgress() const;
+    double getLevelSpeed() const;
 
 protected:
     bool is_finished_;
@@ -41,12 +47,18 @@ protected:
 private:
     bool isValidPosition(Position tetromino_position) const;
     Position getHardDropPosition() const;
+    unsigned int clearLines();
+    void calculateLevelSpeed();
 
     TetrominoGenerator generator_;
     Tetromino tetromino_;
     Position tetromino_position_;
     Grid grid_;
+
     unsigned int score_;
+    unsigned int level_;
+    unsigned int level_progress_;
+    double level_speed_;
 };
 
 class ObservableTetris : public Tetris, public Subject {

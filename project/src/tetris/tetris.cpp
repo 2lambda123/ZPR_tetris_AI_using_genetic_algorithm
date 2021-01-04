@@ -1,6 +1,8 @@
 #include "tetris/tetris.hpp"
 
+#define _USE_MATH_DEFINES
 #include <algorithm>
+#include <cmath>
 #include <string>
 #include <utility>
 #include <vector>
@@ -8,7 +10,7 @@
 #include "tetris/tetromino.hpp"
 #include "tetris/tetromino_generator.hpp"
 
-Tetris::Tetris() : score_(0) {
+Tetris::Tetris() : score_(0), level_(1), level_progress_(0) {
     for (int i = 0; i < GRID_FULL_HEIGHT; ++i) {
         std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
         grid_.push_back(grid_line);
@@ -18,6 +20,7 @@ Tetris::Tetris() : score_(0) {
     generateTetromino();  // is_finished_ needs to be true before this statement otherwise notifying
                           // on tetromino change will break
     is_finished_ = false;
+    calculateLevelSpeed();
 }
 
 bool Tetris::tick(bool isSoftDrop) {
@@ -43,22 +46,15 @@ bool Tetris::tick(bool isSoftDrop) {
 
         grid_[y][x] = tetromino_.getColor();
     }
-    int i = 0;
-    while (i < GRID_FULL_HEIGHT) {
-        bool is_filled_line = true;
-        for (int j = 0; j < GRID_WIDTH; ++j) {
-            if (grid_[i][j] == Tetromino::Color::EMPTY) {
-                is_filled_line = false;
-            }
-        }
-        if (is_filled_line) {
-            grid_.erase(grid_.begin() + i);
-            std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
-            grid_.push_back(grid_line);
-        } else {
-            ++i;
-        }
+
+    unsigned int cleared_lines = clearLines();
+    level_progress_ += cleared_lines;
+    if(level_progress_ >= LINES_PER_LEVEL){
+        level_progress_ = 0;
+        ++level_;
+        calculateLevelSpeed();
     }
+
     generateTetromino();
     return true;
 }
@@ -142,6 +138,14 @@ std::string Tetris::toString() const {
 
 bool Tetris::isFinished() const { return is_finished_; }
 
+unsigned int Tetris::getScore() const { return score_; }
+
+unsigned int Tetris::getLevel() const { return level_; }
+
+unsigned int Tetris::getLevelProgress() const { return level_progress_; }
+
+double Tetris::getLevelSpeed() const { return level_speed_; }
+
 bool Tetris::isValidPosition(Position tetromino_position) const {
     for (const Tetromino::Square& square : tetromino_.getSquares()) {
         int x = tetromino_position.first + square.first;
@@ -164,6 +168,37 @@ Tetris::Position Tetris::getHardDropPosition() const {
     } while (isValidPosition(drop_pos));
     ++drop_pos.second;
     return drop_pos;
+}
+
+unsigned int Tetris::clearLines(){
+    unsigned int cleared = 0;
+    int i = 0;
+    while (i < GRID_FULL_HEIGHT) {
+        bool is_filled_line = true;
+        for (int j = 0; j < GRID_WIDTH; ++j) {
+            if (grid_[i][j] == Tetromino::Color::EMPTY) {
+                is_filled_line = false;
+                break;
+            }
+        }
+        if (is_filled_line) {
+            grid_.erase(grid_.begin() + i);
+            std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
+            grid_.push_back(grid_line);
+            ++cleared;
+        } else {
+            ++i;
+        }
+    }
+    return cleared;
+}
+
+/**
+ * https://tetris.fandom.com/wiki/Tetris_Worlds#Gravity
+ */
+void Tetris::calculateLevelSpeed() {
+    double speed = pow(0.8 - ((level_ - 1) * 0.007), level_ - 1);
+    level_speed_ = speed;
 }
 
 void Tetris::generateTetromino() {

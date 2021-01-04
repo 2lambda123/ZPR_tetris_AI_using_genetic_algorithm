@@ -13,7 +13,7 @@
 
 class AI : public Observer {
 public:
-    AI(Tetris &tetris) : tetris_(tetris) { std::srand(std::time(nullptr)); }
+    AI(Tetris &tetris) : tetris_(tetris) {}
     virtual ~AI() {}
 
     virtual void operator()() = 0;
