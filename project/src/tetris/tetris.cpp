@@ -5,11 +5,9 @@
 #include <cmath>
 #include <stdexcept>
 #include <string>
-#include <utility>
 #include <vector>
 
 #include "tetris/tetromino.hpp"
-#include "tetris/tetromino_generator.hpp"
 #include "tetris/wall_kicks.hpp"
 
 Tetris::Tetris(bool disable_drop_scores)
@@ -22,14 +20,18 @@ Tetris::Tetris(bool disable_drop_scores)
         std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
         grid_.push_back(grid_line);
     }
-    is_finished_ = true;
-
-    generateTetromino();  // is_finished_ needs to be true before this statement otherwise notifying
-                          // on tetromino change will break
     is_finished_ = false;
+    // Explicit call (instead of just 'generateTetromino()'), because linter didn't like calling
+    // a virtual function from constructor.
+    Tetris::generateTetromino();
     calculateLevelSpeed();
 }
 
+/**
+ * @param is_soft_drop indicates if the current tick was caused by a soft drop input
+ * @return true if active tetromino has fallen "into place" and a new tetromino has been generated,
+ * false otherwise
+ */
 bool Tetris::tick(bool is_soft_drop) {
     if (is_finished_) {
         return false;
@@ -58,32 +60,8 @@ bool Tetris::tick(bool is_soft_drop) {
     }
 
     unsigned int cleared_lines = clearLines();
-
-    level_progress_ += cleared_lines;
-    if (level_progress_ >= LINES_PER_LEVEL) {
-        // TODO: zero or mod?
-        level_progress_ = 0;
-        level_ = level_ < MAX_LEVEL ? level_ + 1 : MAX_LEVEL;
-        calculateLevelSpeed();
-    }
-
-    switch (cleared_lines) {
-        case 1:
-            score_ += SCORE_SINGLE * level_;
-            break;
-        case 2:
-            score_ += SCORE_DOUBLE * level_;
-            break;
-        case 3:
-            score_ += SCORE_TRIPLE * level_;
-            break;
-        case 4:
-            score_ += SCORE_TETRIS * level_;
-            break;
-        default:
-            break;
-    }
-
+    addClearedLinesScore(cleared_lines);
+    addProgress(cleared_lines);
     generateTetromino();
     return true;
 }
@@ -143,7 +121,7 @@ Tetris::Grid Tetris::getDisplayGrid() const {
 
 std::string Tetris::toString() const {
     Grid static_grid = getDisplayGrid();
-    std::string str = "";
+    std::string str;
     for (int i = GRID_VISIBLE_HEIGHT - 1; i >= 0; --i) {
         for (int j = 0; j < GRID_WIDTH; ++j) {
             if (static_grid[i][j] == Tetromino::Color::EMPTY) {
@@ -214,6 +192,35 @@ unsigned int Tetris::clearLines() {
     return cleared;
 }
 
+void Tetris::addClearedLinesScore(unsigned int cleared_lines) {
+    switch (cleared_lines) {
+        case 1:
+            score_ += SCORE_SINGLE * level_;
+            break;
+        case 2:
+            score_ += SCORE_DOUBLE * level_;
+            break;
+        case 3:
+            score_ += SCORE_TRIPLE * level_;
+            break;
+        case 4:
+            score_ += SCORE_TETRIS * level_;
+            break;
+        default:
+            break;
+    }
+}
+
+void Tetris::addProgress(unsigned int cleared_lines) {
+    level_progress_ += cleared_lines;
+    if (level_progress_ >= LINES_PER_LEVEL) {
+        // zero or mod? Decided to leave it at zero so progress is slightly slower.
+        level_progress_ = 0;
+        level_ = level_ < MAX_LEVEL ? level_ + 1 : MAX_LEVEL;
+        calculateLevelSpeed();
+    }
+}
+
 /**
  * https://tetris.fandom.com/wiki/Tetris_Worlds#Gravity
  */
@@ -274,7 +281,7 @@ void Tetris::generateTetromino() {
 
 void ObservableTetris::generateTetromino() {
     Tetris::generateTetromino();
-    if (!is_finished_) {  // don't notify at the start of the game
+    if (!isFinished()) {  // don't notify at the start of the game
         notifyObservers(
             GenTetrisEvent::TETROMINO_DROPPED);  // notify genetic algorithm that a tetromino has
                                                  // changed (it should then execute hardDrop())

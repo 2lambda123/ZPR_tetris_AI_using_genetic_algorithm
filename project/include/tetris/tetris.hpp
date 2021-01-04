@@ -17,6 +17,7 @@ public:
     static const int GRID_WIDTH = 10;
     static const int GRID_VISIBLE_HEIGHT = 20;
     static const int GRID_FULL_HEIGHT = 40;
+
     static constexpr Position TETROMINO_INITIAL_POS = {(GRID_WIDTH / 2) - 2,
                                                        (GRID_FULL_HEIGHT / 2) - 1};
 
@@ -30,7 +31,10 @@ public:
     static const int SCORE_SOFT_DROP = 1;
     static const int SCORE_HARD_DROP = 2;
 
-    Tetris(bool disable_drop_scores = false);
+    static const int SCORE_SOFT_DROP_MAX = SCORE_SOFT_DROP * GRID_VISIBLE_HEIGHT;
+    static const int SCORE_HARD_DROP_MAX = SCORE_HARD_DROP * GRID_VISIBLE_HEIGHT;
+
+    explicit Tetris(bool disable_drop_scores = false);
     bool tick(bool is_soft_drop = false);
     void shiftLeft();
     void shiftRight();
@@ -47,13 +51,14 @@ public:
     double getLevelSpeed() const;
 
 protected:
-    bool is_finished_;
     virtual void generateTetromino();
 
 private:
     bool isValidPosition(Position tetromino_position) const;
     Position getHardDropPosition() const;
     unsigned int clearLines();
+    void addClearedLinesScore(unsigned int cleared_lines);
+    void addProgress(unsigned int cleared_lines);
     void calculateLevelSpeed();
     void rotate(bool ccw);
 
@@ -61,6 +66,8 @@ private:
     Tetromino tetromino_;
     Position tetromino_position_;
     Grid grid_;
+
+    bool is_finished_;
 
     unsigned int score_;
     unsigned int level_;
