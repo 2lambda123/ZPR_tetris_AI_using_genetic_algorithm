@@ -10,7 +10,12 @@
 #include "tetris/tetromino.hpp"
 #include "tetris/tetromino_generator.hpp"
 
-Tetris::Tetris(bool disable_drop_scores) : score_(0), level_(1), level_progress_(0), drop_scores_disabled_(disable_drop_scores) {
+Tetris::Tetris(bool disable_drop_scores)
+    : score_(0),
+      level_(1),
+      level_progress_(0),
+      level_speed_(1),
+      drop_scores_disabled_(disable_drop_scores) {
     for (int i = 0; i < GRID_FULL_HEIGHT; ++i) {
         std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
         grid_.push_back(grid_line);
@@ -29,7 +34,7 @@ bool Tetris::tick(bool is_soft_drop) {
     }
     --tetromino_position_.second;
     if (isValidPosition(tetromino_position_)) {
-        if(is_soft_drop && !drop_scores_disabled_){
+        if (is_soft_drop && !drop_scores_disabled_) {
             score_ += SCORE_SOFT_DROP;
         }
         return false;
@@ -53,14 +58,14 @@ bool Tetris::tick(bool is_soft_drop) {
     unsigned int cleared_lines = clearLines();
 
     level_progress_ += cleared_lines;
-    if(level_progress_ >= LINES_PER_LEVEL){
+    if (level_progress_ >= LINES_PER_LEVEL) {
         // TODO: zero or mod?
         level_progress_ = 0;
-        level_ = level_ < MAX_LEVEL ? level_+1 : MAX_LEVEL;
+        level_ = level_ < MAX_LEVEL ? level_ + 1 : MAX_LEVEL;
         calculateLevelSpeed();
     }
 
-    switch(cleared_lines){
+    switch (cleared_lines) {
         case 1:
             score_ += SCORE_SINGLE * level_;
             break;
@@ -98,7 +103,7 @@ void Tetris::shiftRight() {
 void Tetris::hardDrop() {
     int old_y = tetromino_position_.second;
     tetromino_position_ = getHardDropPosition();
-    if(!drop_scores_disabled_){
+    if (!drop_scores_disabled_) {
         score_ += (old_y - tetromino_position_.second) * SCORE_HARD_DROP;
     }
     tick();
@@ -194,7 +199,7 @@ Tetris::Position Tetris::getHardDropPosition() const {
     return drop_pos;
 }
 
-unsigned int Tetris::clearLines(){
+unsigned int Tetris::clearLines() {
     unsigned int cleared = 0;
     int i = 0;
     while (i < GRID_FULL_HEIGHT) {

@@ -42,7 +42,7 @@ add_library(tetris-lib project/include/tetris/tetris.hpp
         project/src/tetris/tetromino.cpp
         project/include/tetris/tetromino_generator.hpp
         project/src/tetris/tetromino_generator.cpp
-)
+        project/src/tetris/wall_kicks.cpp)
 
 add_library(gui-lib
         project/include/app.hpp
@@ -56,7 +56,7 @@ add_library(ai-lib
         project/src/AI/evolutionary_strategy.cpp
         project/include/AI/move.hpp project/src/AI/move.cpp
         project/include/AI/genome.hpp
-        project/src/AI/genome.cpp)
+        project/src/AI/genome.cpp project/include/tetris/wall_kicks.hpp)
 
 target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window sfml-audio)
 target_link_libraries(ai-lib tetris-lib)
