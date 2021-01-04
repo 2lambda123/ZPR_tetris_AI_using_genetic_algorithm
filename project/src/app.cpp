@@ -2,14 +2,17 @@
 
 #include <AI/evolutionary_strategy.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <event_manager.hpp>
 #include <iostream>
 #include <thread>
 
 namespace gentetris {
 
-App::App() : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_), ai_(std::ref(tetris_ai_)), tick_count_(0) {
-    gui_.addObserver(this);
-    addObserver(&gui_);
+App::App()
+    : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_),
+      ai_(std::ref(tetris_ai_)),
+      tick_count_(0),
+      event_manager_(EventManager::getInstance()) {
     if (!background_music.openFromFile(BACKGROUND_MUSIC_FILE)) {
         throw std::runtime_error("Cannot open " + BACKGROUND_MUSIC_FILE);
     }
@@ -38,6 +41,15 @@ void App::update() {
         if (game_clock_.getElapsedTime() > tick_interval_) {
             tetris_human_.tick();
             game_clock_.restart();
+        }
+    }
+    if (!event_manager_.isEmpty()) {
+        if (event_manager_.peekLastEvent() == GenTetrisEvent::PLAY_BUTTON_CLICKED) {
+            event_manager_.popLastEvent();
+            if (state_ == State::MENU) {
+                event_manager_.addEvent(GenTetrisEvent::GAME_STARTED);
+            }
+            reset();
         }
     }
     gui_.update(tetris_human_, tetris_ai_);
@@ -113,14 +125,6 @@ void App::close() {
         }
     }
     state_ = State::CLOSED;
-}
-void App::update(GenTetrisEvent e) {
-    if (e == GenTetrisEvent::PLAY_BUTTON_CLICKED) {
-        if (state_ == State::MENU) {
-            notifyObservers(GenTetrisEvent::GAME_STARTED);
-        }
-        reset();
-    }
 }
 
 void App::start() {

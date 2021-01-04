@@ -1,5 +1,6 @@
 #include "gui/utils.hpp"
 
+#include <event_manager.hpp>
 #include <iostream>
 
 namespace gentetris {
@@ -83,6 +84,11 @@ void Button::update() {
         text_.setFillColor(text_color_);
         rect_.setFillColor(bg_color_);
     }
+    EventManager& event_manager = EventManager::getInstance();
+    if (event_manager.peekLastEvent() == GenTetrisEvent::GAME_STARTED) {
+        event_manager.popLastEvent();
+        setText("RESTART", font_);
+    }
 }
 
 void Button::handleEvent(const sf::Event &e, const sf::Window &window) {
@@ -91,16 +97,11 @@ void Button::handleEvent(const sf::Event &e, const sf::Window &window) {
         auto button_bounds = rect_.getGlobalBounds();
         if (mouse_pos.x >= button_bounds.left && mouse_pos.x <= button_bounds.left + button_bounds.width &&
             mouse_pos.y >= button_bounds.top && button_bounds.top + button_bounds.height) {
-            notifyObservers(GenTetrisEvent::PLAY_BUTTON_CLICKED);
+            EventManager::getInstance().addEvent(GenTetrisEvent::PLAY_BUTTON_CLICKED);
             state_ = State::CLICKED;
             clock_.restart();
             sound_.play();
         }
-    }
-}
-void Button::update(GenTetrisEvent e) {
-    if (e == GenTetrisEvent::GAME_STARTED) {
-        setText("RESTART", font_);
     }
 }
 

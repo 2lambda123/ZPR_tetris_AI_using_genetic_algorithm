@@ -7,16 +7,16 @@
 #include <SFML/System/Time.hpp>
 
 #include "AI/ai.hpp"
+#include "event_manager.hpp"
 #include "gui/gui.hpp"
 #include "tetris/tetris.hpp"
 
 namespace gentetris {
 
-class App : public Observer, public Subject {
+class App {
 public:
     App();
     void run();
-    void update(GenTetrisEvent e) override;
     void update();
     void display();
 
@@ -43,6 +43,8 @@ private:
     void close();
     void start();
     void reset();
+
+    EventManager& event_manager_;
 
     GUI gui_;
 
