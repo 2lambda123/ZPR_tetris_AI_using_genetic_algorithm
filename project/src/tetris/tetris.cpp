@@ -3,12 +3,14 @@
 #define _USE_MATH_DEFINES
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
 
 #include "tetris/tetromino.hpp"
 #include "tetris/tetromino_generator.hpp"
+#include "tetris/wall_kicks.hpp"
 
 Tetris::Tetris(bool disable_drop_scores)
     : score_(0),
@@ -109,19 +111,9 @@ void Tetris::hardDrop() {
     tick();
 }
 
-void Tetris::rotateCW() {
-    tetromino_.rotateCW();
-    while (!isValidPosition(tetromino_position_)) {
-        tetromino_.rotateCW();
-    }
-}
+void Tetris::rotateCW() { rotate(false); }
 
-void Tetris::rotateCCW() {
-    tetromino_.rotateCCW();
-    while (!isValidPosition(tetromino_position_)) {
-        tetromino_.rotateCCW();
-    }
-}
+void Tetris::rotateCCW() { rotate(true); }
 
 Tetris::Grid Tetris::getRawGrid() const { return grid_; }
 
@@ -228,6 +220,41 @@ unsigned int Tetris::clearLines() {
 void Tetris::calculateLevelSpeed() {
     double speed = pow(0.8 - ((level_ - 1) * 0.007), level_ - 1);
     level_speed_ = speed;
+}
+
+void Tetris::rotate(bool ccw) {
+    if (tetromino_.getShape() == Tetromino::Shape::O) {
+        return;
+    }
+    int from = tetromino_.getCurrentRotation();
+    if (!ccw) {
+        tetromino_.rotateCW();
+    } else {
+        tetromino_.rotateCCW();
+    }
+    int to = tetromino_.getCurrentRotation();
+    std::vector<Position> wall_kicks;
+    if (tetromino_.getShape() == Tetromino::Shape::I) {
+        wall_kicks = WallKicks::getITetrominoWallKicks(from, to);
+    } else {
+        wall_kicks = WallKicks::getGenericWallKicks(from, to);
+    }
+    if (wall_kicks.empty()) {
+        throw std::domain_error("Empty wall kick data!");
+    }
+    for (const Position& offset : wall_kicks) {
+        Position new_pos = {tetromino_position_.first + offset.first,
+                            tetromino_position_.second + offset.second};
+        if (isValidPosition(new_pos)) {
+            tetromino_position_ = new_pos;
+            return;
+        }
+    }
+    if (!ccw) {
+        tetromino_.rotateCCW();
+    } else {
+        tetromino_.rotateCW();
+    }
 }
 
 void Tetris::generateTetromino() {

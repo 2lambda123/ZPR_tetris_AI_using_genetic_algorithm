@@ -55,6 +55,7 @@ private:
     Position getHardDropPosition() const;
     unsigned int clearLines();
     void calculateLevelSpeed();
+    void rotate(bool ccw);
 
     TetrominoGenerator generator_;
     Tetromino tetromino_;

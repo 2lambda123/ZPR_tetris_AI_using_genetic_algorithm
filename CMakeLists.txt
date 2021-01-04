@@ -36,27 +36,32 @@ endif()
 include_directories(project/include)
 include_directories(lib/common/include)
 
-add_library(tetris-lib project/include/tetris/tetris.hpp
+add_library(tetris-lib
+        project/include/tetris/tetris.hpp
         project/src/tetris/tetris.cpp
         project/include/tetris/tetromino.hpp
         project/src/tetris/tetromino.cpp
         project/include/tetris/tetromino_generator.hpp
         project/src/tetris/tetromino_generator.cpp
+        project/include/tetris/wall_kicks.hpp
         project/src/tetris/wall_kicks.cpp)
 
 add_library(gui-lib
         project/include/app.hpp
         project/src/app.cpp
         project/include/gui/gui.hpp
-        project/src/gui/gui.cpp project/include/gui/utils.hpp project/src/gui/utils.cpp)
+        project/src/gui/gui.cpp
+        project/include/gui/utils.hpp
+        project/src/gui/utils.cpp)
 
 add_library(ai-lib
         project/include/AI/ai.hpp
         project/include/AI/evolutionary_strategy.hpp
         project/src/AI/evolutionary_strategy.cpp
-        project/include/AI/move.hpp project/src/AI/move.cpp
+        project/include/AI/move.hpp
+        project/src/AI/move.cpp
         project/include/AI/genome.hpp
-        project/src/AI/genome.cpp project/include/tetris/wall_kicks.hpp)
+        project/src/AI/genome.cpp)
 
 target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window sfml-audio)
 target_link_libraries(ai-lib tetris-lib)

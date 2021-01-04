@@ -31,7 +31,9 @@ Tetromino::Tetromino(Color color, Shape shape, Pivot pivot, const Squares& squar
     }
 }
 
-void Tetromino::rotateCW() { ++current_rotation_; }
+void Tetromino::rotateCW() {
+    current_rotation_ = (current_rotation_ + 1) % 4;
+}
 
 void Tetromino::rotateCCW() {
     if (current_rotation_ == 0) {
