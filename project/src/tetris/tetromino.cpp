@@ -6,6 +6,8 @@
 #include <string>
 #include <utility>
 
+namespace gentetris {
+
 Tetromino::Squares Tetromino::rotate(const Squares& squares, const Pivot& pivot, double rad) {
     Squares rotated_squares;
     for (const Square& square : squares) {
@@ -81,4 +83,6 @@ std::string Tetromino::toString() const {
         str += '\n';
     }
     return str;
+}
+
 }

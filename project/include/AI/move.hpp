@@ -7,6 +7,8 @@
 
 #include "tetris/tetris.hpp"
 
+namespace gentetris {
+
 class Move {
 public:
     static const int MIN_MOVE;
@@ -41,8 +43,8 @@ public:
     int getRoughness() const { return roughness_; }
 
 private:
-    void calculateGridProperties(const Tetris& tetris);
-    int calculateHoles(const Tetris::Grid& grid);
+    void calculateGridProperties(const Tetris &tetris);
+    int calculateHoles(const Tetris::Grid &grid);
 
     int move_x_;
     int rotations_;
@@ -53,5 +55,7 @@ private:
     int holes_;
     int roughness_;
 };
+
+}
 
 #endif  // GENETIC_TETRIS_MOVE_HPP

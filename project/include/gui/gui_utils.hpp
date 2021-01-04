@@ -1,5 +1,5 @@
-#ifndef GENETIC_TETRIS_UTILS_HPP
-#define GENETIC_TETRIS_UTILS_HPP
+#ifndef GENETIC_TETRIS_GUI_UTILS_HPP
+#define GENETIC_TETRIS_GUI_UTILS_HPP
 
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
@@ -11,8 +11,6 @@
 
 namespace gentetris {
 
-
-
 const std::map<Tetromino::Color, sf::Color> TETROMINO_COLOR_MAP = {
     {Tetromino::Color::EMPTY, sf::Color(255, 250, 250)},
     {Tetromino::Color::CYAN, sf::Color(0x00bcd4ff)},
@@ -22,8 +20,7 @@ const std::map<Tetromino::Color, sf::Color> TETROMINO_COLOR_MAP = {
     {Tetromino::Color::RED, sf::Color(0xf44336ff)},
     {Tetromino::Color::BLUE, sf::Color(0x2196f3ff)},
     {Tetromino::Color::ORANGE, sf::Color(0xff9800ff)},
-    {Tetromino::Color::GHOST, sf::Color(0xcfd8dcff)}
-};
+    {Tetromino::Color::GHOST, sf::Color(0xcfd8dcff)}};
 
 class TetrisBoard {
     using Board = std::vector<std::vector<sf::RectangleShape>>;
@@ -58,10 +55,13 @@ private:
 
 class Button : public sf::Drawable {
 public:
-    Button(const sf::Vector2f& pos, const sf::Vector2f& size);
-    void setText(const std::string& text, const sf::Font& font, int size = 24);
+    Button();
+    void setPosition(const sf::Vector2f& pos);
+    void setSize(const sf::Vector2f& size);
+    void setText(const std::string &text, const sf::Font &font, int size = 24);
     void update();
     void handleEvent(const sf::Event& e, const sf::Window& window);
+    void setOnClick(std::function<void()> on_click);
 
 protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -86,8 +86,10 @@ private:
     sf::Sound sound_;
 
     sf::Clock clock_;
+
+    std::function<void()> on_click_;
 };
 
 }  // namespace gentetris
 
-#endif  // GENETIC_TETRIS_UTILS_HPP
+#endif  // GENETIC_TETRIS_GUI_UTILS_HPP

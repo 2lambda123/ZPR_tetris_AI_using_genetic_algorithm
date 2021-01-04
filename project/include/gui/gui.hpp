@@ -1,33 +1,40 @@
-#ifndef GUI_HPP
-#define GUI_HPP
+#ifndef GUI_UTILS_HPP
+#define GUI_UTILS_HPP
 
 #include <SFML/Graphics.hpp>
 #include <gui/screen/game_screen.hpp>
+#include <gui/screen/menu_screen.hpp>
 #include <gui/screen/screen.hpp>
 #include <map>
 #include <vector>
 
-#include "gui/utils.hpp"
+#include "gui/gui_utils.hpp"
 #include "tetris/tetris.hpp"
 
 namespace gentetris {
 
 class GUI {
 public:
+    enum class ScreenType {
+        GAME,
+        MENU,
+        EVOLVE,
+    };
+
     GUI(int width, int height, int fps, Tetris& human_tetris, Tetris& ai_tetris);
-    void update(const Tetris& tetris_human, const Tetris& tetris_ai);
-    void draw();
+    void update();
+    void draw() { active_screen_->draw(); }
     void close() { window_.close(); }
-    bool pollEvent(sf::Event& event);
-    void reset() {
-        game_screen_.reset();
-    }
+    bool pollEvent(sf::Event& event) { return active_screen_->pollEvent(event); }
+    void reset() { active_screen_->reset(); }
+    void setActiveScreen(ScreenType screen_type);
 
 private:
-
     sf::RenderWindow window_;
 
+    Screen* active_screen_;
     GameScreen game_screen_;
+    MenuScreen menu_screen_;
 };
 
 }  // namespace gentetris

@@ -5,6 +5,8 @@
 #include <utility>
 #include <vector>
 
+namespace gentetris {
+
 class Tetromino {
 public:
     using Pivot = std::pair<double, double>;
@@ -36,5 +38,7 @@ private:
     Rotations rotations_;
     int current_rotation_;
 };
+
+}
 
 #endif

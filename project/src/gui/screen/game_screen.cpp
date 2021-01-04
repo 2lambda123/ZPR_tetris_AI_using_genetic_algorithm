@@ -1,6 +1,7 @@
 #include "gui/screen/game_screen.hpp"
 
 #include <iomanip>
+#include <event_manager.hpp>
 
 namespace gentetris {
 
@@ -15,8 +16,7 @@ GameScreen::GameScreen(sf::RenderWindow& window, const Tetris& tetris_human, con
                 sf::Vector2i(Tetris::GRID_WIDTH, Tetris::GRID_VISIBLE_HEIGHT),
                 TetrisBoard::TileProperties(30.0f, 0.5f)),
       next_tetromino_panel_(sf::Vector2f(337, 10), sf::Vector2i(6, 18),
-                            TetrisBoard::TileProperties(20.0f, 0.5f)),
-      play_button_(sf::Vector2f(300, 800), sf::Vector2f(200, 50)) {
+                            TetrisBoard::TileProperties(20.0f, 0.5f)) {
     createAIScore();
     createHumanScore();
     createHumanLevel();
@@ -42,6 +42,11 @@ void GameScreen::update() {
     human_level_speed_.setString("Lv speed: " + speed.str() + " sec/line");
     ai_score_.setString("AI: " + std::to_string(tetris_ai_.getScore()));
     play_button_.update();
+    EventManager& event_manager = EventManager::getInstance();
+    if (event_manager.peekLastEvent() == GenTetrisEvent::GAME_STARTED) {
+        event_manager.popLastEvent();
+        play_button_.setText("RESTART", font_);
+    }
 }
 
 void GameScreen::draw() {
@@ -100,7 +105,12 @@ void GameScreen::createHumanLevel() {
 }
 
 void GameScreen::createPlayButton() {
+    play_button_.setPosition(sf::Vector2f(300, 800));
+    play_button_.setSize(sf::Vector2f(200, 50));
     play_button_.setText("PLAY", font_);
+    play_button_.setOnClick([]() {
+        EventManager::getInstance().addEvent(GenTetrisEvent::PLAY_BUTTON_CLICKED);
+    });
 }
 
 

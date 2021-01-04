@@ -3,9 +3,13 @@
 
 #include <vector>
 
+namespace gentetris {
+
 enum class GenTetrisEvent {
     TETROMINO_DROPPED,
     PLAY_BUTTON_CLICKED,
+    EVOLVE_BUTTON_CLICKED,
+    EXIT_BUTTON_CLICKED,
     GAME_STARTED,
 };
 
@@ -28,5 +32,7 @@ public:
 private:
     std::vector<Observer*> obs_;
 };
+
+}
 
 #endif

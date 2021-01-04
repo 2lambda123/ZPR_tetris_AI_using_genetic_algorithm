@@ -1,28 +1,28 @@
 #include "gui/gui.hpp"
 
-#include <cassert>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-
 namespace gentetris {
 
 GUI::GUI(int width, int height, int fps, Tetris& human_tetris, Tetris& ai_tetris)
     : window_(sf::VideoMode(width, height), "Tetris AI"),
-      game_screen_(window_, human_tetris, ai_tetris){
+      game_screen_(window_, human_tetris, ai_tetris),
+      menu_screen_(window_) {
     window_.setFramerateLimit(fps);
+    //setActiveScreen(ScreenType::MENU);
+    setActiveScreen(ScreenType::GAME);
 }
 
-void GUI::update(const Tetris &tetris_human, const Tetris &tetris_ai) {
-    game_screen_.update();
-}
+void GUI::update() { active_screen_->update(); }
 
-void GUI::draw() {
-    game_screen_.draw();
-}
-
-bool GUI::pollEvent(sf::Event &event) {
-    return game_screen_.pollEvent(event);
+void GUI::setActiveScreen(GUI::ScreenType screen_type) {
+    switch (screen_type) {
+        case ScreenType::GAME:
+            active_screen_ = &game_screen_;
+            break;
+        case ScreenType::MENU:
+            active_screen_ = &menu_screen_;
+            break;
+    }
+    active_screen_->reset();
 }
 
 }  // namespace gentetris

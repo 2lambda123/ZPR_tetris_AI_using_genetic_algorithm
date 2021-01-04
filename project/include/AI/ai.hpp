@@ -7,9 +7,11 @@
 #include <iostream>
 #include <thread>
 
+#include "ai_utils.hpp"
 #include "move.hpp"
-#include "observer.hpp"
 #include "tetris/tetris.hpp"
+
+namespace gentetris {
 
 class AI : public Observer {
 public:
@@ -24,6 +26,10 @@ protected:
     Tetris &tetris_;
 
     volatile bool finish_ = false;
+
+    inline static RandomNumberGenerator &generator_ = RandomNumberGenerator::getInstance();
 };
+
+}
 
 #endif

@@ -1,6 +1,7 @@
 #include "AI/move.hpp"
 
 #include <cassert>
+namespace gentetris {
 
 const int Move::MIN_MOVE = -1;
 const int Move::MAX_MOVE = Tetris::GRID_WIDTH - 1;
@@ -70,7 +71,7 @@ void Move::decrementRotation() {
         rotations_--;
 }
 
-void Move::calculateGridProperties(const Tetris& tetris) {
+void Move::calculateGridProperties(const Tetris &tetris) {
     auto grid = tetris.getRawGrid();
     holes_ = calculateHoles(grid);
     max_height_ = cumulative_height_ = roughness_ = 0;
@@ -84,13 +85,10 @@ void Move::calculateGridProperties(const Tetris& tetris) {
             if (grid[y][x] != Tetromino::Color::EMPTY) {
                 cumulative_height_ += y + 1;
                 cur_height = y + 1;
-                if (y + 1 > max_height_)
-                    max_height_ = y + 1;
+                if (y + 1 > max_height_) max_height_ = y + 1;
                 break;
-            }
-            else {
-                if (y < min_height)
-                    min_height = y;
+            } else {
+                if (y < min_height) min_height = y;
             }
         }
         if (x > 0) {
@@ -101,16 +99,19 @@ void Move::calculateGridProperties(const Tetris& tetris) {
     relative_height_ = max_height_ - min_height;
 }
 
-int Move::calculateHoles(const Tetris::Grid& grid) {
+int Move::calculateHoles(const Tetris::Grid &grid) {
     int holes = 0;
     int rows = grid.size();
     int cols = grid[0].size();
     for (int y = rows - 2; y >= 0; y--) {
         for (int x = 0; x < cols; x++) {
-            if (grid[y][x] == Tetromino::Color::EMPTY && grid[y+1][x] != Tetromino::Color::EMPTY) {
+            if (grid[y][x] == Tetromino::Color::EMPTY &&
+                grid[y + 1][x] != Tetromino::Color::EMPTY) {
                 holes++;
             }
         }
     }
     return holes;
 }
+
+}  // namespace gentetris

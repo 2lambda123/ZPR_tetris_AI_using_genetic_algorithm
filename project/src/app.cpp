@@ -1,18 +1,17 @@
 #include "app.hpp"
 
-#include <AI/evolutionary_strategy.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include <event_manager.hpp>
+#include "event_manager.hpp"
 #include <iostream>
 #include <thread>
 
 namespace gentetris {
 
 App::App()
-    : gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_),
+    : event_manager_(EventManager::getInstance()),
+      gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_),
       ai_(std::ref(tetris_ai_)),
-      tick_count_(0),
-      event_manager_(EventManager::getInstance()) {
+      tick_count_(0) {
     if (!background_music.openFromFile(BACKGROUND_MUSIC_FILE)) {
         throw std::runtime_error("Cannot open " + BACKGROUND_MUSIC_FILE);
     }
@@ -52,7 +51,7 @@ void App::update() {
             reset();
         }
     }
-    gui_.update(tetris_human_, tetris_ai_);
+    gui_.update();
 }
 
 void App::display() { gui_.draw(); }
@@ -130,7 +129,8 @@ void App::close() {
 void App::start() {
     game_clock_.restart();
     ai_clock_.restart();
-    ai_thread_ = std::thread([this]() { ai_("res/input.json", "res/output.json"); });
+    //ai_thread_ = std::thread([this]() { ai_("res/input.json", "res/output.json"); });
+    ai_thread_ = std::thread([this]() { ai_(); });
     state_ = State::STARTED;
 }
 

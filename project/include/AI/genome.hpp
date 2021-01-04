@@ -2,15 +2,21 @@
 #define GENETIC_TETRIS_GENOME_HPP
 
 #include <cstdlib>
-struct Genome {
+
+#include "ai_utils.hpp"
+
+namespace gentetris {
+
+class Genome {
+public:
     Genome() {
         id = next_id++;
-        rows_cleared = random_0_1() - 0.5f;
-        max_height = random_0_1() - 0.5f;
-        cumulative_height = random_0_1() - 0.5f;
-        relative_height = random_0_1() - 0.5f;
-        holes = random_0_1() - 0.5f;
-        roughness = random_0_1() - 0.5f;
+        rows_cleared = generator_.random<-1, 1>();
+        max_height = generator_.random<-1, 1>();
+        cumulative_height = generator_.random<-1, 1>();
+        relative_height = generator_.random<-1, 1>();
+        holes = generator_.random<-1, 1>();
+        roughness = generator_.random<-1, 1>();
     }
     static long next_id;
     long id;
@@ -21,11 +27,13 @@ struct Genome {
     float holes;
     float roughness;
 
-    // may be moved somewhere else
     float score;
     float ps;
+private:
 
-    static float random_0_1() { return rand() / double(RAND_MAX); }
+    static RandomNumberGenerator& generator_;
 };
+
+}
 
 #endif  // GENETIC_TETRIS_GENOME_HPP

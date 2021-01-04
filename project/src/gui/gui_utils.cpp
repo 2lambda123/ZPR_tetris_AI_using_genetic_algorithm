@@ -1,4 +1,4 @@
-#include "gui/utils.hpp"
+#include "gui/gui_utils.hpp"
 
 #include <event_manager.hpp>
 #include <iostream>
@@ -47,13 +47,17 @@ bool TetrisBoard::isStateFinished() const { return state_finished_; }
 
 void TetrisBoard::setStateFinished(bool finished) { state_finished_ = finished; }
 
-Button::Button(const sf::Vector2f &pos, const sf::Vector2f &size) {
-    text_.setPosition(pos.x, pos.y);
-    rect_.setPosition(pos);
-    rect_.setSize(size);
+Button::Button() {
     if (!buffer_.loadFromFile(BUTTON_CLICK_SOUND))
         throw std::runtime_error("Cannot open " + BUTTON_CLICK_SOUND);
     sound_.setBuffer(buffer_);
+}
+void Button::setPosition(const sf::Vector2f &pos) {
+    text_.setPosition(pos.x, pos.y);
+    rect_.setPosition(pos);
+}
+void Button::setSize(const sf::Vector2f &size) {
+    rect_.setSize(size);
 }
 
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -84,11 +88,6 @@ void Button::update() {
         text_.setFillColor(text_color_);
         rect_.setFillColor(bg_color_);
     }
-    EventManager& event_manager = EventManager::getInstance();
-    if (event_manager.peekLastEvent() == GenTetrisEvent::GAME_STARTED) {
-        event_manager.popLastEvent();
-        setText("RESTART", font_);
-    }
 }
 
 void Button::handleEvent(const sf::Event &e, const sf::Window &window) {
@@ -96,13 +95,17 @@ void Button::handleEvent(const sf::Event &e, const sf::Window &window) {
         auto mouse_pos = sf::Mouse::getPosition(window);
         auto button_bounds = rect_.getGlobalBounds();
         if (mouse_pos.x >= button_bounds.left && mouse_pos.x <= button_bounds.left + button_bounds.width &&
-            mouse_pos.y >= button_bounds.top && button_bounds.top + button_bounds.height) {
-            EventManager::getInstance().addEvent(GenTetrisEvent::PLAY_BUTTON_CLICKED);
+            mouse_pos.y >= button_bounds.top && mouse_pos.y <= button_bounds.top + button_bounds.height) {
+            on_click_();
             state_ = State::CLICKED;
             clock_.restart();
             sound_.play();
         }
     }
+}
+
+void Button::setOnClick(std::function<void()> on_click) {
+    on_click_ = on_click;
 }
 
 }

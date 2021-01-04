@@ -5,9 +5,11 @@
 #include <utility>
 #include <vector>
 
-#include "observer.hpp"
 #include "tetromino.hpp"
 #include "tetromino_generator.hpp"
+#include "utils.hpp"
+
+namespace gentetris {
 
 class Tetris {
 public:
@@ -76,5 +78,7 @@ public:
 private:
     void generateTetromino() override;
 };
+
+}
 
 #endif

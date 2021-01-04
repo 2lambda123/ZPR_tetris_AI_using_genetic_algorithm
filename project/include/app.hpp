@@ -1,12 +1,12 @@
 #ifndef APP_HPP
 #define APP_HPP
 
-#include <AI/evolutionary_strategy.hpp>
 #include <SFML/Audio/Music.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
 #include "AI/ai.hpp"
+#include "AI/evolutionary_strategy.hpp"
 #include "event_manager.hpp"
 #include "gui/gui.hpp"
 #include "tetris/tetris.hpp"
@@ -63,5 +63,5 @@ private:
     unsigned int tick_count_;
 };
 
-}
+}  // namespace gentetris
 #endif

@@ -6,6 +6,8 @@
 
 #include "tetris/tetromino.hpp"
 
+namespace gentetris {
+
 class TetrominoGenerator {
 public:
     static const unsigned int QUEUE_LENGTH = 3;
@@ -22,5 +24,7 @@ private:
     std::deque<Tetromino> queue_;
     Tetromino last_tetromino_;
 };
+
+}
 
 #endif

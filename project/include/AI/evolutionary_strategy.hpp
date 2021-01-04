@@ -8,6 +8,8 @@
 #include "ai.hpp"
 #include "genome.hpp"
 
+namespace gentetris {
+
 class EvolutionaryStrategy : public AI {
 public:
     EvolutionaryStrategy(Tetris& tetris) : AI(tetris) {}
@@ -50,7 +52,7 @@ private:
 
     Genome rouletteSelection(const std::vector<Genome>& pop) {
         while (true) {
-            float p = random_0_1();
+            float p = generator_.random_0_1();
             for (const auto& c : pop) {
                 assert(c.ps >= 0.0f);
                 if (p < c.ps) {
@@ -65,7 +67,6 @@ private:
 
     Move generateBestMove(const Genome& genome, Tetris& tetris);
 
-    static float random_0_1() { return rand() / double(RAND_MAX); }
     void displayState();
 
     Genome best;
@@ -78,5 +79,7 @@ private:
     std::condition_variable drop_cond_;
     bool drop_ = false;
 };
+
+}
 
 #endif  // GENETIC_TETRIS_EVOLUTIONARY_STRATEGY_HPP

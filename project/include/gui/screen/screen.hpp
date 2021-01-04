@@ -2,7 +2,6 @@
 #define GENETIC_TETRIS_SCREEN_HPP
 
 #include <SFML/Graphics.hpp>
-#include <observer.hpp>
 
 namespace gentetris {
 

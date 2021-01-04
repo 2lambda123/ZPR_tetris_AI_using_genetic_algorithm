@@ -1,10 +1,10 @@
 #ifndef GENETIC_TETRIS_GAME_SCREEN_HPP
 #define GENETIC_TETRIS_GAME_SCREEN_HPP
 
-#include "screen.hpp"
-#include "gui/utils.hpp"
-
 #include <map>
+
+#include "gui/gui_utils.hpp"
+#include "screen.hpp"
 
 namespace gentetris {
 
