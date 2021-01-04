@@ -23,12 +23,18 @@ public:
     static const int MAX_LEVEL = 15;
     static const int LINES_PER_LEVEL = 10;
 
-    Tetris();
-    bool tick(bool isSoftDrop = false);
+    static const int SCORE_SINGLE = 100;
+    static const int SCORE_DOUBLE = 300;
+    static const int SCORE_TRIPLE = 500;
+    static const int SCORE_TETRIS = 800;
+    static const int SCORE_SOFT_DROP = 1;
+    static const int SCORE_HARD_DROP = 2;
+
+    Tetris(bool disable_drop_scores = false);
+    bool tick(bool is_soft_drop = false);
     void shiftLeft();
     void shiftRight();
     void hardDrop();
-    void softDrop();
     void rotateCW();
     void rotateCCW();
     Grid getRawGrid() const;
@@ -59,6 +65,8 @@ private:
     unsigned int level_;
     unsigned int level_progress_;
     double level_speed_;
+
+    bool drop_scores_disabled_;
 };
 
 class ObservableTetris : public Tetris, public Subject {

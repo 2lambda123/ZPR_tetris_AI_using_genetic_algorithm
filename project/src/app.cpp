@@ -137,7 +137,7 @@ void App::reset() {
     }
     tetris_human_ = ObservableTetris();
     tetris_human_.addObserver(&ai_);
-    tetris_ai_ = Tetris();
+    tetris_ai_ = Tetris(true);
     gui_.reset();
     start();
 }

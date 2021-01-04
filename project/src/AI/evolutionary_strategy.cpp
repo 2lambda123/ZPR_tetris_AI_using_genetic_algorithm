@@ -182,7 +182,7 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
     score_sum = 0.0f;
     for (auto& c : next_pop) {
         //Tetris tmp(tetris_);
-        Tetris tmp;
+        Tetris tmp(true);
         Move best_move;
         for (int i = 0; i < MOVES_TO_SIMULATE; i++) {
             best_move = generateBestMove(c, tmp);

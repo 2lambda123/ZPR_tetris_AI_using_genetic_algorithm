@@ -10,7 +10,7 @@
 #include "tetris/tetromino.hpp"
 #include "tetris/tetromino_generator.hpp"
 
-Tetris::Tetris() : score_(0), level_(1), level_progress_(0) {
+Tetris::Tetris(bool disable_drop_scores) : score_(0), level_(1), level_progress_(0), drop_scores_disabled_(disable_drop_scores) {
     for (int i = 0; i < GRID_FULL_HEIGHT; ++i) {
         std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
         grid_.push_back(grid_line);
@@ -23,12 +23,15 @@ Tetris::Tetris() : score_(0), level_(1), level_progress_(0) {
     calculateLevelSpeed();
 }
 
-bool Tetris::tick(bool isSoftDrop) {
+bool Tetris::tick(bool is_soft_drop) {
     if (is_finished_) {
         return false;
     }
     --tetromino_position_.second;
     if (isValidPosition(tetromino_position_)) {
+        if(is_soft_drop && !drop_scores_disabled_){
+            score_ += SCORE_SOFT_DROP;
+        }
         return false;
     }
     ++tetromino_position_.second;
@@ -48,11 +51,30 @@ bool Tetris::tick(bool isSoftDrop) {
     }
 
     unsigned int cleared_lines = clearLines();
+
     level_progress_ += cleared_lines;
     if(level_progress_ >= LINES_PER_LEVEL){
+        // TODO: zero or mod?
         level_progress_ = 0;
-        ++level_;
+        level_ = level_ < MAX_LEVEL ? level_+1 : MAX_LEVEL;
         calculateLevelSpeed();
+    }
+
+    switch(cleared_lines){
+        case 1:
+            score_ += SCORE_SINGLE * level_;
+            break;
+        case 2:
+            score_ += SCORE_DOUBLE * level_;
+            break;
+        case 3:
+            score_ += SCORE_TRIPLE * level_;
+            break;
+        case 4:
+            score_ += SCORE_TETRIS * level_;
+            break;
+        default:
+            break;
     }
 
     generateTetromino();
@@ -74,11 +96,13 @@ void Tetris::shiftRight() {
 }
 
 void Tetris::hardDrop() {
+    int old_y = tetromino_position_.second;
     tetromino_position_ = getHardDropPosition();
+    if(!drop_scores_disabled_){
+        score_ += (old_y - tetromino_position_.second) * SCORE_HARD_DROP;
+    }
     tick();
 }
-
-void Tetris::softDrop() {}
 
 void Tetris::rotateCW() {
     tetromino_.rotateCW();
