@@ -2,6 +2,8 @@
 #define GUI_HPP
 
 #include <SFML/Graphics.hpp>
+#include <gui/screen/game_screen.hpp>
+#include <gui/screen/screen.hpp>
 #include <map>
 #include <vector>
 
@@ -10,39 +12,22 @@
 
 namespace gentetris {
 
-class GUI : public Observer, public Subject {
+class GUI {
 public:
-    void update(GenTetrisEvent e) override;
-    GUI(int width, int height, int fps);
+    GUI(int width, int height, int fps, Tetris& human_tetris, Tetris& ai_tetris);
     void update(const Tetris& tetris_human, const Tetris& tetris_ai);
     void draw();
     void close() { window_.close(); }
     bool pollEvent(sf::Event& event);
     void reset() {
-        board_human_.reset();
-        board_ai_.reset();
+        game_screen_.reset();
     }
 
 private:
-    const sf::Color BG_COLOR = sf::Color(207, 185, 151);
-    const std::string FONT_FILE = "res/HackBoldNerdFontCompleteMono.ttf";
-    const int FONT_SIZE = 24;
 
     sf::RenderWindow window_;
 
-    TetrisBoard board_human_;
-    TetrisBoard board_ai_;
-    TetrisBoard next_tetromino_panel_;
-
-    Button play_button_;
-
-    sf::Font font_;
-
-    sf::Text human_score_;
-    sf::Text human_level_;
-    sf::Text human_level_progress_;
-    sf::Text human_level_speed_;
-    sf::Text ai_score_;
+    GameScreen game_screen_;
 };
 
 }  // namespace gentetris

@@ -48,7 +48,7 @@ add_library(gui-lib
         project/include/app.hpp
         project/src/app.cpp
         project/include/gui/gui.hpp
-        project/src/gui/gui.cpp project/include/gui/utils.hpp project/src/gui/utils.cpp)
+        project/src/gui/gui.cpp project/include/gui/utils.hpp project/src/gui/utils.cpp project/include/gui/screen/screen.hpp project/include/gui/screen/game_screen.hpp project/src/gui/screen/game_screen.cpp project/include/event_manager.hpp)
 
 add_library(ai-lib
         project/include/AI/ai.hpp

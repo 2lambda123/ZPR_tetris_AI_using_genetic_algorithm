@@ -11,6 +11,8 @@
 
 namespace gentetris {
 
+
+
 const std::map<Tetromino::Color, sf::Color> TETROMINO_COLOR_MAP = {
     {Tetromino::Color::EMPTY, sf::Color(255, 250, 250)},
     {Tetromino::Color::CYAN, sf::Color(0x00bcd4ff)},
@@ -54,7 +56,7 @@ private:
     TileProperties tile_prop_;
 };
 
-class Button : public sf::Drawable, public Subject, public Observer {
+class Button : public sf::Drawable {
 public:
     Button(const sf::Vector2f& pos, const sf::Vector2f& size);
     void setText(const std::string& text, const sf::Font& font, int size = 24);
@@ -63,9 +65,6 @@ public:
 
 protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
-public:
-    void update(GenTetrisEvent e) override;
 
 private:
     const std::string BUTTON_CLICK_SOUND = "res/button_click.wav";
