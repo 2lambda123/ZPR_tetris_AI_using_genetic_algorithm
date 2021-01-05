@@ -18,6 +18,14 @@ public:
     virtual bool pollEvent(sf::Event& event) = 0;
 
 protected:
+    sf::Text createText(const sf::Vector2f& position, int font_size) {
+        sf::Text text;
+        text.setFont(font_);
+        text.setCharacterSize(font_size);
+        text.setPosition(position);
+        return text;
+    }
+
     const sf::Color BG_COLOR = sf::Color(207, 185, 151);
     const std::string FONT_FILE = "res/HackBoldNerdFontCompleteMono.ttf";
     const int FONT_SIZE = 24;

@@ -3,26 +3,21 @@
 
 #include <vector>
 
+#include "event_manager.hpp"
+
 namespace gentetris {
 
-enum class GenTetrisEvent {
-    TETROMINO_DROPPED,
-    PLAY_BUTTON_CLICKED,
-    EVOLVE_BUTTON_CLICKED,
-    EXIT_BUTTON_CLICKED,
-    GAME_STARTED,
-};
 
 class Observer {
 public:
-    virtual void update(GenTetrisEvent e) = 0;
+    virtual void update(EventType e) = 0;
     virtual ~Observer() {}
 };
 
 class Subject {
 public:
     void addObserver(Observer* o) { obs_.push_back(o); }
-    void notifyObservers(GenTetrisEvent e) {
+    void notifyObservers(EventType e) {
         for (Observer* o : obs_) {
             o->update(e);
         }

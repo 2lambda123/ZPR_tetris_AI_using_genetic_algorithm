@@ -3,37 +3,36 @@
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
 
+#include <boost/format.hpp>
 #include <fstream>
+#include <sstream>
 
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 
 namespace gentetris {
 
-void EvolutionaryStrategy::operator()() {
-    state_ = State::STOP;
-    evolution_thread_ = std::thread([this]() { evolve(); });
-    controlLoop();
+void EvolutionaryStrategy::operator()(EvolutionaryStrategy::Mode mode) {
+    finish_ = false;
+    if (mode == Mode::EVOLVE) {
+        evolve();
+    } else if (mode == Mode::PLAY) {
+        play();
+    }
 }
 
-void EvolutionaryStrategy::operator()(const std::string& input_json,
-                                      const std::string& output_json) {
-    state_ = State::STOP;
-    evolution_thread_ =
-        std::thread([this, input_json, output_json]() { evolve(input_json, output_json); });
-    controlLoop();
-}
-
-void EvolutionaryStrategy::controlLoop() {
+void EvolutionaryStrategy::play() {
     finish_ = false;
     drop_ = false;
     state_ = State::START;
+    generation_bests_ = loadFromJSON(BESTS_GAME);
+    if (generation_bests_.size() == 0) throw std::runtime_error(BESTS_GAME + " does not contain genomes");
     while (!finish_) {
         std::unique_lock<std::mutex> lk(m_);
         drop_cond_.wait(lk, [this]() { return drop_ || finish_; });
         if (finish_) return;
         if (drop_) {
-            Genome best_cpy = best;
+            Genome best_cpy = generation_bests_[0];
             Move move = generateBestMove(best_cpy, tetris_);
             move.apply(tetris_);
             drop_ = false;
@@ -50,7 +49,6 @@ void EvolutionaryStrategy::finish() {
     finish_ = true;
     if (state_ == State::START) {
         if (!tetris_.isFinished()) drop_cond_.notify_one();
-        if (evolution_thread_.joinable()) evolution_thread_.join();
     }
     state_ = State::STOP;
 }
@@ -93,7 +91,6 @@ std::vector<Genome> EvolutionaryStrategy::loadFromJSON(const std::string& file) 
     Document d;
     d.ParseStream(isw);
     assert(d.IsArray());
-    assert(d.Size() == POP_SIZE);
     for (Value::ConstValueIterator itr = d.Begin(); itr != d.End(); ++itr) {
         Genome g;
         auto g_json = itr->GetObject();
@@ -106,7 +103,6 @@ std::vector<Genome> EvolutionaryStrategy::loadFromJSON(const std::string& file) 
         g.roughness = g_json["roughness"].GetDouble();
         pop.push_back(g);
     }
-    assert(pop.size() == POP_SIZE);
     return pop;
 }
 
@@ -116,6 +112,7 @@ void EvolutionaryStrategy::evolve() {
     while (!finish_) {
         pop = next_generation(pop);
     }
+    saveToJSON(BESTS_EVOLVE, generation_bests_);
 }
 
 void EvolutionaryStrategy::evolve(const std::string& input_json, const std::string& output_json) {
@@ -136,7 +133,7 @@ std::vector<Genome> EvolutionaryStrategy::next_generation(std::vector<Genome>& p
     auto selected = selection(pop);
     auto next_pop = crossoverAndMutation(selected);
     evaluation(next_pop);
-    displayState();
+    std::cout << getInfo() << std::endl;
     t++;
     return next_pop;
 }
@@ -149,38 +146,71 @@ std::vector<Genome> EvolutionaryStrategy::initialPop() {
 
 std::vector<Genome> EvolutionaryStrategy::selection(std::vector<Genome>& pop) {
     std::vector<Genome> selected;
-    selected.reserve(POP_SIZE);
-    selected.push_back(best);
-    while (selected.size() < SELECTED_TO_CROSS_AND_MUTATE) {
-        selected.push_back(rouletteSelection(pop));
+    selected.reserve(SELECTED_TO_BREED);
+    std::sort(pop.begin(), pop.end(),
+              [](const Genome& a, const Genome& b) { return a.score > b.score; });
+    selected.push_back(pop[0]);
+    best_ = pop[0];
+    generation_bests_.push_back(best_);
+    for (std::size_t i = 0; i < SELECTED_TO_BREED; i++) {
+        selected.push_back(pop[i]);
     }
     return selected;
 }
 
 std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(const std::vector<Genome> selected) {
     std::vector<Genome> next_pop(selected);
-    while (next_pop.size() < POP_SIZE - 1) {
-        float p = generator_.random_0_1();
-        if (p < PROB_CROSSOVER) {
-            auto father = rouletteSelection(selected);
-            auto mother = rouletteSelection(selected);
-            Genome child;
-            child.max_height = (father.max_height + mother.max_height) / 2.0f;
-            next_pop.push_back(child);
-        } else {
-            float dx = std::clamp(generator_.random_0_1() - 0.5f, -MUTATION_STRENGTH, MUTATION_STRENGTH);
-            auto mutant = rouletteSelection(selected);
-            mutant.max_height += dx;
-        }
+    std::vector<Genome> children;
+    while (children.size() + SELECTED_TO_BREED < POP_SIZE - 1) {
+        children.push_back(breed(selected));
     }
-    next_pop.push_back(best);
+    for (auto& child : children) {
+        mutate(child);
+        next_pop.push_back(child);
+    }
+    assert(next_pop.size() == POP_SIZE);
     return next_pop;
+}
+
+void EvolutionaryStrategy::mutate(Genome& genome) {
+    auto mutate_gene = [this](float gene) {
+        if (generator_.random_0_1() < MUTATION_RATE) {
+            return gene + generator_.random_0_1() * MUTATION_STEP * 2 - MUTATION_STEP;
+        }
+        return gene;
+    };
+    genome.rows_cleared = mutate_gene(genome.rows_cleared);
+    genome.max_height = mutate_gene(genome.max_height);
+    genome.cumulative_height = mutate_gene(genome.cumulative_height);
+    genome.relative_height = mutate_gene(genome.relative_height);
+    genome.holes = mutate_gene(genome.holes);
+    genome.roughness = mutate_gene(genome.roughness);
+}
+
+Genome EvolutionaryStrategy::breed(const std::vector<Genome>& selected) {
+    Genome child;
+    std::vector<Genome> parents;
+    std::sample(selected.begin(), selected.end(), std::back_inserter(parents), 2,
+                std::mt19937{std::random_device{}()});
+    auto gene_picker = [](float gene_father, float gene_mother) {
+        float p = generator_.random<-1, 1>();
+        if (p >= 0.0f) return gene_father;
+        return gene_mother;
+    };
+    child.rows_cleared = gene_picker(parents[0].rows_cleared, parents[1].rows_cleared);
+    child.max_height = gene_picker(parents[0].max_height, parents[1].max_height);
+    child.cumulative_height =
+        gene_picker(parents[0].cumulative_height, parents[1].cumulative_height);
+    child.relative_height = gene_picker(parents[0].relative_height, parents[1].relative_height);
+    child.holes = gene_picker(parents[0].holes, parents[1].holes);
+    child.roughness = gene_picker(parents[0].roughness, parents[1].roughness);
+
+    return child;
 }
 
 void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
     score_sum = 0.0f;
     for (auto& c : next_pop) {
-        // Tetris tmp(tetris_);
         Tetris tmp(true);
         Move best_move;
         for (int i = 0; i < MOVES_TO_SIMULATE; i++) {
@@ -193,22 +223,12 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
         if (tmp.isFinished()) {
             c.score = 0.0f;
         } else {
-            // + 200 is needed because as for now we are using roulette selection
-            c.score = 10000.0f - best_move.getMaxHeight() - best_move.getCumulativeHeight() -
-                      best_move.getRelativeHeight() - best_move.getHoles() -
-                      best_move.getRoughness();
+            c.score = tmp.getScore();
         }
         assert(c.score >= 0.0f);
         score_sum += c.score;
     }
-    float prev_ps = 0.0f;
-    for (auto& c : next_pop) {
-        c.ps = prev_ps + c.score / score_sum;
-        prev_ps = c.ps;
-    }
-
-    best = *std::max_element(next_pop.begin(), next_pop.end(),
-                             [](const Genome& a, const Genome& b) { return a.score < b.score; });
+    mean_fitness_ = score_sum / POP_SIZE;
 }
 
 Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris) {
@@ -235,12 +255,18 @@ Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris
     return best_move;
 }
 
-void EvolutionaryStrategy::displayState() {
-    mean_fitness_ = score_sum / POP_SIZE;
-    std::cout << "Generation " << t << ": " << std::endl;
-    std::cout << "\tmean fitness: " << mean_fitness_ << std::endl;
-    printf("\tbest: (score=%f max_h=%f cumulative_h=%f relative_h=%f holes=%f)\n", best.score,
-           best.max_height, best.cumulative_height, best.relative_height, best.holes);
+std::string EvolutionaryStrategy::getInfo() {
+    std::stringstream string_stream;
+    string_stream << "Generation " << t << ": " << std::endl;
+    string_stream << "\tmean fitness: " << mean_fitness_ << std::endl;
+    string_stream
+        << boost::format(
+               "\tbest: "
+               "{\n\t\tscore=%1%\n\t\tmax_h=%2%\n\t\trows_cleared=%3%\n\t\tcumulative_h=%4%\n\t\t"
+               "relative_h=%5%\n\t\tholes=%6%\n\t\troughness=%7%)\n\t}") %
+               best_.score % best_.max_height % best_.rows_cleared % best_.cumulative_height %
+               best_.relative_height % best_.holes % best_.roughness;
+    return string_stream.str();
 }
 
 }  // namespace gentetris

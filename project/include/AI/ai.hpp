@@ -18,7 +18,6 @@ public:
     AI(Tetris &tetris) : tetris_(tetris) {}
     virtual ~AI() {}
 
-    virtual void operator()() = 0;
     virtual void finish() { finish_ = true; }
     virtual void drop() = 0;
 

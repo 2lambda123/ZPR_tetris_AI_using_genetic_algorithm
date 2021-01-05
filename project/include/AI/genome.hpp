@@ -28,7 +28,6 @@ public:
     float roughness;
 
     float score;
-    float ps;
 private:
 
     static RandomNumberGenerator& generator_;

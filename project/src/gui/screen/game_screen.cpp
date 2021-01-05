@@ -22,7 +22,8 @@ GameScreen::GameScreen(sf::RenderWindow& window, const Tetris& tetris_human, con
     createHumanLevel();
     createHumanLevelSpeed();
     createHumanLevelProgress();
-    createPlayButton();
+    createRestartButton();
+    createBackButton();
 }
 
 void GameScreen::update() {
@@ -44,12 +45,9 @@ void GameScreen::update() {
     speed << std::fixed << std::setprecision(5) << tetris_human_.getLevelSpeed();
     human_level_speed_.setString("Lv speed: " + speed.str() + " sec/line");
     ai_score_.setString("AI: " + std::to_string(tetris_ai_.getScore()));
-    play_button_.update();
-    EventManager& event_manager = EventManager::getInstance();
-    if (event_manager.peekLastEvent() == GenTetrisEvent::GAME_STARTED) {
-        event_manager.popLastEvent();
-        play_button_.setText("RESTART", font_);
-    }
+    if (tetris_human_.isFinished())
+        restart_button_.update();
+    back_button_.update();
 }
 
 void GameScreen::draw() {
@@ -62,7 +60,9 @@ void GameScreen::draw() {
     window_.draw(human_level_progress_);
     window_.draw(human_level_speed_);
     window_.draw(ai_score_);
-    window_.draw(play_button_);
+    if (tetris_human_.isFinished())
+        window_.draw(restart_button_);
+    window_.draw(back_button_);
     window_.display();
 }
 
@@ -74,18 +74,11 @@ void GameScreen::reset() {
 bool GameScreen::pollEvent(sf::Event& event) {
     bool event_polled = window_.pollEvent(event);
     if (event_polled) {
-        play_button_.handleEvent(event, window_);
+        restart_button_.handleEvent(event, window_);
+        back_button_.handleEvent(event, window_);
         return true;
     }
     return false;
-}
-
-sf::Text GameScreen::createText(const sf::Vector2f& position, int font_size) {
-    sf::Text text;
-    text.setFont(font_);
-    text.setCharacterSize(font_size);
-    text.setPosition(position);
-    return text;
 }
 
 void GameScreen::createHumanScore() {
@@ -108,12 +101,21 @@ void GameScreen::createHumanLevel() {
     human_level_ = createText(sf::Vector2f(10, 670), FONT_SIZE);
 }
 
-void GameScreen::createPlayButton() {
-    play_button_.setPosition(sf::Vector2f(300, 800));
-    play_button_.setSize(sf::Vector2f(200, 50));
-    play_button_.setText("PLAY", font_);
-    play_button_.setOnClick([]() {
-        EventManager::getInstance().addEvent(GenTetrisEvent::PLAY_BUTTON_CLICKED);
+void GameScreen::createRestartButton() {
+    restart_button_.setPosition(sf::Vector2f(300, 400));
+    restart_button_.setSize(sf::Vector2f(200, 50));
+    restart_button_.setText("RESTART", font_);
+    restart_button_.setOnClick([]() {
+        EventManager::getInstance().addEvent(EventType::RESTART_BUTTON_CLICKED);
+    });
+}
+
+void GameScreen::createBackButton() {
+    back_button_.setPosition(sf::Vector2f(300, 800));
+    back_button_.setSize(sf::Vector2f(200, 50));
+    back_button_.setText("BACK", font_);
+    back_button_.setOnClick([]() {
+      EventManager::getInstance().addEvent(EventType::BACK_BUTTON_CLICKED);
     });
 }
 

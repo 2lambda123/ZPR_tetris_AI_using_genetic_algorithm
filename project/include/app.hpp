@@ -4,6 +4,9 @@
 #include <SFML/Audio/Music.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
+#include <controller/evolve_controller.hpp>
+#include <controller/game_controller.hpp>
+#include <controller/menu_controller.hpp>
 
 #include "AI/ai.hpp"
 #include "AI/evolutionary_strategy.hpp"
@@ -25,25 +28,21 @@ private:
     const int WINDOW_HEIGHT_ = 900;
     const int FPS_ = 60;
 
-    const float DEFAULT_SOFT_DROP_INTERVAL_ = 0.05f;
-
-    const sf::Time ai_move_interval_ = sf::seconds(0.1f);
-
     const std::string BACKGROUND_MUSIC_FILE = "res/tetris_theme.ogg";
-    const float BACKGROUND_MUSIC_VOLUME = 25.0f;
+    const float BACKGROUND_MUSIC_VOLUME = 0.0f; // 0.25f
 
     enum class State {
         MENU,
-        STARTED,
+        PLAYING,
+        EVOLVING,
         CLOSED,
     } state_ = State::MENU;
 
     void pollSfmlEvents();
+    void pollCustomEvents();
     void close();
     void start();
     void reset();
-
-    void humanTick(bool is_soft_drop = false);
 
     EventManager& event_manager_;
 
@@ -55,13 +54,16 @@ private:
     GUI gui_;
 
     sf::Time tick_interval_;
-    sf::Time soft_drop_interval_;
     sf::Clock game_clock_;
-    sf::Clock ai_clock_;
 
     std::thread ai_thread_;
 
-    sf::Music background_music;
+    sf::Music background_music_;
+
+    Controller* active_controller_;
+    GameController game_controller_;
+    EvolveController evolve_controller_;
+    MenuController menu_controller_;
 };
 
 }  // namespace gentetris
