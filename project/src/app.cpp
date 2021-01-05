@@ -9,9 +9,12 @@ namespace gentetris {
 
 App::App()
     : event_manager_(EventManager::getInstance()),
-      gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_),
+      tetris_human_(),
+      tetris_ai_(true),
       ai_(std::ref(tetris_ai_)),
-      tick_count_(0) {
+      gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_) {
+    tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
+    soft_drop_interval_ = sf::seconds(DEFAULT_SOFT_DROP_INTERVAL_);
     if (!background_music.openFromFile(BACKGROUND_MUSIC_FILE)) {
         throw std::runtime_error("Cannot open " + BACKGROUND_MUSIC_FILE);
     }
@@ -24,7 +27,6 @@ void App::run() {
     while (state_ != State::CLOSED) {
         update();
         display();
-        ++tick_count_;
     }
 }
 
@@ -38,8 +40,7 @@ void App::update() {
             }
         }
         if (game_clock_.getElapsedTime() > tick_interval_) {
-            tetris_human_.tick();
-            game_clock_.restart();
+            humanTick();
         }
     }
     if (!event_manager_.isEmpty()) {
@@ -104,9 +105,8 @@ void App::pollSfmlEvents() {
     if (state_ == State::STARTED && !tetris_human_.isFinished()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2)) {
-            if (tick_count_ % SOFT_DROP_INTERVAL_ == 0) {
-                tetris_human_.tick(true);
-                game_clock_.restart();
+            if (game_clock_.getElapsedTime() > soft_drop_interval_) {
+                humanTick(true);
             }
         }
     }
@@ -128,6 +128,8 @@ void App::close() {
 
 void App::start() {
     game_clock_.restart();
+    tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
+    soft_drop_interval_ = sf::seconds(DEFAULT_SOFT_DROP_INTERVAL_);
     ai_clock_.restart();
     //ai_thread_ = std::thread([this]() { ai_("res/input.json", "res/output.json"); });
     ai_thread_ = std::thread([this]() { ai_(); });
@@ -144,6 +146,15 @@ void App::reset() {
     tetris_ai_ = Tetris(true);
     gui_.reset();
     start();
+}
+
+void App::humanTick(bool is_soft_drop) {
+    tetris_human_.tick(is_soft_drop);
+    game_clock_.restart();
+    tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
+    if (soft_drop_interval_.asSeconds() * 2 > tick_interval_.asSeconds()) {
+        soft_drop_interval_ = sf::seconds(tick_interval_.asSeconds() / 2);
+    }
 }
 
 }  // namespace gentetris
