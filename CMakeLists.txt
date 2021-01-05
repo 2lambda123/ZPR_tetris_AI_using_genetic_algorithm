@@ -51,16 +51,14 @@ add_library(gui-lib
         project/src/app.cpp
         project/include/gui/gui.hpp
         project/src/gui/gui.cpp
-        project/include/gui/utils.hpp
-        project/src/gui/utils.cpp
+        project/include/gui/gui_utils.hpp
+        project/src/gui/gui_utils.cpp
         project/include/gui/screen/screen.hpp
         project/include/gui/screen/game_screen.hpp
         project/src/gui/screen/game_screen.cpp
         project/include/event_manager.hpp
         project/include/gui/screen/menu_screen.hpp
-        project/src/gui/screen/menu_screen.cpp
-        project/include/gui/utils.hpp
-        project/src/gui/utils.cpp)
+        project/src/gui/screen/menu_screen.cpp)
 
 add_library(ai-lib
         project/include/AI/ai.hpp
