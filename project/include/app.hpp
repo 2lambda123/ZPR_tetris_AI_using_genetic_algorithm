@@ -30,18 +30,22 @@ private:
     const sf::Time ai_move_interval_ = sf::seconds(0.1f);
 
     const std::string BACKGROUND_MUSIC_FILE = "res/tetris_theme.ogg";
-    const float BACKGROUND_MUSIC_VOLUME = 25.0f;
+    const float BACKGROUND_MUSIC_VOLUME = 0.0f; // 0.25f
 
     enum class State {
         MENU,
-        STARTED,
+        PLAYING,
+        EVOLVING,
         CLOSED,
     } state_ = State::MENU;
 
     void pollSfmlEvents();
+    void pollCustomEvents();
     void close();
     void start();
     void reset();
+
+    void handlePlayerInput(const sf::Event& event);
 
     void humanTick(bool is_soft_drop = false);
 

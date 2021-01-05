@@ -22,9 +22,9 @@ private:
     void createHumanLevelProgress();
     void createHumanLevelSpeed();
     void createHumanLevel();
-    void createPlayButton();
+    void createRestartButton();
+    void createBackButton();
 
-    sf::Text createText(const sf::Vector2f& position, int font_size);
 
     const Tetris& tetris_human_;
     const Tetris& tetris_ai_;
@@ -39,7 +39,8 @@ private:
     sf::Text human_level_speed_;
     sf::Text ai_score_;
 
-    Button play_button_;
+    Button restart_button_;
+    Button back_button_;
 };
 
 }

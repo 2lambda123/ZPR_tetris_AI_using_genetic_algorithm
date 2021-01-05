@@ -24,7 +24,10 @@ void gentetris::MenuScreen::draw() {
     window_.display();
 }
 
-void gentetris::MenuScreen::reset() {}
+void gentetris::MenuScreen::reset() {
+
+}
+
 bool gentetris::MenuScreen::pollEvent(sf::Event& event) {
     bool event_polled = window_.pollEvent(event);
     if (event_polled) {
@@ -41,7 +44,7 @@ void gentetris::MenuScreen::createPlayButton() {
     play_button_.setSize(sf::Vector2f(200, 50));
     play_button_.setText("PLAY", font_);
     play_button_.setOnClick(
-        []() { EventManager::getInstance().addEvent(GenTetrisEvent::PLAY_BUTTON_CLICKED); });
+        []() { EventManager::getInstance().addEvent(EventType::PLAY_BUTTON_CLICKED); });
 }
 
 void gentetris::MenuScreen::createEvolveButton() {
@@ -49,7 +52,7 @@ void gentetris::MenuScreen::createEvolveButton() {
     evolve_button_.setSize(sf::Vector2f(200, 50));
     evolve_button_.setText("EVOLVE", font_);
     evolve_button_.setOnClick(
-        []() { EventManager::getInstance().addEvent(GenTetrisEvent::EVOLVE_BUTTON_CLICKED); });
+        []() { EventManager::getInstance().addEvent(EventType::EVOLVE_BUTTON_CLICKED); });
 }
 
 void gentetris::MenuScreen::createExitButton() {
@@ -57,7 +60,7 @@ void gentetris::MenuScreen::createExitButton() {
     exit_button_.setSize(sf::Vector2f(200, 50));
     exit_button_.setText("EXIT", font_);
     exit_button_.setOnClick(
-        []() { EventManager::getInstance().addEvent(GenTetrisEvent::EXIT_BUTTON_CLICKED); });
+        []() { EventManager::getInstance().addEvent(EventType::EXIT_BUTTON_CLICKED); });
 }
 
 }

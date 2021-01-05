@@ -58,7 +58,7 @@ add_library(gui-lib
         project/src/gui/screen/game_screen.cpp
         project/include/event_manager.hpp
         project/include/gui/screen/menu_screen.hpp
-        project/src/gui/screen/menu_screen.cpp)
+        project/src/gui/screen/menu_screen.cpp project/include/gui/screen/evolve_screen.hpp project/src/gui/screen/evolve_screen.cpp)
 
 add_library(ai-lib
         project/include/AI/ai.hpp
