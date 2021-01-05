@@ -25,7 +25,7 @@ public:
     Move(const Move &other);
     Move &operator=(const Move &other);
 
-    void apply(Tetris &tetris);
+    void apply(Tetris &tetris, bool hard_drop = true);
 
     int getMoveX() const { return move_x_; }
     int getRotation() const { return rotations_; }

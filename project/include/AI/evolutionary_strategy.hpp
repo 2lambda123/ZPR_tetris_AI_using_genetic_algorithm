@@ -25,12 +25,19 @@ public:
         drop_ = true;
         drop_cond_.notify_one();
     }
+
     void update(EventType e) override {
         if (e == EventType::TETROMINO_DROPPED) {
+            smooth_drop_ = true;
             drop();
         }
     }
+
     void finish() override;
+
+    void tick();
+
+    bool isDroppingSmoothly() const { return is_dropping_smoothly_; }
 
     std::string getInfo();
 
@@ -77,6 +84,8 @@ private:
     void saveToJSON(const std::string& file, std::vector<Genome>& genomes);
     std::vector<Genome> loadFromJSON(const std::string& file);
 
+    // TODO: move assignments to a constructor
+
     Genome best_;
     std::vector<Genome> generation_bests_;
     float mean_fitness_ = 0.0f;
@@ -86,6 +95,8 @@ private:
     std::mutex m_;
     std::condition_variable drop_cond_;
     bool drop_ = false;
+    bool smooth_drop_ = false;
+    bool is_dropping_smoothly_ = false;
 };
 
 }  // namespace gentetris

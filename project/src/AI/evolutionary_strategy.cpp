@@ -22,20 +22,27 @@ void EvolutionaryStrategy::operator()(EvolutionaryStrategy::Mode mode) {
 }
 
 void EvolutionaryStrategy::play() {
+    // TODO: are the assignments below necessary?
     finish_ = false;
     drop_ = false;
+    smooth_drop_ = false;
     state_ = State::START;
     generation_bests_ = loadFromJSON(BESTS_GAME);
-    if (generation_bests_.size() == 0) throw std::runtime_error(BESTS_GAME + " does not contain genomes");
+    if (generation_bests_.size() == 0)
+        throw std::runtime_error(BESTS_GAME + " does not contain genomes");
     while (!finish_) {
         std::unique_lock<std::mutex> lk(m_);
-        drop_cond_.wait(lk, [this]() { return drop_ || finish_; });
+        drop_cond_.wait(lk, [this]() { return (drop_ || finish_) && !is_dropping_smoothly_; });
         if (finish_) return;
         if (drop_) {
             Genome best_cpy = generation_bests_[0];
             Move move = generateBestMove(best_cpy, tetris_);
-            move.apply(tetris_);
+            move.apply(tetris_, !smooth_drop_);
+            if (smooth_drop_) {
+                is_dropping_smoothly_ = true;
+            }
             drop_ = false;
+            smooth_drop_ = false;
         }
         lk.unlock();
         if (tetris_.isFinished()) {
@@ -51,6 +58,18 @@ void EvolutionaryStrategy::finish() {
         if (!tetris_.isFinished()) drop_cond_.notify_one();
     }
     state_ = State::STOP;
+}
+
+void EvolutionaryStrategy::tick() {
+    if (is_dropping_smoothly_) {
+        bool has_dropped = tetris_.tick();
+        if (has_dropped) {
+            is_dropping_smoothly_ = false;
+            if (tetris_.isFinished()) {
+                finish();
+            }
+        }
+    }
 }
 
 void EvolutionaryStrategy::saveToJSON(const std::string& file, std::vector<Genome>& genomes) {

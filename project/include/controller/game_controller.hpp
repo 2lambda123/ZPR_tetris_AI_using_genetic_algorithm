@@ -18,8 +18,12 @@ public:
     }
 
     void update() override {
+        if (ai_.isDroppingSmoothly()) {
+            ai_.tick();
+            return;
+        }
         if (tetris_human_.isFinished()) {
-            if (ai_clock_.getElapsedTime() > ai_move_interval_ ||
+            if (ai_clock_.getElapsedTime() > AI_MOVE_INTERVAL_ ||
                 sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
                 ai_.drop();
                 ai_clock_.restart();
@@ -59,7 +63,7 @@ public:
     }
 
     void handleSfmlEvent(const sf::Event& event) override {
-        if (!tetris_human_.isFinished()) {
+        if (!tetris_human_.isFinished() && !ai_.isDroppingSmoothly()) {
             handlePlayerInput(event);
         }
     }
@@ -67,7 +71,7 @@ public:
     void handleCustomEvent(EventType e) override {}
 
 private:
-    const sf::Time ai_move_interval_ = sf::seconds(0.1f);
+    const sf::Time AI_MOVE_INTERVAL_ = sf::seconds(0.1f);
     const float DEFAULT_SOFT_DROP_INTERVAL_ = 0.05f;
 
     void humanTick(bool is_soft_drop = false) {

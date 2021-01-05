@@ -21,7 +21,13 @@ Move &Move::operator=(const Move &other) {
     return *this;
 }
 
-void Move::apply(Tetris &tetris) {
+/**
+ * @param tetris
+ * @param hard_drop defaults to true, but needs to be false when in PvAI mode for a smooth drop.
+ * When false, doesn't invoke calculateGridProperties(),
+ * but this function call doesn't have any effect when playing a normal (PvAI) game.
+ */
+void Move::apply(Tetris &tetris, bool hard_drop) {
     for (int i = 0; i < getRotation(); ++i) {
         tetris.rotateCW();
     }
@@ -36,8 +42,10 @@ void Move::apply(Tetris &tetris) {
             tetris.shiftLeft();
         }
     }
-    tetris.hardDrop();
-    calculateGridProperties(tetris);
+    if (hard_drop) {
+        tetris.hardDrop();
+        calculateGridProperties(tetris);
+    }
 }
 
 void Move::setMoveX(int value) { move_x_ = std::clamp(value, MIN_MOVE, MAX_MOVE); }
