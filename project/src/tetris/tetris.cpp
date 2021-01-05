@@ -17,6 +17,7 @@ Tetris::Tetris(bool disable_drop_scores)
       level_(1),
       level_progress_(0),
       level_speed_(1),
+      cleared_rows_(0),
       drop_scores_disabled_(disable_drop_scores) {
     for (int i = 0; i < GRID_FULL_HEIGHT; ++i) {
         std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
@@ -61,9 +62,9 @@ bool Tetris::tick(bool is_soft_drop) {
         grid_[y][x] = tetromino_.getColor();
     }
 
-    unsigned int cleared_lines = clearLines();
-    addClearedLinesScore(cleared_lines);
-    addProgress(cleared_lines);
+    clearLines();
+    addClearedLinesScore();
+    addProgress();
     generateTetromino();
     return true;
 }
@@ -149,6 +150,8 @@ unsigned int Tetris::getLevelProgress() const { return level_progress_; }
 
 double Tetris::getLevelSpeed() const { return level_speed_; }
 
+unsigned int Tetris::getLastTickClearedRowsCount() const { return cleared_rows_; }
+
 std::deque<Tetromino> Tetris::getTetrominoQueue() const { return generator_.getQueue(); }
 
 bool Tetris::isValidPosition(Position tetromino_position) const {
@@ -175,8 +178,8 @@ Tetris::Position Tetris::getHardDropPosition() const {
     return drop_pos;
 }
 
-unsigned int Tetris::clearLines() {
-    unsigned int cleared = 0;
+void Tetris::clearLines() {
+    cleared_rows_ = 0;
     int i = 0;
     while (i < GRID_FULL_HEIGHT) {
         bool is_filled_line = true;
@@ -190,16 +193,15 @@ unsigned int Tetris::clearLines() {
             grid_.erase(grid_.begin() + i);
             std::vector<Tetromino::Color> grid_line(GRID_WIDTH, Tetromino::Color::EMPTY);
             grid_.push_back(grid_line);
-            ++cleared;
+            ++cleared_rows_;
         } else {
             ++i;
         }
     }
-    return cleared;
 }
 
-void Tetris::addClearedLinesScore(unsigned int cleared_lines) {
-    switch (cleared_lines) {
+void Tetris::addClearedLinesScore() {
+    switch (cleared_rows_) {
         case 1:
             score_ += SCORE_SINGLE * level_;
             break;
@@ -217,8 +219,8 @@ void Tetris::addClearedLinesScore(unsigned int cleared_lines) {
     }
 }
 
-void Tetris::addProgress(unsigned int cleared_lines) {
-    level_progress_ += cleared_lines;
+void Tetris::addProgress() {
+    level_progress_ += cleared_rows_;
     if (level_progress_ >= LINES_PER_LEVEL) {
         // zero or mod? Decided to leave it at zero so progress is slightly slower.
         level_progress_ = 0;

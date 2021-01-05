@@ -48,6 +48,7 @@ public:
     unsigned int getLevel() const;
     unsigned int getLevelProgress() const;
     double getLevelSpeed() const;
+    unsigned int getLastTickClearedRowsCount() const;
     std::deque<Tetromino> getTetrominoQueue() const;
 
 protected:
@@ -56,9 +57,9 @@ protected:
 private:
     bool isValidPosition(Position tetromino_position) const;
     Position getHardDropPosition() const;
-    unsigned int clearLines();
-    void addClearedLinesScore(unsigned int cleared_lines);
-    void addProgress(unsigned int cleared_lines);
+    void clearLines();
+    void addClearedLinesScore();
+    void addProgress();
     void calculateLevelSpeed();
     void rotate(bool ccw);
 
@@ -73,6 +74,8 @@ private:
     unsigned int level_;
     unsigned int level_progress_;
     double level_speed_;
+
+    unsigned int cleared_rows_;
 
     bool drop_scores_disabled_;
 };
