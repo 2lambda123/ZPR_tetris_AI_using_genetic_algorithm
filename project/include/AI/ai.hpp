@@ -21,6 +21,8 @@ public:
     virtual void finish() { finish_ = true; }
     virtual void drop() = 0;
 
+    void resetTetris() { tetris_ = Tetris(true); }
+
 protected:
     Tetris &tetris_;
 
@@ -29,6 +31,6 @@ protected:
     inline static RandomNumberGenerator &generator_ = RandomNumberGenerator::getInstance();
 };
 
-}
+}  // namespace gentetris
 
 #endif

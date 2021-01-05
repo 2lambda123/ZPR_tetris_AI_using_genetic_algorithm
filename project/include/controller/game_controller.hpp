@@ -11,8 +11,8 @@ namespace gentetris {
 
 class GameController : public Controller {
 public:
-    GameController(ObservableTetris& tetris_human, Tetris& tetris_ai, EvolutionaryStrategy& ai)
-        : tetris_human_(tetris_human), tetris_ai_(tetris_ai), ai_(ai) {
+    GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai)
+        : tetris_human_(tetris_human), ai_(ai) {
         tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
         soft_drop_interval_ = sf::seconds(DEFAULT_SOFT_DROP_INTERVAL_);
     }
@@ -55,7 +55,7 @@ public:
         finish();
         tetris_human_ = ObservableTetris();
         tetris_human_.addObserver(&ai_);
-        tetris_ai_ = Tetris(true);
+        ai_.resetTetris();
     }
 
     void handleSfmlEvent(const sf::Event& event) override {
@@ -120,7 +120,6 @@ private:
     }
 
     ObservableTetris& tetris_human_;
-    Tetris& tetris_ai_;
     EvolutionaryStrategy& ai_;
 
     sf::Clock ai_clock_;
