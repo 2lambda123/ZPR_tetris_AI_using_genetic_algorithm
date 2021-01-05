@@ -17,11 +17,12 @@ GameScreen::GameScreen(sf::RenderWindow& window, const Tetris& tetris_human, con
                 TetrisBoard::TileProperties(30.0f, 0.5f)),
       next_tetromino_panel_(sf::Vector2f(337, 10), sf::Vector2i(6, 18),
                             TetrisBoard::TileProperties(20.0f, 0.5f)) {
-    createAIScore();
     createHumanScore();
+    createAIScore();
     createHumanLevel();
-    createHumanLevelSpeed();
+    createAILevel();
     createHumanLevelProgress();
+    createHumanLevelSpeed();
     createRestartButton();
     createBackButton();
 }
@@ -30,10 +31,15 @@ void GameScreen::update() {
     if (tetris_human_.isFinished() && !board_human_.isStateFinished())
         board_human_.setStateFinished(true);
     if (tetris_ai_.isFinished() && !board_ai_.isStateFinished()) board_ai_.setStateFinished(true);
+    // TODO: setting state happens in every frame even though it doesn't change that often.
+    //  Possible optimization to consider if we have time.
     board_human_.setState(tetris_human_.getDisplayGrid());
     board_ai_.setState(tetris_ai_.getDisplayGrid());
+    next_tetromino_panel_.setTetrominoQueue(tetris_human_.getTetrominoQueue());
     human_score_.setString("Human: " + std::to_string(tetris_human_.getScore()));
     human_level_.setString("Level: " + std::to_string(tetris_human_.getLevel()) + "/" +
+                           std::to_string(Tetris::MAX_LEVEL));
+    ai_level_.setString("Level: " + std::to_string(tetris_ai_.getLevel()) + "/" +
                            std::to_string(Tetris::MAX_LEVEL));
     human_level_progress_.setString(
         "Lv progress: " + std::to_string(tetris_human_.getLevelProgress()) + "/" +
@@ -57,6 +63,7 @@ void GameScreen::draw() {
     window_.draw(human_level_progress_);
     window_.draw(human_level_speed_);
     window_.draw(ai_score_);
+    window_.draw(ai_level_);
     if (tetris_human_.isFinished())
         window_.draw(restart_button_);
     window_.draw(back_button_);
@@ -67,11 +74,11 @@ void GameScreen::reset() {
     board_human_.reset();
     board_ai_.reset();
 }
+
 void GameScreen::handleSfmlEvent(const sf::Event& event) {
     restart_button_.handleEvent(event, window_);
     back_button_.handleEvent(event, window_);
 }
-
 
 void GameScreen::createHumanScore() {
     human_score_ = createText(sf::Vector2f(10, 640), FONT_SIZE);
@@ -81,16 +88,20 @@ void GameScreen::createAIScore() {
     ai_score_ = createText(sf::Vector2f(480, 640), FONT_SIZE);
 }
 
+void GameScreen::createHumanLevel() {
+    human_level_ = createText(sf::Vector2f(10, 670), FONT_SIZE);
+}
+
+void GameScreen::createAILevel() {
+    ai_level_ = createText(sf::Vector2f(480, 670), FONT_SIZE);
+}
+
 void GameScreen::createHumanLevelProgress() {
     human_level_progress_ = createText(sf::Vector2f(10, 703), (int)(FONT_SIZE * 0.75));
 }
 
 void GameScreen::createHumanLevelSpeed() {
     human_level_speed_ = createText(sf::Vector2f(10, 730), (int)(FONT_SIZE * 0.75));
-}
-
-void GameScreen::createHumanLevel() {
-    human_level_ = createText(sf::Vector2f(10, 670), FONT_SIZE);
 }
 
 void GameScreen::createRestartButton() {

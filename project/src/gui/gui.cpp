@@ -24,6 +24,8 @@ void GUI::setActiveScreen(GUI::ScreenType screen_type) {
         case ScreenType::EVOLVE:
             active_screen_ = &evolve_screen_;
             break;
+        default:
+            break;
     }
     active_screen_->reset();
 }

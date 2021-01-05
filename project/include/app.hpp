@@ -29,7 +29,7 @@ private:
     const int FPS_ = 60;
 
     const std::string BACKGROUND_MUSIC_FILE = "res/tetris_theme.ogg";
-    const float BACKGROUND_MUSIC_VOLUME = 0.0f; // 0.25f
+    const float BACKGROUND_MUSIC_VOLUME = 0.0f;  // 0.25f
 
     enum class State {
         MENU,

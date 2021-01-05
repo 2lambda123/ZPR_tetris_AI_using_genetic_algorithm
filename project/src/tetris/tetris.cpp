@@ -82,13 +82,15 @@ void Tetris::shiftRight() {
     }
 }
 
-void Tetris::hardDrop() {
+void Tetris::hardDrop(bool tick_after_drop) {
     int old_y = tetromino_position_.second;
     tetromino_position_ = getHardDropPosition();
     if (!drop_scores_disabled_) {
         score_ += (old_y - tetromino_position_.second) * SCORE_HARD_DROP;
     }
-    tick();
+    if (tick_after_drop) {
+        tick();
+    }
 }
 
 void Tetris::rotateCW() { rotate(false); }
@@ -146,6 +148,8 @@ unsigned int Tetris::getLevel() const { return level_; }
 unsigned int Tetris::getLevelProgress() const { return level_progress_; }
 
 double Tetris::getLevelSpeed() const { return level_speed_; }
+
+std::deque<Tetromino> Tetris::getTetrominoQueue() const { return generator_.getQueue(); }
 
 bool Tetris::isValidPosition(Position tetromino_position) const {
     for (const Tetromino::Square& square : tetromino_.getSquares()) {
@@ -286,7 +290,7 @@ void ObservableTetris::generateTetromino() {
     if (!isFinished()) {  // don't notify at the start of the game
         notifyObservers(
             EventType::TETROMINO_DROPPED);  // notify genetic algorithm that a tetromino has
-                                                 // changed (it should then execute hardDrop())
+                                            // changed (it should then execute hardDrop())
     }
 }
 

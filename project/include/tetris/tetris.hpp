@@ -33,14 +33,11 @@ public:
     static const int SCORE_SOFT_DROP = 1;
     static const int SCORE_HARD_DROP = 2;
 
-    static const int SCORE_SOFT_DROP_MAX = SCORE_SOFT_DROP * GRID_VISIBLE_HEIGHT;
-    static const int SCORE_HARD_DROP_MAX = SCORE_HARD_DROP * GRID_VISIBLE_HEIGHT;
-
     explicit Tetris(bool disable_drop_scores = false);
     bool tick(bool is_soft_drop = false);
     void shiftLeft();
     void shiftRight();
-    void hardDrop();
+    void hardDrop(bool tick_after_drop = true);
     void rotateCW();
     void rotateCCW();
     Grid getRawGrid() const;
@@ -51,6 +48,7 @@ public:
     unsigned int getLevel() const;
     unsigned int getLevelProgress() const;
     double getLevelSpeed() const;
+    std::deque<Tetromino> getTetrominoQueue() const;
 
 protected:
     virtual void generateTetromino();
@@ -87,6 +85,6 @@ private:
     void generateTetromino() override;
 };
 
-}
+}  // namespace gentetris
 
 #endif

@@ -8,21 +8,21 @@
 #include "controller.hpp"
 
 namespace gentetris {
+
 class GameController : public Controller {
 public:
-    GameController(ObservableTetris& tetris_human, Tetris& tetris_ai, EvolutionaryStrategy& ai)
-        : tetris_human_(tetris_human), tetris_ai_(tetris_ai), ai_(ai) {
+    GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai)
+        : tetris_human_(tetris_human), ai_(ai) {
         tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
         soft_drop_interval_ = sf::seconds(DEFAULT_SOFT_DROP_INTERVAL_);
     }
+
     void update() override {
         if (tetris_human_.isFinished()) {
-            if (ai_clock_.getElapsedTime() > ai_move_interval_) {
+            if (ai_clock_.getElapsedTime() > ai_move_interval_ ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
                 ai_.drop();
                 ai_clock_.restart();
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-                ai_.drop();
             }
         } else {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ||
@@ -36,12 +36,14 @@ public:
             }
         }
     }
+
     void start() override {
         game_clock_.restart();
         ai_clock_.restart();
         tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
         ai_thread_ = std::thread([this]() { ai_(EvolutionaryStrategy::Mode::PLAY); });
     }
+
     void finish() override {
         ai_.finish();
         if (ai_thread_.joinable()) {
@@ -53,13 +55,15 @@ public:
         finish();
         tetris_human_ = ObservableTetris();
         tetris_human_.addObserver(&ai_);
-        tetris_ai_ = Tetris(true);
+        ai_.resetTetris();
     }
+
     void handleSfmlEvent(const sf::Event& event) override {
         if (!tetris_human_.isFinished()) {
             handlePlayerInput(event);
         }
     }
+
     void handleCustomEvent(EventType e) override {}
 
 private:
@@ -74,6 +78,7 @@ private:
             soft_drop_interval_ = sf::seconds(tick_interval_.asSeconds() / 2);
         }
     }
+
     void handlePlayerInput(const sf::Event& event) {
         if (event.type == sf::Event::KeyPressed) {
             switch (event.key.code) {
@@ -94,6 +99,7 @@ private:
                 case sf::Keyboard::Space:
                 case sf::Keyboard::Numpad8:
                     tetris_human_.hardDrop();
+                    game_clock_.restart();
                     break;
                 case sf::Keyboard::Escape:
                 case sf::Keyboard::F1:
@@ -114,7 +120,6 @@ private:
     }
 
     ObservableTetris& tetris_human_;
-    Tetris& tetris_ai_;
     EvolutionaryStrategy& ai_;
 
     sf::Clock ai_clock_;
@@ -124,6 +129,7 @@ private:
 
     std::thread ai_thread_;
 };
+
 }  // namespace gentetris
 
 #endif  // GENETIC_TETRIS_GAME_CONTROLLER_HPP

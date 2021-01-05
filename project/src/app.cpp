@@ -14,7 +14,7 @@ App::App()
       tetris_ai_(true),
       ai_(std::ref(tetris_ai_)),
       gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_, ai_),
-      game_controller_(tetris_human_, tetris_ai_, ai_),
+      game_controller_(tetris_human_, ai_),
       evolve_controller_(tetris_ai_, ai_) {
     if (!background_music_.openFromFile(BACKGROUND_MUSIC_FILE)) {
         throw std::runtime_error("Cannot open " + BACKGROUND_MUSIC_FILE);
@@ -96,9 +96,7 @@ void App::close() {
     state_ = State::CLOSED;
 }
 
-void App::start() {
-    active_controller_->start();
-}
+void App::start() { active_controller_->start(); }
 
 void App::reset() {
     active_controller_->reset();

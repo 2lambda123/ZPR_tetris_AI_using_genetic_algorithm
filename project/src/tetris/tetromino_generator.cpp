@@ -2,7 +2,6 @@
 
 #include <cstdlib>
 #include <deque>
-#include <utility>
 #include <vector>
 
 #include "tetris/tetromino.hpp"
@@ -10,20 +9,20 @@
 namespace gentetris {
 
 const std::vector<Tetromino> TetrominoGenerator::TETROMINOES = {
-    Tetromino(Tetromino::Color::CYAN, Tetromino::Shape::I, std::pair(1.5, 1.5),
-              {std::pair(0, 2), std::pair(1, 2), std::pair(2, 2), std::pair(3, 2)}),
-    Tetromino(Tetromino::Color::BLUE, Tetromino::Shape::J, std::pair(1, 1),
-              {std::pair(0, 2), std::pair(0, 1), std::pair(1, 1), std::pair(2, 1)}),
-    Tetromino(Tetromino::Color::ORANGE, Tetromino::Shape::L, std::pair(1, 1),
-              {std::pair(0, 1), std::pair(1, 1), std::pair(2, 1), std::pair(2, 2)}),
-    Tetromino(Tetromino::Color::YELLOW, Tetromino::Shape::O, std::pair(1.5, 1.5),
-              {std::pair(1, 2), std::pair(2, 2), std::pair(1, 1), std::pair(2, 1)}),
-    Tetromino(Tetromino::Color::GREEN, Tetromino::Shape::S, std::pair(1, 1),
-              {std::pair(0, 1), std::pair(1, 1), std::pair(1, 2), std::pair(2, 2)}),
-    Tetromino(Tetromino::Color::PURPLE, Tetromino::Shape::T, std::pair(1, 1),
-              {std::pair(0, 1), std::pair(1, 1), std::pair(2, 1), std::pair(1, 2)}),
-    Tetromino(Tetromino::Color::RED, Tetromino::Shape::Z, std::pair(1, 1),
-              {std::pair(0, 2), std::pair(1, 2), std::pair(1, 1), std::pair(2, 1)}),
+    Tetromino(Tetromino::Color::CYAN, Tetromino::Shape::I, {1.5, 1.5},
+              {{0, 2}, {1, 2}, {2, 2}, {3, 2}}),
+    Tetromino(Tetromino::Color::BLUE, Tetromino::Shape::J, {1, 1},
+              {{0, 2}, {0, 1}, {1, 1}, {2, 1}}),
+    Tetromino(Tetromino::Color::ORANGE, Tetromino::Shape::L, {1, 1},
+              {{0, 1}, {1, 1}, {2, 1}, {2, 2}}),
+    Tetromino(Tetromino::Color::YELLOW, Tetromino::Shape::O, {1.5, 1.5},
+              {{1, 2}, {2, 2}, {1, 1}, {2, 1}}),
+    Tetromino(Tetromino::Color::GREEN, Tetromino::Shape::S, {1, 1},
+              {{0, 1}, {1, 1}, {1, 2}, {2, 2}}),
+    Tetromino(Tetromino::Color::PURPLE, Tetromino::Shape::T, {1, 1},
+              {{0, 1}, {1, 1}, {2, 1}, {1, 2}}),
+    Tetromino(Tetromino::Color::RED, Tetromino::Shape::Z, {1, 1},
+              {{0, 2}, {1, 2}, {1, 1}, {2, 1}})
 };
 
 TetrominoGenerator::TetrominoGenerator() : last_tetromino_(Tetromino()) { generateTetrominoes(); }
