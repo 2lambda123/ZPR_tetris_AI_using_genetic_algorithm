@@ -36,6 +36,7 @@ Tetris::Tetris(bool disable_drop_scores)
  * false otherwise
  */
 bool Tetris::tick(bool is_soft_drop) {
+    cleared_rows_ = 0;
     if (is_finished_) {
         return false;
     }
