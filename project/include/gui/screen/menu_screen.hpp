@@ -11,7 +11,10 @@ public:
     void update() override;
     void draw() override;
     void reset() override;
-    bool pollEvent(sf::Event& event) override;
+    void handleSfmlEvent(const sf::Event& event) override;
+private:
+public:
+    void handleCustomEvent(EventType event) override;
 private:
     void createPlayButton();
     void createEvolveButton();

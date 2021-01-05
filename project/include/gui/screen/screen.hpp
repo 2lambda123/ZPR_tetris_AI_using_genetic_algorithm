@@ -15,7 +15,8 @@ public:
     virtual void update() = 0;
     virtual void draw() = 0;
     virtual void reset() = 0;
-    virtual bool pollEvent(sf::Event& event) = 0;
+    virtual void handleSfmlEvent(const sf::Event& event) = 0;
+    virtual void handleCustomEvent(EventType event) = 0;
 
 protected:
     sf::Text createText(const sf::Vector2f& position, int font_size) {

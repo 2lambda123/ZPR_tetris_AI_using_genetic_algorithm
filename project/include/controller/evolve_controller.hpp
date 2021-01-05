@@ -18,7 +18,15 @@ public:
         move.apply(tetris_ai_);
     }
     void handleSfmlEvent(const sf::Event& e) override {}
-    void handleCustomEvent(EventType e) override {}
+    void handleCustomEvent(EventType e) override {
+        if (e == EventType::START_STOP_BUTTON_CLICKED) {
+            reset();
+            start();
+        }
+        else if (e == EventType::SAVE_BUTTON_CLICKED) {
+            ai_.save();
+        }
+    }
     void start() override {
         ai_thread_ = std::thread([this]() { ai_(EvolutionaryStrategy::Mode::EVOLVE); });
     }

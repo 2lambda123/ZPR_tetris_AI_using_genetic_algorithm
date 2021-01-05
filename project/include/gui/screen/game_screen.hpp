@@ -14,13 +14,17 @@ public:
     void update() override;
     void draw() override;
     void reset() override;
-    bool pollEvent(sf::Event& event) override;
+    void handleSfmlEvent(const sf::Event& event) override;
 
 private:
     void createHumanScore();
     void createAIScore();
     void createHumanLevelProgress();
     void createHumanLevelSpeed();
+
+public:
+    void handleCustomEvent(EventType event) override;
+private:
     void createHumanLevel();
     void createRestartButton();
     void createBackButton();

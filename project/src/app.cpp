@@ -49,6 +49,7 @@ void App::pollSfmlEvents() {
             close();
         }
         active_controller_->handleSfmlEvent(event);
+        gui_.handleSfmlEvent(event);
     }
 }
 
@@ -84,6 +85,7 @@ void App::pollCustomEvents() {
             close();
         } else {
             active_controller_->handleCustomEvent(e);
+            gui_.handleCustomEvent(e);
         }
     }
 }

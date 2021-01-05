@@ -39,6 +39,11 @@ public:
         return tmp;
     }
 
+    void save() {
+        saveToJSON(BESTS_GAME, generation_bests_);
+        EventManager::getInstance().addEvent(EventType::GENOMES_SAVED);
+    }
+
     static Move generateBestMove(const Genome& genome, Tetris& tetris);
 
 private:

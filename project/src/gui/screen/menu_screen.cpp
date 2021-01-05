@@ -28,15 +28,10 @@ void gentetris::MenuScreen::reset() {
 
 }
 
-bool gentetris::MenuScreen::pollEvent(sf::Event& event) {
-    bool event_polled = window_.pollEvent(event);
-    if (event_polled) {
-        play_button_.handleEvent(event, window_);
-        evolve_button_.handleEvent(event, window_);
-        exit_button_.handleEvent(event, window_);
-        return true;
-    }
-    return false;
+void gentetris::MenuScreen::handleSfmlEvent(const sf::Event& event) {
+    play_button_.handleEvent(event, window_);
+    evolve_button_.handleEvent(event, window_);
+    exit_button_.handleEvent(event, window_);
 }
 
 void gentetris::MenuScreen::createPlayButton() {
@@ -62,5 +57,6 @@ void gentetris::MenuScreen::createExitButton() {
     exit_button_.setOnClick(
         []() { EventManager::getInstance().addEvent(EventType::EXIT_BUTTON_CLICKED); });
 }
+void MenuScreen::handleCustomEvent(EventType event) {}
 
 }

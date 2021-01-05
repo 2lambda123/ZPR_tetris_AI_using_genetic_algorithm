@@ -67,14 +67,9 @@ void GameScreen::reset() {
     board_human_.reset();
     board_ai_.reset();
 }
-bool GameScreen::pollEvent(sf::Event& event) {
-    bool event_polled = window_.pollEvent(event);
-    if (event_polled) {
-        restart_button_.handleEvent(event, window_);
-        back_button_.handleEvent(event, window_);
-        return true;
-    }
-    return false;
+void GameScreen::handleSfmlEvent(const sf::Event& event) {
+    restart_button_.handleEvent(event, window_);
+    back_button_.handleEvent(event, window_);
 }
 
 
@@ -115,5 +110,6 @@ void GameScreen::createBackButton() {
       EventManager::getInstance().addEvent(EventType::BACK_BUTTON_CLICKED);
     });
 }
+void GameScreen::handleCustomEvent(EventType event) {}
 
 }  // namespace gentetris

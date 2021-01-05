@@ -27,7 +27,9 @@ public:
     void update();
     void draw() { active_screen_->draw(); }
     void close() { window_.close(); }
-    bool pollEvent(sf::Event& event) { return active_screen_->pollEvent(event); }
+    bool pollEvent(sf::Event& event) { return window_.pollEvent(event); }
+    void handleSfmlEvent(const sf::Event& event) { active_screen_->handleSfmlEvent(event); }
+    void handleCustomEvent(EventType event) { active_screen_->handleCustomEvent(event); }
     void reset() { active_screen_->reset(); }
     void setActiveScreen(ScreenType screen_type);
 

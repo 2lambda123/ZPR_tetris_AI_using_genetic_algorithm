@@ -16,6 +16,7 @@ EvolveScreen::EvolveScreen(sf::RenderWindow& window, EvolutionaryStrategy& ai,
     createStartStopButton();
     createSaveButton();
     createInfo();
+    createStatus();
 }
 
 void EvolveScreen::update() {
@@ -24,12 +25,16 @@ void EvolveScreen::update() {
     start_stop_button_.update();
     save_button_.update();
     info_.setString(ai_.getInfo());
+    if (status_clock_.getElapsedTime() > STATUS_PERSISTANCE) {
+        status_.setString("");
+    }
 }
 
 void EvolveScreen::draw() {
     window_.clear(BG_COLOR);
     board_ai_.draw(window_);
     window_.draw(info_);
+    window_.draw(status_);
     window_.draw(back_button_);
     window_.draw(start_stop_button_);
     window_.draw(save_button_);
@@ -40,15 +45,10 @@ void EvolveScreen::reset() {
     board_ai_.reset();
 }
 
-bool EvolveScreen::pollEvent(sf::Event& event) {
-    bool event_polled = window_.pollEvent(event);
-    if (event_polled) {
-        back_button_.handleEvent(event, window_);
-        start_stop_button_.handleEvent(event, window_);
-        save_button_.handleEvent(event, window_);
-        return true;
-    }
-    return false;
+void EvolveScreen::handleSfmlEvent(const sf::Event& event) {
+    back_button_.handleEvent(event, window_);
+    start_stop_button_.handleEvent(event, window_);
+    save_button_.handleEvent(event, window_);
 }
 
 void EvolveScreen::createBackButton() {
@@ -64,18 +64,28 @@ void EvolveScreen::createStartStopButton() {
     start_stop_button_.setSize(sf::Vector2f(200, 50));
     start_stop_button_.setText("START", font_);
     start_stop_button_.setOnClick(
-        []() { EventManager::getInstance().addEvent(EventType::BACK_BUTTON_CLICKED); });
+        []() { EventManager::getInstance().addEvent(EventType::START_STOP_BUTTON_CLICKED); });
 }
 void EvolveScreen::createSaveButton() {
     save_button_.setPosition(sf::Vector2f(510, 800));
     save_button_.setSize(sf::Vector2f(200, 50));
     save_button_.setText("SAVE", font_);
     save_button_.setOnClick(
-        []() { EventManager::getInstance().addEvent(EventType::BACK_BUTTON_CLICKED); });
+        []() { EventManager::getInstance().addEvent(EventType::SAVE_BUTTON_CLICKED); });
+}
+
+void EvolveScreen::createStatus() {
+    status_ = createText(sf::Vector2f(10, 870), (int)(FONT_SIZE * 0.65));
 }
 
 void EvolveScreen::createInfo() {
     info_ = createText(sf::Vector2f(90, 570), (int)(FONT_SIZE * 0.65));
+}
+void EvolveScreen::handleCustomEvent(EventType event) {
+    if (event == EventType::GENOMES_SAVED) {
+        status_.setString("Genomes saved");
+        status_clock_.restart();
+    }
 }
 
 }  // namespace gentetris

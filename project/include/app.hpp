@@ -53,11 +53,6 @@ private:
 
     GUI gui_;
 
-    sf::Time tick_interval_;
-    sf::Clock game_clock_;
-
-    std::thread ai_thread_;
-
     sf::Music background_music_;
 
     Controller* active_controller_;
