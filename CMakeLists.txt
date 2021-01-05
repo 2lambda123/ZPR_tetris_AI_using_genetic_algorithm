@@ -58,7 +58,7 @@ add_library(gui-lib
         project/src/gui/screen/game_screen.cpp
         project/include/event_manager.hpp
         project/include/gui/screen/menu_screen.hpp
-        project/src/gui/screen/menu_screen.cpp project/include/gui/screen/evolve_screen.hpp project/src/gui/screen/evolve_screen.cpp)
+        project/src/gui/screen/menu_screen.cpp project/include/gui/screen/evolve_screen.hpp project/src/gui/screen/evolve_screen.cpp project/include/controller/game_controller.hpp project/include/controller/evolve_controller.hpp project/include/controller/menu_controller.hpp)
 
 add_library(ai-lib
         project/include/AI/ai.hpp
@@ -69,7 +69,7 @@ add_library(ai-lib
         project/include/AI/genome.hpp
         project/src/AI/genome.cpp
         project/include/AI/ai_utils.hpp
-        project/src/AI/ai_utils.cpp)
+        project/src/AI/ai_utils.cpp project/include/controller/controller.hpp)
 
 target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window sfml-audio)
 target_link_libraries(ai-lib tetris-lib)
