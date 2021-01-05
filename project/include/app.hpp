@@ -25,9 +25,8 @@ private:
     const int WINDOW_HEIGHT_ = 900;
     const int FPS_ = 60;
 
-    const int SOFT_DROP_INTERVAL_ = 3;
+    const float DEFAULT_SOFT_DROP_INTERVAL_ = 0.05f;
 
-    const sf::Time tick_interval_ = sf::seconds(0.5f);
     const sf::Time ai_move_interval_ = sf::seconds(0.1f);
 
     const std::string BACKGROUND_MUSIC_FILE = "res/tetris_theme.ogg";
@@ -44,24 +43,26 @@ private:
     void start();
     void reset();
 
-    EventManager& event_manager_;
+    void humanTick(bool is_soft_drop = false);
 
-    GUI gui_;
+    EventManager& event_manager_;
 
     ObservableTetris tetris_human_;
     Tetris tetris_ai_;
 
     EvolutionaryStrategy ai_;
 
+    GUI gui_;
+
+    sf::Time tick_interval_;
+    sf::Time soft_drop_interval_;
     sf::Clock game_clock_;
     sf::Clock ai_clock_;
 
     std::thread ai_thread_;
 
     sf::Music background_music;
-
-    unsigned int tick_count_;
 };
 
-}
+}  // namespace gentetris
 #endif
