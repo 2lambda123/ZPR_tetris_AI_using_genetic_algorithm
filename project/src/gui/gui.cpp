@@ -7,7 +7,7 @@ GUI::GUI(int width, int height, int fps, Tetris& human_tetris, Tetris& ai_tetris
       game_screen_(window_, human_tetris, ai_tetris),
       menu_screen_(window_) {
     window_.setFramerateLimit(fps);
-    //setActiveScreen(ScreenType::MENU);
+    // setActiveScreen(ScreenType::MENU);
     setActiveScreen(ScreenType::GAME);
 }
 
@@ -20,6 +20,8 @@ void GUI::setActiveScreen(GUI::ScreenType screen_type) {
             break;
         case ScreenType::MENU:
             active_screen_ = &menu_screen_;
+            break;
+        default:
             break;
     }
     active_screen_->reset();

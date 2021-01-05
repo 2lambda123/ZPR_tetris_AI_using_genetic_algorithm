@@ -147,6 +147,8 @@ unsigned int Tetris::getLevelProgress() const { return level_progress_; }
 
 double Tetris::getLevelSpeed() const { return level_speed_; }
 
+std::deque<Tetromino> Tetris::getTetrominoQueue() const { return generator_.getQueue(); }
+
 bool Tetris::isValidPosition(Position tetromino_position) const {
     for (const Tetromino::Square& square : tetromino_.getSquares()) {
         int x = tetromino_position.first + square.first;

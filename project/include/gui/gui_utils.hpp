@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <vector>
+#include <deque>
 
 #include "tetris/tetris.hpp"
 
@@ -38,6 +39,7 @@ public:
     TetrisBoard(const sf::Vector2f& position, const sf::Vector2i& board_tile_count,
                 const TileProperties& tile_prop);
     void setState(const Tetris::Grid& tetris_grid);
+    void setTetrominoQueue(const std::deque<Tetromino>& queue);
     void draw(sf::RenderWindow& window);
     void reset() { setStateFinished(false); }
 

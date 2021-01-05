@@ -51,6 +51,7 @@ public:
     unsigned int getLevel() const;
     unsigned int getLevelProgress() const;
     double getLevelSpeed() const;
+    std::deque<Tetromino> getTetrominoQueue() const;
 
 protected:
     virtual void generateTetromino();
@@ -87,6 +88,6 @@ private:
     void generateTetromino() override;
 };
 
-}
+}  // namespace gentetris
 
 #endif

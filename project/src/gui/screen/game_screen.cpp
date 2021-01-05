@@ -29,8 +29,11 @@ void GameScreen::update() {
     if (tetris_human_.isFinished() && !board_human_.isStateFinished())
         board_human_.setStateFinished(true);
     if (tetris_ai_.isFinished() && !board_ai_.isStateFinished()) board_ai_.setStateFinished(true);
+    // TODO: setting state happens in every frame even though it doesn't change that often.
+    //  Possible optimization to consider if we have time.
     board_human_.setState(tetris_human_.getDisplayGrid());
     board_ai_.setState(tetris_ai_.getDisplayGrid());
+    next_tetromino_panel_.setTetrominoQueue(tetris_human_.getTetrominoQueue());
     human_score_.setString("Human: " + std::to_string(tetris_human_.getScore()));
     human_level_.setString("Level: " + std::to_string(tetris_human_.getLevel()) + "/" +
                            std::to_string(Tetris::MAX_LEVEL));
@@ -67,6 +70,7 @@ void GameScreen::reset() {
     board_human_.reset();
     board_ai_.reset();
 }
+
 bool GameScreen::pollEvent(sf::Event& event) {
     bool event_polled = window_.pollEvent(event);
     if (event_polled) {
@@ -112,6 +116,5 @@ void GameScreen::createPlayButton() {
         EventManager::getInstance().addEvent(GenTetrisEvent::PLAY_BUTTON_CLICKED);
     });
 }
-
 
 }  // namespace gentetris
