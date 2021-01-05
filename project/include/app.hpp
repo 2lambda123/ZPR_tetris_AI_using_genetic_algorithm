@@ -29,7 +29,7 @@ private:
     const int FPS_ = 60;
 
     const std::string BACKGROUND_MUSIC_FILE = "res/tetris_theme.ogg";
-    const float BACKGROUND_MUSIC_VOLUME = 0.0f; // 0.25f
+    const float BACKGROUND_MUSIC_VOLUME = 0.0f;  // 0.25f
 
     enum class State {
         MENU,
@@ -52,11 +52,6 @@ private:
     EvolutionaryStrategy ai_;
 
     GUI gui_;
-
-    sf::Time tick_interval_;
-    sf::Clock game_clock_;
-
-    std::thread ai_thread_;
 
     sf::Music background_music_;
 
