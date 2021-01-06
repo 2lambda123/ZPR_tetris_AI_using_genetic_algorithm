@@ -44,6 +44,7 @@ add_library(tetris-lib
 
 add_library(gui-lib
         project/src/app.cpp
+        project/src/sound_manager.cpp
         project/src/gui/gui.cpp
         project/src/gui/gui_utils.cpp
         project/src/gui/screen/game_screen.cpp

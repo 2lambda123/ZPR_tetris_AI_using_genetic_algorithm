@@ -27,24 +27,25 @@ public:
         static EventManager instance;
         return instance;
     }
+
+    EventManager(const EventManager&) = delete;
+    EventManager operator=(const EventManager&) = delete;
+
     EventType pollEvent() {
         EventType e = events.front();
         events.pop_front();
         return e;
     }
-    void addEvent(const EventType& e) {
-        events.push_back(e);
-    }
+
+    void addEvent(const EventType& e) { events.push_back(e); }
     bool isEmpty() const { return events.empty(); }
 
 private:
-    EventManager() {}
-    EventManager(const EventManager&) = delete;
-    EventManager operator=(const EventManager&) = delete;
+    EventManager() = default;
 
     std::list<EventType> events;
 };
 
-}
+}  // namespace gentetris
 
 #endif  // GENETIC_TETRIS_EVENT_MANAGER_HPP

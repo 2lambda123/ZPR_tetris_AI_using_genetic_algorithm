@@ -6,15 +6,13 @@
 #include <tetris/tetris.hpp>
 
 #include "controller.hpp"
+#include "sound_manager.hpp"
 
 namespace gentetris {
 
 class GameController : public Controller {
 public:
-    enum class State {
-        START,
-        STOP
-    } state_ = State::STOP;
+    enum class State { START, STOP } state_ = State::STOP;
 
     GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai, GUI& gui);
 
@@ -42,6 +40,8 @@ private:
     sf::Time soft_drop_interval_;
 
     std::thread ai_thread_;
+
+    SoundManager& sound_manager_;
 };
 
 }  // namespace gentetris

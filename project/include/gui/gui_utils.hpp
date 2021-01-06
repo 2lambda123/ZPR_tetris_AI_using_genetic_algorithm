@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 
+#include "sound_manager.hpp"
 #include "tetris/tetris.hpp"
 
 namespace gentetris {
@@ -69,7 +70,6 @@ protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
-    const std::string BUTTON_CLICK_SOUND = "res/button_click.wav";
     const sf::Time CLICK_ANIMATION_TIME = sf::seconds(0.1f);
     const sf::Color CLICK_HUE_CHANGE = sf::Color(20, 20, 20, 0);
 
@@ -84,8 +84,7 @@ private:
     sf::Font font_;
     sf::RectangleShape rect_;
 
-    sf::SoundBuffer buffer_;
-    sf::Sound sound_;
+    SoundManager& sound_manager_;
 
     sf::Clock clock_;
 
@@ -103,13 +102,14 @@ public:
     void update();
     void handleEvent(const sf::Event& e, const sf::Window& window);
     int getValue() const { return value_; }
+
 protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
     const sf::Vector2f PLUS_BUTTON_RELATIVE_POS = sf::Vector2f(0, -20);
-    const sf::Vector2f MINUS_BUTTON_RELATIVE_POS = sf::Vector2f (0, 24);
-    const sf::Vector2f VALUE_TEXT_RELATIVE_POS = sf::Vector2f (0, 0);
+    const sf::Vector2f MINUS_BUTTON_RELATIVE_POS = sf::Vector2f(0, 24);
+    const sf::Vector2f VALUE_TEXT_RELATIVE_POS = sf::Vector2f(0, 0);
 
     const sf::Vector2f BUTTONS_DEFAULT_SIZE = sf::Vector2f(20, 20);
 

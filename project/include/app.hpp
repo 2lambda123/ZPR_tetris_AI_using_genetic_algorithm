@@ -12,6 +12,7 @@
 #include "AI/evolutionary_strategy.hpp"
 #include "event_manager.hpp"
 #include "gui/gui.hpp"
+#include "sound_manager.hpp"
 #include "tetris/tetris.hpp"
 
 namespace gentetris {
@@ -28,9 +29,6 @@ private:
     const int WINDOW_HEIGHT_ = 900;
     const int FPS_ = 60;
 
-    const std::string BACKGROUND_MUSIC_FILE = "res/tetris_theme.ogg";
-    const float BACKGROUND_MUSIC_VOLUME = 0.0f;  // 0.25f
-
     enum class State {
         MENU,
         PLAYING,
@@ -45,6 +43,7 @@ private:
     void reset();
 
     EventManager& event_manager_;
+    SoundManager& sound_manager_;
 
     ObservableTetris tetris_human_;
     Tetris tetris_ai_;
@@ -53,8 +52,6 @@ private:
 
     GUI gui_;
 
-    sf::Music background_music_;
-
     Controller* active_controller_;
     GameController game_controller_;
     EvolveController evolve_controller_;
@@ -62,4 +59,5 @@ private:
 };
 
 }  // namespace gentetris
+
 #endif

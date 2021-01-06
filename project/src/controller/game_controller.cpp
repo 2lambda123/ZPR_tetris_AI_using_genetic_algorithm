@@ -5,11 +5,15 @@
 #include <tetris/tetris.hpp>
 
 #include "controller/controller.hpp"
+#include "sound_manager.hpp"
 
 namespace gentetris {
 
 GameController::GameController(ObservableTetris &tetris_human, EvolutionaryStrategy &ai, GUI &gui)
-    : Controller(gui), tetris_human_(tetris_human), ai_(ai) {
+    : Controller(gui),
+      tetris_human_(tetris_human),
+      ai_(ai),
+      sound_manager_(SoundManager::getInstance()) {
     tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
     soft_drop_interval_ = sf::seconds(DEFAULT_SOFT_DROP_INTERVAL_);
 }
@@ -83,6 +87,9 @@ void GameController::finish() {
 
 void GameController::humanTick(bool is_soft_drop) {
     tetris_human_.tick(is_soft_drop);
+    if (tetris_human_.getLastTickClearedRowsCount()) {
+        sound_manager_.play(Sound::ROW_CLEARED);
+    }
     game_clock_.restart();
     tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
     if (soft_drop_interval_.asSeconds() * 2 > tick_interval_.asSeconds()) {
@@ -109,8 +116,9 @@ void GameController::handlePlayerInput(const sf::Event &event) {
                 break;
             case sf::Keyboard::Space:
             case sf::Keyboard::Numpad8:
-                tetris_human_.hardDrop();
-                game_clock_.restart();
+                tetris_human_.hardDrop(false);
+                sound_manager_.play(Sound::HARD_DROP);
+                humanTick();
                 break;
             case sf::Keyboard::Escape:
             case sf::Keyboard::F1:

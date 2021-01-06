@@ -1,31 +1,25 @@
 #include "app.hpp"
 
-#include <SFML/Window/Keyboard.hpp>
-#include <iostream>
 #include <thread>
 
 #include "event_manager.hpp"
+#include "sound_manager.hpp"
 
 namespace gentetris {
 
 App::App()
     : event_manager_(EventManager::getInstance()),
+      sound_manager_(SoundManager::getInstance()),
       tetris_human_(),
       tetris_ai_(true),
       ai_(std::ref(tetris_ai_)),
       gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_, ai_),
       game_controller_(tetris_human_, ai_, gui_),
       evolve_controller_(tetris_ai_, ai_, gui_),
-      menu_controller_(gui_) {
-    if (!background_music_.openFromFile(BACKGROUND_MUSIC_FILE)) {
-        throw std::runtime_error("Cannot open " + BACKGROUND_MUSIC_FILE);
-    }
-    background_music_.setLoop(true);
-    background_music_.setVolume(BACKGROUND_MUSIC_VOLUME);
-}
+      menu_controller_(gui_) {}
 
 void App::run() {
-    background_music_.play();
+    sound_manager_.play(Sound::TETRIS_THEME);
     gui_.setActiveScreen(GUI::ScreenType::MENU);
     active_controller_ = &menu_controller_;
     while (state_ != State::CLOSED) {

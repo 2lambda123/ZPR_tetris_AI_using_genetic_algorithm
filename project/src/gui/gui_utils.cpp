@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "sound_manager.hpp"
+
 namespace gentetris {
 
 TetrisBoard::TetrisBoard(const sf::Vector2f &position, const sf::Vector2i &board_tile_count,
@@ -78,11 +80,7 @@ bool TetrisBoard::isStateFinished() const { return state_finished_; }
 
 void TetrisBoard::setStateFinished(bool finished) { state_finished_ = finished; }
 
-Button::Button() {
-    if (!buffer_.loadFromFile(BUTTON_CLICK_SOUND))
-        throw std::runtime_error("Cannot open " + BUTTON_CLICK_SOUND);
-    sound_.setBuffer(buffer_);
-}
+Button::Button() : sound_manager_(SoundManager::getInstance()) {}
 
 void Button::setPosition(const sf::Vector2f &pos) {
     text_.setPosition(pos.x, pos.y);
@@ -131,7 +129,7 @@ void Button::handleEvent(const sf::Event &e, const sf::Window &window) {
             on_click_();
             state_ = State::CLICKED;
             clock_.restart();
-            sound_.play();
+            sound_manager_.play(Sound::CLICK);
         }
     }
 }
@@ -146,7 +144,10 @@ void IncDecDialog::draw(sf::RenderTarget &target, sf::RenderStates states) const
 
 IncDecDialog::IncDecDialog() {}
 
-IncDecDialog &IncDecDialog::setPosition(const sf::Vector2f &pos) { dialog_pos_ = pos; }
+IncDecDialog &IncDecDialog::setPosition(const sf::Vector2f &pos) {
+    dialog_pos_ = pos;
+    return *this;
+}
 
 IncDecDialog &IncDecDialog::setFont(const sf::Font &font, int size) {
     font_ = font;
@@ -186,12 +187,10 @@ void IncDecDialog::build() {
     plus_button_.setText("+", font_, font_size_);
     minus_button_.setText("-", font_, font_size_);
     value_ = std::clamp(value_, value_bounds_.x, value_bounds_.y);
-    plus_button_.setOnClick([this]() {
-        value_ = std::clamp(++value_, value_bounds_.x, value_bounds_.y);
-    });
-    minus_button_.setOnClick([this]() {
-        value_ = std::clamp(--value_, value_bounds_.x, value_bounds_.y);
-    });
+    plus_button_.setOnClick(
+        [this]() { value_ = std::clamp(++value_, value_bounds_.x, value_bounds_.y); });
+    minus_button_.setOnClick(
+        [this]() { value_ = std::clamp(--value_, value_bounds_.x, value_bounds_.y); });
 }
 
 }  // namespace gentetris
