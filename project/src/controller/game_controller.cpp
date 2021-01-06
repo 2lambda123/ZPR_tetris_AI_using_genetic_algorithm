@@ -13,17 +13,26 @@ GameController::GameController(ObservableTetris &tetris_human, EvolutionaryStrat
     : Controller(gui),
       tetris_human_(tetris_human),
       ai_(ai),
-      sound_manager_(SoundManager::getInstance()) {
+      sound_manager_(SoundManager::getInstance()),
+      hard_drop_lock_(false) {
     tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
     soft_drop_interval_ = sf::seconds(DEFAULT_SOFT_DROP_INTERVAL_);
 }
 
 void GameController::update() {
+    // TODO: elseify
     if (state_ == State::STOP) {
         return;
     }
     if (ai_.isDroppingSmoothly()) {
         ai_.tick();
+        return;
+    }
+    if (hard_drop_lock_) {
+        if (game_clock_.getElapsedTime() > HARD_DROP_LOCK_DELAY_) {
+            hard_drop_lock_ = false;
+            humanTick();
+        }
         return;
     }
     if (tetris_human_.isFinished()) {
@@ -46,7 +55,8 @@ void GameController::update() {
 }
 
 void GameController::handleSfmlEvent(const sf::Event &event) {
-    if (state_ == State::START && !tetris_human_.isFinished() && !ai_.isDroppingSmoothly()) {
+    if (state_ == State::START && !tetris_human_.isFinished() && !ai_.isDroppingSmoothly() &&
+        !hard_drop_lock_) {
         handlePlayerInput(event);
     }
 }
@@ -118,7 +128,8 @@ void GameController::handlePlayerInput(const sf::Event &event) {
             case sf::Keyboard::Numpad8:
                 tetris_human_.hardDrop(false);
                 sound_manager_.play(Sound::HARD_DROP);
-                humanTick();
+                hard_drop_lock_ = true;
+                game_clock_.restart();
                 break;
             case sf::Keyboard::Escape:
             case sf::Keyboard::F1:

@@ -26,6 +26,7 @@ public:
 
 private:
     const sf::Time AI_MOVE_INTERVAL_ = sf::seconds(0.1f);
+    const sf::Time HARD_DROP_LOCK_DELAY_ = sf::seconds(0.25f);
     const float DEFAULT_SOFT_DROP_INTERVAL_ = 0.05f;
 
     void humanTick(bool is_soft_drop = false);
@@ -40,8 +41,8 @@ private:
     sf::Time soft_drop_interval_;
 
     std::thread ai_thread_;
-
     SoundManager& sound_manager_;
+    bool hard_drop_lock_;
 };
 
 }  // namespace gentetris
