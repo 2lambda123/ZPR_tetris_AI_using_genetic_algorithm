@@ -32,6 +32,7 @@ public:
     void handleCustomEvent(EventType event) { active_screen_->handleCustomEvent(event); }
     void reset() { active_screen_->reset(); }
     void setActiveScreen(ScreenType screen_type);
+    Screen* getActiveScreen() { return active_screen_; }
 
 private:
     sf::RenderWindow window_;

@@ -17,6 +17,8 @@ enum class EventType {
     SAVE_BUTTON_CLICKED,
     START_STOP_BUTTON_CLICKED,
     GENOMES_SAVED,
+    GENERATION_OUT_OF_BOUNDS,
+    GAME_STARTED,
 };
 
 class EventManager {

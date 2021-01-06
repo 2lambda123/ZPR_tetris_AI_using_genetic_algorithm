@@ -53,6 +53,8 @@ public:
 
     static Move generateBestMove(const Genome& genome, Tetris& tetris);
 
+    void setGenerationNumber(int value) { generation_number_ = value; }
+
 private:
     const std::size_t POP_SIZE = 50;
     const std::size_t SELECTED_TO_BREED = POP_SIZE / 2;
@@ -61,6 +63,7 @@ private:
     const int MOVES_TO_SIMULATE = 40;
 
     const std::string BESTS_GAME = "res/bests_game.json";
+    const std::string BESTS_GAME_DEFAULT = "res/default_bests_game.json";
     const std::string BESTS_EVOLVE = "res/bests_evolve.json";
 
     enum class State {
@@ -97,6 +100,8 @@ private:
     bool drop_ = false;
     bool smooth_drop_ = false;
     bool is_dropping_smoothly_ = false;
+
+    int generation_number_ = 0;
 };
 
 }  // namespace gentetris

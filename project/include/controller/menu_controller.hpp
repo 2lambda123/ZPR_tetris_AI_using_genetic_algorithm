@@ -5,6 +5,7 @@
 namespace gentetris {
 class MenuController : public Controller {
 public:
+    MenuController(GUI& gui): Controller(gui) {}
     void update() override {}
     void handleSfmlEvent(const sf::Event& e) override {}
     void handleCustomEvent(EventType e) override {}

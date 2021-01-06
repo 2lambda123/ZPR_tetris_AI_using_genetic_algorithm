@@ -14,8 +14,9 @@ App::App()
       tetris_ai_(true),
       ai_(std::ref(tetris_ai_)),
       gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_, ai_),
-      game_controller_(tetris_human_, ai_),
-      evolve_controller_(tetris_ai_, ai_) {
+      game_controller_(tetris_human_, ai_, gui_),
+      evolve_controller_(tetris_ai_, ai_, gui_),
+      menu_controller_(gui_) {
     if (!background_music_.openFromFile(BACKGROUND_MUSIC_FILE)) {
         throw std::runtime_error("Cannot open " + BACKGROUND_MUSIC_FILE);
     }
@@ -56,7 +57,7 @@ void App::pollSfmlEvents() {
 void App::pollCustomEvents() {
     if (!event_manager_.isEmpty()) {
         EventType e = event_manager_.pollEvent();
-        if (e == EventType::PLAY_BUTTON_CLICKED || e == EventType::RESTART_BUTTON_CLICKED) {
+        if (e == EventType::PLAY_BUTTON_CLICKED) {
             if (state_ == State::MENU) {
                 gui_.setActiveScreen(GUI::ScreenType::GAME);
                 state_ = State::PLAYING;
@@ -64,7 +65,6 @@ void App::pollCustomEvents() {
                 active_controller_ = &game_controller_;
             }
             reset();
-            start();
         } else if (e == EventType::BACK_BUTTON_CLICKED) {
             if (state_ == State::PLAYING || state_ == State::EVOLVING) {
                 gui_.setActiveScreen(GUI::ScreenType::MENU);

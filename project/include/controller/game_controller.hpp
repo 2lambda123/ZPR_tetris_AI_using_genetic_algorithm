@@ -11,13 +11,19 @@ namespace gentetris {
 
 class GameController : public Controller {
 public:
-    GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai)
-        : tetris_human_(tetris_human), ai_(ai) {
+    enum class State {
+        START,
+        STOP
+    } state_ = State::STOP;
+
+    GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai, GUI& gui)
+        : Controller(gui), tetris_human_(tetris_human), ai_(ai) {
         tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
         soft_drop_interval_ = sf::seconds(DEFAULT_SOFT_DROP_INTERVAL_);
     }
 
     void update() override {
+        if (state_ == State::STOP) return;
         if (ai_.isDroppingSmoothly()) {
             ai_.tick();
             return;
@@ -46,6 +52,7 @@ public:
         ai_clock_.restart();
         tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
         ai_thread_ = std::thread([this]() { ai_(EvolutionaryStrategy::Mode::PLAY); });
+        state_ = State::START;
     }
 
     void finish() override {
@@ -53,6 +60,7 @@ public:
         if (ai_thread_.joinable()) {
             ai_thread_.join();
         }
+        state_ = State::STOP;
     }
 
     void reset() override {
@@ -68,7 +76,15 @@ public:
         }
     }
 
-    void handleCustomEvent(EventType e) override {}
+    void handleCustomEvent(EventType e) override {
+        if (e == EventType::RESTART_BUTTON_CLICKED) {
+            ai_.setGenerationNumber(static_cast<GameScreen*>(gui_.getActiveScreen())->getNumberGenerations());
+            EventManager::getInstance().addEvent(EventType::GAME_STARTED);
+            reset();
+            gui_.reset();
+            start();
+        }
+    }
 
 private:
     const sf::Time AI_MOVE_INTERVAL_ = sf::seconds(0.1f);

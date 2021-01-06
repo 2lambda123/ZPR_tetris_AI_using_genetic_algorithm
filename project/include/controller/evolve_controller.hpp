@@ -9,7 +9,7 @@ namespace gentetris {
 
 class EvolveController : public Controller {
 public:
-    EvolveController(Tetris& tetrisAi, EvolutionaryStrategy& ai) : tetris_ai_(tetrisAi), ai_(ai) {}
+    EvolveController(Tetris& tetris_ai, EvolutionaryStrategy& ai, GUI& gui) : Controller(gui), tetris_ai_(tetris_ai), ai_(ai) {}
     void update() override {
         if (tetris_ai_.isFinished()) {
             tetris_ai_ = Tetris();
