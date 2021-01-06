@@ -72,7 +72,6 @@ void App::pollCustomEvents() {
                 active_controller_ = &menu_controller_;
                 state_ = State::MENU;
                 reset();
-                start();
             }
         } else if (e == EventType::EVOLVE_BUTTON_CLICKED) {
             gui_.setActiveScreen(GUI::ScreenType::EVOLVE);
@@ -80,7 +79,6 @@ void App::pollCustomEvents() {
             active_controller_->finish();
             active_controller_ = &evolve_controller_;
             reset();
-            start();
         } else if (e == EventType::EXIT_BUTTON_CLICKED) {
             close();
         } else {

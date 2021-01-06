@@ -37,39 +37,26 @@ include_directories(project/include)
 include_directories(lib/common/include)
 
 add_library(tetris-lib
-        project/include/tetris/tetris.hpp
         project/src/tetris/tetris.cpp
-        project/include/tetris/tetromino.hpp
         project/src/tetris/tetromino.cpp
-        project/include/tetris/tetromino_generator.hpp
         project/src/tetris/tetromino_generator.cpp
-        project/include/tetris/wall_kicks.hpp
         project/src/tetris/wall_kicks.cpp)
 
 add_library(gui-lib
-        project/include/app.hpp
         project/src/app.cpp
-        project/include/gui/gui.hpp
         project/src/gui/gui.cpp
-        project/include/gui/gui_utils.hpp
         project/src/gui/gui_utils.cpp
-        project/include/gui/screen/screen.hpp
-        project/include/gui/screen/game_screen.hpp
         project/src/gui/screen/game_screen.cpp
-        project/include/event_manager.hpp
-        project/include/gui/screen/menu_screen.hpp
-        project/src/gui/screen/menu_screen.cpp project/include/gui/screen/evolve_screen.hpp project/src/gui/screen/evolve_screen.cpp project/include/controller/game_controller.hpp project/include/controller/evolve_controller.hpp project/include/controller/menu_controller.hpp)
+        project/src/gui/screen/menu_screen.cpp
+        project/src/gui/screen/evolve_screen.cpp
+        project/src/controller/game_controller.cpp
+        project/src/controller/evolve_controller.cpp)
 
 add_library(ai-lib
-        project/include/AI/ai.hpp
-        project/include/AI/evolutionary_strategy.hpp
         project/src/AI/evolutionary_strategy.cpp
-        project/include/AI/move.hpp
         project/src/AI/move.cpp
-        project/include/AI/genome.hpp
         project/src/AI/genome.cpp
-        project/include/AI/ai_utils.hpp
-        project/src/AI/ai_utils.cpp project/include/controller/controller.hpp)
+        project/src/AI/ai_utils.cpp)
 
 target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window sfml-audio)
 target_link_libraries(ai-lib tetris-lib)

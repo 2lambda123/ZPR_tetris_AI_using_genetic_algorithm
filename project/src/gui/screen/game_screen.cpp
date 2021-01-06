@@ -79,7 +79,6 @@ void GameScreen::draw() {
 }
 
 void GameScreen::reset() {
-    start_restart_button_.setText("START", font_);
     board_human_.reset();
     board_ai_.reset();
     state_ = State::STOP;
@@ -112,8 +111,7 @@ void GameScreen::createStartRestartButton() {
     start_restart_button_.setSize(sf::Vector2f(200, 50));
     start_restart_button_.setText("START", font_);
     start_restart_button_.setOnClick([this]() {
-        start_restart_button_.setText("RESTART", font_);
-        EventManager::getInstance().addEvent(EventType::RESTART_BUTTON_CLICKED);
+      EventManager::getInstance().addEvent(EventType::START_GAME_BUTTON_CLICKED);
     });
 }
 

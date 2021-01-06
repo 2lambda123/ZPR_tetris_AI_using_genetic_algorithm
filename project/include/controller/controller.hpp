@@ -1,8 +1,10 @@
 #ifndef GENETIC_TETRIS_CONTROLLER_HPP
 #define GENETIC_TETRIS_CONTROLLER_HPP
+
 #include <SFML/Window/Event.hpp>
 #include "event_manager.hpp"
 #include "gui/gui.hpp"
+
 namespace gentetris {
 
 class Controller {
@@ -19,6 +21,6 @@ protected:
     GUI& gui_;
 };
 
-}
+}  // namespace gentetris
 
 #endif  // GENETIC_TETRIS_CONTROLLER_HPP
