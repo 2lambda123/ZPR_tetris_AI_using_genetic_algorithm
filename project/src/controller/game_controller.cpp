@@ -20,7 +20,6 @@ GameController::GameController(ObservableTetris &tetris_human, EvolutionaryStrat
 }
 
 void GameController::update() {
-    // TODO: elseify
     if (state_ == State::STOP) {
         return;
     }
@@ -54,24 +53,6 @@ void GameController::update() {
     }
 }
 
-void GameController::handleSfmlEvent(const sf::Event &event) {
-    if (state_ == State::START && !tetris_human_.isFinished() && !ai_.isDroppingSmoothly() &&
-        !hard_drop_lock_) {
-        handlePlayerInput(event);
-    }
-}
-
-void GameController::handleCustomEvent(EventType e) {
-    if (e == EventType::START_GAME_BUTTON_CLICKED) {
-        ai_.setGenerationNumber(
-            static_cast<GameScreen *>(gui_.getActiveScreen())->getNumberGenerations());
-        EventManager::getInstance().addEvent(EventType::GAME_STARTED);
-        reset();
-        gui_.reset();
-        start();
-    }
-}
-
 void GameController::start() {
     game_clock_.restart();
     ai_clock_.restart();
@@ -93,6 +74,24 @@ void GameController::finish() {
         ai_thread_.join();
     }
     state_ = State::STOP;
+}
+
+void GameController::handleSfmlEvent(const sf::Event &event) {
+    if (state_ == State::START && !tetris_human_.isFinished() && !ai_.isDroppingSmoothly() &&
+        !hard_drop_lock_) {
+        handlePlayerInput(event);
+    }
+}
+
+void GameController::handleCustomEvent(EventType e) {
+    if (e == EventType::START_GAME_BUTTON_CLICKED) {
+        ai_.setGenerationNumber(
+            dynamic_cast<GameScreen *>(gui_.getActiveScreen())->getNumberGenerations());
+        EventManager::getInstance().addEvent(EventType::GAME_STARTED);
+        reset();
+        gui_.reset();
+        start();
+    }
 }
 
 void GameController::humanTick(bool is_soft_drop) {
@@ -130,10 +129,6 @@ void GameController::handlePlayerInput(const sf::Event &event) {
                 sound_manager_.play(Sound::HARD_DROP);
                 hard_drop_lock_ = true;
                 game_clock_.restart();
-                break;
-            case sf::Keyboard::Escape:
-            case sf::Keyboard::F1:
-                // TODO: pause
                 break;
             case sf::Keyboard::Left:
             case sf::Keyboard::Numpad4:

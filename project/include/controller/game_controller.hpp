@@ -18,8 +18,8 @@ public:
 
     void update() override;
     void start() override;
-    void finish() override;
     void reset() override;
+    void finish() override;
 
     void handleSfmlEvent(const sf::Event& event) override;
     void handleCustomEvent(EventType e) override;

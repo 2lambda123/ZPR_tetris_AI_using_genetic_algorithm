@@ -7,13 +7,15 @@ namespace genetic_tetris {
 
 class MenuController : public Controller {
 public:
-    MenuController(GUI& gui): Controller(gui) {}
+    explicit MenuController(GUI& gui) : Controller(gui) {}
+
     void update() override {}
-    void handleSfmlEvent([[maybe_unused]] const sf::Event& e) override {}
-    void handleCustomEvent([[maybe_unused]] EventType e) override {}
     void start() override {}
     void reset() override {}
     void finish() override {}
+
+    void handleSfmlEvent(const sf::Event&) override {}
+    void handleCustomEvent(EventType) override {}
 };
 
 }  // namespace genetic_tetris
