@@ -22,21 +22,18 @@ const std::vector<Tetromino> TetrominoGenerator::TETROMINOES = {
     Tetromino(Tetromino::Color::PURPLE, Tetromino::Shape::T, {1, 1},
               {{0, 1}, {1, 1}, {2, 1}, {1, 2}}),
     Tetromino(Tetromino::Color::RED, Tetromino::Shape::Z, {1, 1},
-              {{0, 2}, {1, 2}, {1, 1}, {2, 1}})
-};
+              {{0, 2}, {1, 2}, {1, 1}, {2, 1}})};
 
-TetrominoGenerator::TetrominoGenerator() : last_tetromino_(Tetromino()) { generateTetrominoes(); }
+TetrominoGenerator::TetrominoGenerator() { generateTetrominoes(); }
 
 Tetromino TetrominoGenerator::getNextTetromino() {
-    last_tetromino_ = queue_.front();
+    Tetromino next_tetromino = queue_.front();
     queue_.pop_front();
     if (queue_.size() < QUEUE_LENGTH) {
         generateTetrominoes();
     }
-    return last_tetromino_;
+    return next_tetromino;
 }
-
-Tetromino TetrominoGenerator::getLastTetromino() const { return last_tetromino_; }
 
 std::deque<Tetromino> TetrominoGenerator::getQueue() const {
     return std::deque<Tetromino>(queue_.begin(), queue_.begin() + QUEUE_LENGTH);

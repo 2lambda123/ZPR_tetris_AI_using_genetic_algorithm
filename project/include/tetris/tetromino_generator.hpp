@@ -15,14 +15,12 @@ public:
 
     TetrominoGenerator();
     Tetromino getNextTetromino();
-    Tetromino getLastTetromino() const;
     std::deque<Tetromino> getQueue() const;
 
 private:
     void generateTetrominoes();
 
     std::deque<Tetromino> queue_;
-    Tetromino last_tetromino_;
 };
 
 }  // namespace gentetris
