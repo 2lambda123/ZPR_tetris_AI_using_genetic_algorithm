@@ -64,7 +64,7 @@ void EvolveScreen::createStartStopButton() {
     start_stop_button_.setSize(sf::Vector2f(200, 50));
     start_stop_button_.setText("START", font_);
     start_stop_button_.setOnClick(
-        []() { EventManager::getInstance().addEvent(EventType::START_STOP_BUTTON_CLICKED); });
+        []() { EventManager::getInstance().addEvent(EventType::START_EVOLVE_BUTTON_CLICKED); });
 }
 void EvolveScreen::createSaveButton() {
     save_button_.setPosition(sf::Vector2f(510, 800));

@@ -10,9 +10,14 @@ namespace gentetris {
 
 class EvolveController : public Controller {
 public:
-    EvolveController(Tetris& tetrisAi, EvolutionaryStrategy& ai);
+    enum class State {
+        START,
+        STOP
+    } state_ = State::STOP;
+
+    EvolveController(Tetris& tetris_ai, EvolutionaryStrategy& ai, GUI& gui);
     void update() override;
-    void handleSfmlEvent([[maybe_unused]] const sf::Event& e) override {}
+    void handleSfmlEvent(const sf::Event& e) override {}
     void handleCustomEvent(EventType e) override;
     void start() override;
     void reset() override;

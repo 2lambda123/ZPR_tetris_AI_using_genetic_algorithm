@@ -11,13 +11,20 @@ namespace gentetris {
 
 class GameController : public Controller {
 public:
-    GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai);
+    enum class State {
+        START,
+        STOP
+    } state_ = State::STOP;
+
+    GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai, GUI& gui);
+
     void update() override;
-    void handleSfmlEvent(const sf::Event& event) override;
-    void handleCustomEvent([[maybe_unused]] EventType e) override {}
     void start() override;
-    void reset() override;
     void finish() override;
+    void reset() override;
+
+    void handleSfmlEvent(const sf::Event& event) override;
+    void handleCustomEvent(EventType e) override;
 
 private:
     const sf::Time AI_MOVE_INTERVAL_ = sf::seconds(0.1f);

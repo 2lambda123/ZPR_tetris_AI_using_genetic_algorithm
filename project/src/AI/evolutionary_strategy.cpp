@@ -29,14 +29,18 @@ void EvolutionaryStrategy::play() {
     state_ = State::START;
     generation_bests_ = loadFromJSON(BESTS_GAME);
     if (generation_bests_.size() == 0)
-        throw std::runtime_error(BESTS_GAME + " does not contain genomes");
+        generation_bests_ = loadFromJSON(BESTS_GAME_DEFAULT);
+    else if (generation_bests_.size() <= generation_number_) {
+        generation_number_ = generation_bests_.size() - 1;
+        EventManager::getInstance().addEvent(EventType::GENERATION_OUT_OF_BOUNDS);
+    }
     while (!finish_) {
         std::unique_lock<std::mutex> lk(m_);
         drop_cond_.wait(lk, [this]() { return (drop_ || finish_) && !is_dropping_smoothly_; });
         if (finish_) return;
         if (drop_) {
-            Genome best_cpy = generation_bests_[0];
-            Move move = generateBestMove(best_cpy, tetris_);
+            Genome genome = generation_bests_[generation_number_];
+            Move move = generateBestMove(genome, tetris_);
             move.apply(tetris_, !smooth_drop_);
             if (smooth_drop_) {
                 is_dropping_smoothly_ = true;

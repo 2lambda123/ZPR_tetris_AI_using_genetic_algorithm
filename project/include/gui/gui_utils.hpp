@@ -4,9 +4,9 @@
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
+#include <deque>
 #include <map>
 #include <vector>
-#include <deque>
 
 #include "tetris/tetris.hpp"
 
@@ -60,7 +60,7 @@ public:
     Button();
     void setPosition(const sf::Vector2f& pos);
     void setSize(const sf::Vector2f& size);
-    void setText(const std::string &text, const sf::Font &font, int size = 24);
+    void setText(const std::string& text, const sf::Font& font, int size = 24);
     void update();
     void handleEvent(const sf::Event& e, const sf::Window& window);
     void setOnClick(std::function<void()> on_click);
@@ -90,6 +90,39 @@ private:
     sf::Clock clock_;
 
     std::function<void()> on_click_;
+};
+
+class IncDecDialog : public sf::Drawable {
+public:
+    IncDecDialog();
+    IncDecDialog& setPosition(const sf::Vector2f& pos);
+    IncDecDialog& setFont(const sf::Font& font, int size = 24);
+    IncDecDialog& setButtonSize(const sf::Vector2f& size);
+    IncDecDialog& setValueBounds(const sf::Vector2i& bounds);
+    void build();
+    void update();
+    void handleEvent(const sf::Event& e, const sf::Window& window);
+    int getValue() const { return value_; }
+protected:
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+private:
+    const sf::Vector2f PLUS_BUTTON_RELATIVE_POS = sf::Vector2f(0, -20);
+    const sf::Vector2f MINUS_BUTTON_RELATIVE_POS = sf::Vector2f (0, 24);
+    const sf::Vector2f VALUE_TEXT_RELATIVE_POS = sf::Vector2f (0, 0);
+
+    const sf::Vector2f BUTTONS_DEFAULT_SIZE = sf::Vector2f(20, 20);
+
+    sf::Vector2f dialog_pos_;
+    sf::Vector2i value_bounds_;
+    Button plus_button_;
+    Button minus_button_;
+    sf::Vector2f button_size_ = BUTTONS_DEFAULT_SIZE;
+    sf::Text value_text_;
+    int value_ = 0;
+
+    sf::Font font_;
+    int font_size_;
 };
 
 }  // namespace gentetris

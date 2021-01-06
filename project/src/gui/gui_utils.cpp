@@ -138,4 +138,60 @@ void Button::handleEvent(const sf::Event &e, const sf::Window &window) {
 
 void Button::setOnClick(std::function<void()> on_click) { on_click_ = on_click; }
 
+void IncDecDialog::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    target.draw(plus_button_, states);
+    target.draw(minus_button_, states);
+    target.draw(value_text_, states);
+}
+
+IncDecDialog::IncDecDialog() {}
+
+IncDecDialog &IncDecDialog::setPosition(const sf::Vector2f &pos) { dialog_pos_ = pos; }
+
+IncDecDialog &IncDecDialog::setFont(const sf::Font &font, int size) {
+    font_ = font;
+    font_size_ = size;
+    return *this;
+}
+
+IncDecDialog &IncDecDialog::setButtonSize(const sf::Vector2f &size) {
+    button_size_ = size;
+    return *this;
+}
+
+IncDecDialog &IncDecDialog::setValueBounds(const sf::Vector2i &bounds) {
+    value_bounds_ = bounds;
+    return *this;
+}
+
+void IncDecDialog::update() {
+    plus_button_.update();
+    minus_button_.update();
+}
+
+void IncDecDialog::handleEvent(const sf::Event &e, const sf::Window &window) {
+    plus_button_.handleEvent(e, window);
+    minus_button_.handleEvent(e, window);
+    value_text_.setString(std::to_string(value_));
+}
+
+void IncDecDialog::build() {
+    plus_button_.setSize(button_size_);
+    minus_button_.setSize(button_size_);
+    value_text_.setFont(font_);
+    value_text_.setCharacterSize(font_size_);
+    value_text_.setPosition(dialog_pos_ + VALUE_TEXT_RELATIVE_POS);
+    plus_button_.setPosition(dialog_pos_ + PLUS_BUTTON_RELATIVE_POS);
+    minus_button_.setPosition(dialog_pos_ + MINUS_BUTTON_RELATIVE_POS);
+    plus_button_.setText("+", font_, font_size_);
+    minus_button_.setText("-", font_, font_size_);
+    value_ = std::clamp(value_, value_bounds_.x, value_bounds_.y);
+    plus_button_.setOnClick([this]() {
+        value_ = std::clamp(++value_, value_bounds_.x, value_bounds_.y);
+    });
+    minus_button_.setOnClick([this]() {
+        value_ = std::clamp(--value_, value_bounds_.x, value_bounds_.y);
+    });
+}
+
 }  // namespace gentetris

@@ -1,11 +1,12 @@
 #include "gui/screen/game_screen.hpp"
 
-#include <iomanip>
 #include <event_manager.hpp>
+#include <iomanip>
 
 namespace gentetris {
 
-GameScreen::GameScreen(sf::RenderWindow& window, const Tetris& tetris_human, const Tetris& tetris_ai)
+GameScreen::GameScreen(sf::RenderWindow& window, const Tetris& tetris_human,
+                       const Tetris& tetris_ai)
     : Screen(window),
       tetris_human_(tetris_human),
       tetris_ai_(tetris_ai),
@@ -23,8 +24,10 @@ GameScreen::GameScreen(sf::RenderWindow& window, const Tetris& tetris_human, con
     createAILevel();
     createHumanLevelProgress();
     createHumanLevelSpeed();
-    createRestartButton();
+    createStartRestartButton();
     createBackButton();
+    createGenerationDialog();
+    createStatus();
 }
 
 void GameScreen::update() {
@@ -40,7 +43,7 @@ void GameScreen::update() {
     human_level_.setString("Level: " + std::to_string(tetris_human_.getLevel()) + "/" +
                            std::to_string(Tetris::MAX_LEVEL));
     ai_level_.setString("Level: " + std::to_string(tetris_ai_.getLevel()) + "/" +
-                           std::to_string(Tetris::MAX_LEVEL));
+                        std::to_string(Tetris::MAX_LEVEL));
     human_level_progress_.setString(
         "Lv progress: " + std::to_string(tetris_human_.getLevelProgress()) + "/" +
         std::to_string(Tetris::LINES_PER_LEVEL));
@@ -48,9 +51,12 @@ void GameScreen::update() {
     speed << std::fixed << std::setprecision(5) << tetris_human_.getLevelSpeed();
     human_level_speed_.setString("Lv speed: " + speed.str() + " sec/line");
     ai_score_.setString("AI: " + std::to_string(tetris_ai_.getScore()));
-    if (tetris_human_.isFinished())
-        restart_button_.update();
+    if (state_ == State::STOP || tetris_human_.isFinished()) start_restart_button_.update();
     back_button_.update();
+    generation_number_dialog_.update();
+    if (status_clock_.getElapsedTime() > STATUS_PERSISTANCE) {
+        status_.setString("");
+    }
 }
 
 void GameScreen::draw() {
@@ -64,37 +70,33 @@ void GameScreen::draw() {
     window_.draw(human_level_speed_);
     window_.draw(ai_score_);
     window_.draw(ai_level_);
-    if (tetris_human_.isFinished())
-        window_.draw(restart_button_);
+    if (state_ == State::STOP || tetris_human_.isFinished()) window_.draw(start_restart_button_);
     window_.draw(back_button_);
+    window_.draw(generation_text_);
+    window_.draw(generation_number_dialog_);
+    window_.draw(status_);
     window_.display();
 }
 
 void GameScreen::reset() {
     board_human_.reset();
     board_ai_.reset();
+    state_ = State::STOP;
 }
 
 void GameScreen::handleSfmlEvent(const sf::Event& event) {
-    restart_button_.handleEvent(event, window_);
+    start_restart_button_.handleEvent(event, window_);
     back_button_.handleEvent(event, window_);
+    generation_number_dialog_.handleEvent(event, window_);
 }
 
-void GameScreen::createHumanScore() {
-    human_score_ = createText(sf::Vector2f(10, 640), FONT_SIZE);
-}
+void GameScreen::createHumanScore() { human_score_ = createText(sf::Vector2f(10, 640), FONT_SIZE); }
 
-void GameScreen::createAIScore() {
-    ai_score_ = createText(sf::Vector2f(480, 640), FONT_SIZE);
-}
+void GameScreen::createAIScore() { ai_score_ = createText(sf::Vector2f(480, 640), FONT_SIZE); }
 
-void GameScreen::createHumanLevel() {
-    human_level_ = createText(sf::Vector2f(10, 670), FONT_SIZE);
-}
+void GameScreen::createHumanLevel() { human_level_ = createText(sf::Vector2f(10, 670), FONT_SIZE); }
 
-void GameScreen::createAILevel() {
-    ai_level_ = createText(sf::Vector2f(480, 670), FONT_SIZE);
-}
+void GameScreen::createAILevel() { ai_level_ = createText(sf::Vector2f(480, 670), FONT_SIZE); }
 
 void GameScreen::createHumanLevelProgress() {
     human_level_progress_ = createText(sf::Vector2f(10, 703), (int)(FONT_SIZE * 0.75));
@@ -104,12 +106,12 @@ void GameScreen::createHumanLevelSpeed() {
     human_level_speed_ = createText(sf::Vector2f(10, 730), (int)(FONT_SIZE * 0.75));
 }
 
-void GameScreen::createRestartButton() {
-    restart_button_.setPosition(sf::Vector2f(300, 400));
-    restart_button_.setSize(sf::Vector2f(200, 50));
-    restart_button_.setText("RESTART", font_);
-    restart_button_.setOnClick([]() {
-        EventManager::getInstance().addEvent(EventType::RESTART_BUTTON_CLICKED);
+void GameScreen::createStartRestartButton() {
+    start_restart_button_.setPosition(sf::Vector2f(300, 400));
+    start_restart_button_.setSize(sf::Vector2f(200, 50));
+    start_restart_button_.setText("START", font_);
+    start_restart_button_.setOnClick([this]() {
+      EventManager::getInstance().addEvent(EventType::START_GAME_BUTTON_CLICKED);
     });
 }
 
@@ -117,10 +119,31 @@ void GameScreen::createBackButton() {
     back_button_.setPosition(sf::Vector2f(300, 800));
     back_button_.setSize(sf::Vector2f(200, 50));
     back_button_.setText("BACK", font_);
-    back_button_.setOnClick([]() {
-      EventManager::getInstance().addEvent(EventType::BACK_BUTTON_CLICKED);
-    });
+    back_button_.setOnClick(
+        []() { EventManager::getInstance().addEvent(EventType::BACK_BUTTON_CLICKED); });
 }
-void GameScreen::handleCustomEvent(EventType event) {}
+void GameScreen::handleCustomEvent(EventType event) {
+    if (event == EventType::GENERATION_OUT_OF_BOUNDS) {
+        status_.setString(
+            "Generation number out of bounds. You may consider going back to evolve screen.");
+        status_clock_.restart();
+    }
+    else if (event == EventType::GAME_STARTED) {
+        state_ = State::START;
+    }
+}
+
+void GameScreen::createGenerationDialog() {
+    generation_text_ = createText(sf::Vector2f(480, 740), (int)(FONT_SIZE * 0.75));
+    generation_text_.setString("generation");
+    generation_number_dialog_.setFont(font_, (int)(FONT_SIZE * 0.75))
+        .setPosition(sf::Vector2f(600, 740))
+        .setValueBounds(sf::Vector2i(0, 99))
+        .build();
+}
+
+void GameScreen::createStatus() {
+    status_ = createText(sf::Vector2f(10, 870), (int)(FONT_SIZE * 0.65));
+}
 
 }  // namespace gentetris

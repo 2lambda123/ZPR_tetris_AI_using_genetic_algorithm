@@ -8,13 +8,14 @@
 
 namespace gentetris {
 
-GameController::GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai)
-    : tetris_human_(tetris_human), ai_(ai) {
+GameController::GameController(ObservableTetris &tetris_human, EvolutionaryStrategy &ai, GUI &gui)
+    : Controller(gui), tetris_human_(tetris_human), ai_(ai) {
     tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
     soft_drop_interval_ = sf::seconds(DEFAULT_SOFT_DROP_INTERVAL_);
 }
 
 void GameController::update() {
+    if (state_ == State::STOP) return;
     if (ai_.isDroppingSmoothly()) {
         ai_.tick();
         return;
@@ -38,9 +39,20 @@ void GameController::update() {
     }
 }
 
-void GameController::handleSfmlEvent(const sf::Event& event) {
+void GameController::handleSfmlEvent(const sf::Event &event) {
     if (!tetris_human_.isFinished() && !ai_.isDroppingSmoothly()) {
         handlePlayerInput(event);
+    }
+}
+
+void GameController::handleCustomEvent(EventType e) {
+    if (e == EventType::START_GAME_BUTTON_CLICKED) {
+        ai_.setGenerationNumber(
+            static_cast<GameScreen *>(gui_.getActiveScreen())->getNumberGenerations());
+        EventManager::getInstance().addEvent(EventType::GAME_STARTED);
+        reset();
+        gui_.reset();
+        start();
     }
 }
 
@@ -49,6 +61,7 @@ void GameController::start() {
     ai_clock_.restart();
     tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
     ai_thread_ = std::thread([this]() { ai_(EvolutionaryStrategy::Mode::PLAY); });
+    state_ = State::START;
 }
 
 void GameController::reset() {
@@ -63,6 +76,7 @@ void GameController::finish() {
     if (ai_thread_.joinable()) {
         ai_thread_.join();
     }
+    state_ = State::STOP;
 }
 
 void GameController::humanTick(bool is_soft_drop) {
@@ -74,7 +88,7 @@ void GameController::humanTick(bool is_soft_drop) {
     }
 }
 
-void GameController::handlePlayerInput(const sf::Event& event) {
+void GameController::handlePlayerInput(const sf::Event &event) {
     if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
             case sf::Keyboard::Up:
