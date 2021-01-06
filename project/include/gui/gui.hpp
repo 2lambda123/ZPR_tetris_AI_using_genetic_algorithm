@@ -17,30 +17,31 @@ namespace genetic_tetris {
 class GUI {
 public:
     enum class ScreenType {
-        GAME,
         MENU,
+        GAME,
         EVOLVE,
     };
 
     GUI(int width, int height, int fps, Tetris& human_tetris, Tetris& ai_tetris,
         EvolutionaryStrategy& ai);
     void update();
-    void draw() { active_screen_->draw(); }
-    void close() { window_.close(); }
-    bool pollEvent(sf::Event& event) { return window_.pollEvent(event); }
-    void handleSfmlEvent(const sf::Event& event) { active_screen_->handleSfmlEvent(event); }
-    void handleCustomEvent(EventType event) { active_screen_->handleCustomEvent(event); }
-    void reset() { active_screen_->reset(); }
+    void draw();
+    void close();
+    bool pollEvent(sf::Event& event);
+    void handleSfmlEvent(const sf::Event& event);
+    void handleCustomEvent(EventType event);
+    void reset();
     void setActiveScreen(ScreenType screen_type);
-    Screen* getActiveScreen() { return active_screen_; }
+    Screen* getActiveScreen();
 
 private:
     sf::RenderWindow window_;
 
-    Screen* active_screen_;
-    GameScreen game_screen_;
     MenuScreen menu_screen_;
+    GameScreen game_screen_;
     EvolveScreen evolve_screen_;
+
+    Screen* active_screen_;
 };
 
 }  // namespace genetic_tetris

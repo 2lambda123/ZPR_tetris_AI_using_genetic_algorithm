@@ -25,16 +25,16 @@ public:
     void display();
 
 private:
-    const int WINDOW_WIDTH_ = 800;
-    const int WINDOW_HEIGHT_ = 900;
-    const int FPS_ = 60;
-
     enum class State {
         MENU,
         PLAYING,
         EVOLVING,
         CLOSED,
-    } state_ = State::MENU;
+    };
+
+    const static int WINDOW_WIDTH_ = 800;
+    const static int WINDOW_HEIGHT_ = 900;
+    const static int FPS_ = 60;
 
     void pollSfmlEvents();
     void pollCustomEvents();
@@ -52,10 +52,12 @@ private:
 
     GUI gui_;
 
-    Controller* active_controller_;
     GameController game_controller_;
     EvolveController evolve_controller_;
     MenuController menu_controller_;
+
+    State state_;
+    Controller* active_controller_;
 };
 
 }  // namespace genetic_tetris

@@ -5,13 +5,26 @@ namespace genetic_tetris {
 GUI::GUI(int width, int height, int fps, Tetris& human_tetris, Tetris& ai_tetris,
          EvolutionaryStrategy& ai)
     : window_(sf::VideoMode(width, height), "Tetris AI"),
-      game_screen_(window_, human_tetris, ai_tetris),
       menu_screen_(window_),
-      evolve_screen_(window_, ai, ai_tetris) {
+      game_screen_(window_, human_tetris, ai_tetris),
+      evolve_screen_(window_, ai, ai_tetris),
+      active_screen_(&menu_screen_) {
     window_.setFramerateLimit(fps);
 }
 
 void GUI::update() { active_screen_->update(); }
+
+void GUI::draw() { active_screen_->draw(); }
+
+void GUI::close() { window_.close(); }
+
+bool GUI::pollEvent(sf::Event& event) { return window_.pollEvent(event); }
+
+void GUI::handleSfmlEvent(const sf::Event& event) { active_screen_->handleSfmlEvent(event); }
+
+void GUI::handleCustomEvent(EventType event) { active_screen_->handleCustomEvent(event); }
+
+void GUI::reset() { active_screen_->reset(); }
 
 void GUI::setActiveScreen(GUI::ScreenType screen_type) {
     switch (screen_type) {
@@ -29,5 +42,7 @@ void GUI::setActiveScreen(GUI::ScreenType screen_type) {
     }
     active_screen_->reset();
 }
+
+Screen* GUI::getActiveScreen() { return active_screen_; }
 
 }  // namespace genetic_tetris

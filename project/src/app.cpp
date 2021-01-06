@@ -16,7 +16,9 @@ App::App()
       gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_, ai_),
       game_controller_(tetris_human_, ai_, gui_),
       evolve_controller_(tetris_ai_, ai_, gui_),
-      menu_controller_(gui_) {}
+      menu_controller_(gui_),
+      state_(State::MENU),
+      active_controller_(&menu_controller_) {}
 
 void App::run() {
     sound_manager_.play(Sound::TETRIS_THEME);
@@ -38,7 +40,7 @@ void App::update() {
 void App::display() { gui_.draw(); }
 
 void App::pollSfmlEvents() {
-    sf::Event event;
+    sf::Event event{};
     while (gui_.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
             close();
