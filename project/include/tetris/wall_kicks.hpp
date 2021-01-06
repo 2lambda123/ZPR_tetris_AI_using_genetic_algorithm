@@ -3,11 +3,11 @@
 
 #include <vector>
 
-namespace WallKicks {
+namespace genetic_tetris::WallKicks {
 
 std::vector<std::pair<int, int> > getGenericWallKicks(int from, int to);
 std::vector<std::pair<int, int> > getITetrominoWallKicks(int from, int to);
 
-}  // namespace WallKicks
+}  // namespace genetic_tetris::WallKicks
 
 #endif

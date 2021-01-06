@@ -11,7 +11,7 @@ namespace genetic_tetris {
 class TetrominoGenerator {
 public:
     static const unsigned int QUEUE_LENGTH = 4;
-    static const std::vector<Tetromino> TETROMINOES;
+    static const std::vector<Tetromino>& getTetrominoes();
 
     TetrominoGenerator();
     Tetromino getNextTetromino();

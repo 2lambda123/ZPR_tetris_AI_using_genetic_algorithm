@@ -29,7 +29,6 @@ public:
     Shape getShape() const;
     const Squares& getSquares() const;
     int getCurrentRotation() const;
-    int setCurrentRotation(int rotation);
     std::string toString() const;
 
 private:
@@ -39,6 +38,6 @@ private:
     int current_rotation_;
 };
 
-}
+}  // namespace genetic_tetris
 
 #endif

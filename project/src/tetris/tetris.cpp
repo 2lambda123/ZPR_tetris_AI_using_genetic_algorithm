@@ -159,7 +159,8 @@ unsigned int Tetris::getLastTickClearedRowsCount() const { return cleared_rows_;
 std::deque<Tetromino> Tetris::getTetrominoQueue() const { return generator_.getQueue(); }
 
 bool Tetris::isValidPosition(Position tetromino_position) const {
-    for (const Tetromino::Square& square : tetromino_.getSquares()) {
+    const Tetromino::Squares& squares = tetromino_.getSquares();
+    return std::all_of(squares.cbegin(), squares.cend(), [&](const Tetromino::Square& square) {
         int x = tetromino_position.first + square.first;
         int y = tetromino_position.second + square.second;
         if (x < 0 || x > GRID_WIDTH - 1 || y < 0) {
@@ -169,8 +170,8 @@ bool Tetris::isValidPosition(Position tetromino_position) const {
             grid_[y][x] != Tetromino::Color::EMPTY) {
             return false;
         }
-    }
-    return true;
+        return true;
+    });
 }
 
 Tetris::Position Tetris::getHardDropPosition() const {

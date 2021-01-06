@@ -1,6 +1,9 @@
 #include "tetris/tetromino.hpp"
 
+#ifdef _WIN32
 #define _USE_MATH_DEFINES
+#endif
+
 #include <cmath>
 #include <stdexcept>
 #include <string>
@@ -33,9 +36,7 @@ Tetromino::Tetromino(Color color, Shape shape, Pivot pivot, const Squares& squar
     }
 }
 
-void Tetromino::rotateCW() {
-    current_rotation_ = (current_rotation_ + 1) % 4;
-}
+void Tetromino::rotateCW() { current_rotation_ = (current_rotation_ + 1) % 4; }
 
 void Tetromino::rotateCCW() {
     if (current_rotation_ == 0) {
@@ -58,25 +59,16 @@ const Tetromino::Squares& Tetromino::getSquares() const {
 
 int Tetromino::getCurrentRotation() const { return current_rotation_; }
 
-int Tetromino::setCurrentRotation(int rotation) {
-    if (rotation < 0) {
-        current_rotation_ = (rotation + abs(rotation * 4)) % 4;
-    } else {
-        current_rotation_ = rotation;
-    }
-    return current_rotation_;
-}
-
 std::string Tetromino::toString() const {
-    std::string str = "";
+    std::string str;
     const int array_size = 4;
     int array_squares[array_size][array_size] = {{0}};
     for (const Square& square : getSquares()) {
         array_squares[square.first][square.second] = 1;
     }
     for (int i = array_size - 1; i >= 0; --i) {
-        for (int j = 0; j < array_size; ++j) {
-            if (array_squares[j][i] == 1) {
+        for (auto& column : array_squares) {
+            if (column[i] == 1) {
                 str += "#";
             } else {
                 str += "-";
@@ -87,4 +79,4 @@ std::string Tetromino::toString() const {
     return str;
 }
 
-}
+}  // namespace genetic_tetris
