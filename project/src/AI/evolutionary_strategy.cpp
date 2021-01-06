@@ -36,7 +36,7 @@ void EvolutionaryStrategy::play() {
     }
     while (!finish_) {
         std::unique_lock<std::mutex> lk(m_);
-        drop_cond_.wait(lk, [this]() { return (drop_ || finish_) && !is_dropping_smoothly_; });
+        drop_cond_.wait(lk, [this]() { return (drop_ && !is_dropping_smoothly_) || finish_; });
         if (finish_) return;
         if (drop_) {
             Genome genome = generation_bests_[generation_number_];

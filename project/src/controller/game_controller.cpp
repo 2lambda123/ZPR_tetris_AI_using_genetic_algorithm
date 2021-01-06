@@ -15,7 +15,9 @@ GameController::GameController(ObservableTetris &tetris_human, EvolutionaryStrat
 }
 
 void GameController::update() {
-    if (state_ == State::STOP) return;
+    if (state_ == State::STOP) {
+        return;
+    }
     if (ai_.isDroppingSmoothly()) {
         ai_.tick();
         return;
@@ -40,7 +42,7 @@ void GameController::update() {
 }
 
 void GameController::handleSfmlEvent(const sf::Event &event) {
-    if (!tetris_human_.isFinished() && !ai_.isDroppingSmoothly()) {
+    if (state_ == State::START && !tetris_human_.isFinished() && !ai_.isDroppingSmoothly()) {
         handlePlayerInput(event);
     }
 }
