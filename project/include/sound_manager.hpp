@@ -3,9 +3,9 @@
 
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
+#include <memory>
 #include <unordered_map>
 #include <vector>
-#include <memory>
 
 namespace gentetris {
 
@@ -23,15 +23,14 @@ public:
 private:
     typedef struct SoundProperties {
         SoundProperties(std::string path, float volume, bool loop = false)
-            : path(path), volume(volume), loop(loop), buffer(nullptr) {}
-        SoundProperties(const SoundProperties& sound_properties){
+            : path(std::move(path)), volume(volume), loop(loop), buffer(nullptr) {}
+        // TODO: comment about the awful constructor below
+        SoundProperties(const SoundProperties& sound_properties) {
             path = sound_properties.path;
             volume = sound_properties.volume;
             loop = sound_properties.loop;
-//            buffer = std::move(sound_properties.buffer);
             buffer = nullptr;
         };
-//        SoundProperties(const SoundProperties& sound_properties) = default;
 
         std::string path;
         float volume;
@@ -39,12 +38,11 @@ private:
         std::unique_ptr<sf::SoundBuffer> buffer;
     } SoundProperties;
 
-    static const std::vector<std::pair<Sound, SoundProperties> > SOUND_FILES_;
+    static std::unordered_map<Sound, SoundProperties> sounds_;
 
     SoundManager();
     void garbageCollector();
 
-    std::unordered_map<Sound, std::unique_ptr<SoundProperties> > sounds_;
     std::vector<std::unique_ptr<sf::Sound> > playing_sounds_;
 };
 
