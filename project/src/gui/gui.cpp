@@ -1,6 +1,6 @@
 #include "gui/gui.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 GUI::GUI(int width, int height, int fps, Tetris& human_tetris, Tetris& ai_tetris,
          EvolutionaryStrategy& ai)
@@ -30,4 +30,4 @@ void GUI::setActiveScreen(GUI::ScreenType screen_type) {
     active_screen_->reset();
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

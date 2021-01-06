@@ -11,7 +11,7 @@
 #include "sound_manager.hpp"
 #include "tetris/tetris.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 const std::map<Tetromino::Color, sf::Color> TETROMINO_COLOR_MAP = {
     {Tetromino::Color::EMPTY, sf::Color(255, 250, 250)},
@@ -125,6 +125,6 @@ private:
     int font_size_;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_GUI_UTILS_HPP

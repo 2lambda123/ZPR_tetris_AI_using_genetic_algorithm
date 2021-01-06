@@ -11,7 +11,7 @@
 #include "move.hpp"
 #include "tetris/tetris.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class AI : public Observer {
 public:
@@ -31,6 +31,6 @@ protected:
     inline static RandomNumberGenerator &generator_ = RandomNumberGenerator::getInstance();
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif

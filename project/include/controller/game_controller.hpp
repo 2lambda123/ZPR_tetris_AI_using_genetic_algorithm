@@ -8,7 +8,7 @@
 #include "controller.hpp"
 #include "sound_manager.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class GameController : public Controller {
 public:
@@ -45,6 +45,6 @@ private:
     bool hard_drop_lock_;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_GAME_CONTROLLER_HPP

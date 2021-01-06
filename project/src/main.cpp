@@ -6,6 +6,6 @@
 
 int main() {
     srand(time(nullptr));
-    gentetris::App app;
+    genetic_tetris::App app;
     app.run();
 }

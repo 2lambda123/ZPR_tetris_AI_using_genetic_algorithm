@@ -6,7 +6,7 @@
 #include <string>
 #include <utility>
 
-namespace gentetris {
+namespace genetic_tetris {
 
 Tetromino::Squares Tetromino::rotate(const Squares& squares, const Pivot& pivot, double rad) {
     Squares rotated_squares;

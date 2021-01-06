@@ -2,7 +2,7 @@
 
 #include <AI/evolutionary_strategy.hpp>
 
-namespace gentetris {
+namespace genetic_tetris {
 
 EvolveScreen::EvolveScreen(sf::RenderWindow& window, EvolutionaryStrategy& ai,
                            const Tetris& tetris_ai)
@@ -88,4 +88,4 @@ void EvolveScreen::handleCustomEvent(EventType event) {
     }
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

@@ -3,7 +3,7 @@
 #include <AI/evolutionary_strategy.hpp>
 #include <tetris/tetris.hpp>
 
-namespace gentetris {
+namespace genetic_tetris {
 
 EvolveController::EvolveController(Tetris& tetris_ai, EvolutionaryStrategy& ai, GUI& gui) : Controller(gui), tetris_ai_(tetris_ai), ai_(ai) {}
 
@@ -43,4 +43,4 @@ void EvolveController::finish() {
     }
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

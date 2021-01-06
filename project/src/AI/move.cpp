@@ -1,7 +1,7 @@
 #include "AI/move.hpp"
 
 #include <cassert>
-namespace gentetris {
+namespace genetic_tetris {
 
 const int Move::MIN_MOVE = -1;
 const int Move::MAX_MOVE = Tetris::GRID_WIDTH - 1;
@@ -122,4 +122,4 @@ int Move::calculateHoles(const Tetris::Grid &grid) {
     return holes;
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

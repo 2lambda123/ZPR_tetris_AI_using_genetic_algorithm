@@ -8,7 +8,7 @@
 #include "ai.hpp"
 #include "genome.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class EvolutionaryStrategy : public AI {
 public:
@@ -104,6 +104,6 @@ private:
     int generation_number_ = 0;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_EVOLUTIONARY_STRATEGY_HPP

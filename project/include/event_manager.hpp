@@ -5,7 +5,7 @@
 
 #include "utils.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 enum class EventType {
     TETROMINO_DROPPED,
@@ -46,6 +46,6 @@ private:
     std::list<EventType> events;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_EVENT_MANAGER_HPP

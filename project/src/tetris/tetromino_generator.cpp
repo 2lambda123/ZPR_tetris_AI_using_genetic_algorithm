@@ -6,7 +6,7 @@
 
 #include "tetris/tetromino.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 const std::vector<Tetromino> TetrominoGenerator::TETROMINOES = {
     Tetromino(Tetromino::Color::CYAN, Tetromino::Shape::I, {1.5, 1.5},
@@ -54,4 +54,4 @@ void TetrominoGenerator::generateTetrominoes() {
     }
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

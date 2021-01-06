@@ -15,7 +15,7 @@
 #include "sound_manager.hpp"
 #include "tetris/tetris.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class App {
 public:
@@ -58,6 +58,6 @@ private:
     MenuController menu_controller_;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif

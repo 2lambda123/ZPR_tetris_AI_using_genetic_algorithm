@@ -10,7 +10,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 void EvolutionaryStrategy::operator()(EvolutionaryStrategy::Mode mode) {
     finish_ = false;
@@ -292,4 +292,4 @@ std::string EvolutionaryStrategy::getInfo() {
     return string_stream.str();
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

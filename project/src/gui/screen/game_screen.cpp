@@ -3,7 +3,7 @@
 #include <event_manager.hpp>
 #include <iomanip>
 
-namespace gentetris {
+namespace genetic_tetris {
 
 GameScreen::GameScreen(sf::RenderWindow& window, const Tetris& tetris_human,
                        const Tetris& tetris_ai)
@@ -146,4 +146,4 @@ void GameScreen::createStatus() {
     status_ = createText(sf::Vector2f(10, 870), (int)(FONT_SIZE * 0.65));
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

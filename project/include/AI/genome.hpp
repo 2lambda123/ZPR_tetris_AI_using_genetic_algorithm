@@ -5,7 +5,7 @@
 
 #include "ai_utils.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class Genome {
 public:

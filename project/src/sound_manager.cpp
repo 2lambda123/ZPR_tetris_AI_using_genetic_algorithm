@@ -8,7 +8,7 @@
 
 #include "gui/gui.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 SoundManager& SoundManager::getInstance() {
     static SoundManager instance;
@@ -56,4 +56,4 @@ void SoundManager::garbageCollector() {
     }
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

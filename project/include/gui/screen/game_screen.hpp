@@ -6,7 +6,7 @@
 #include "gui/gui_utils.hpp"
 #include "screen.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class GameScreen : public Screen {
 public:

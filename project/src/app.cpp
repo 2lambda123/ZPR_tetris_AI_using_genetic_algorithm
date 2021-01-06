@@ -5,7 +5,7 @@
 #include "event_manager.hpp"
 #include "sound_manager.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 App::App()
     : event_manager_(EventManager::getInstance()),
@@ -95,4 +95,4 @@ void App::reset() {
     gui_.reset();
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

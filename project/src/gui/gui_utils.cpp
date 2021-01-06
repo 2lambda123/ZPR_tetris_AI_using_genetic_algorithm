@@ -4,7 +4,7 @@
 
 #include "sound_manager.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 TetrisBoard::TetrisBoard(const sf::Vector2f &position, const sf::Vector2i &board_tile_count,
                          const TileProperties &tile_prop)
@@ -193,4 +193,4 @@ void IncDecDialog::build() {
         [this]() { value_ = std::clamp(--value_, value_bounds_.x, value_bounds_.y); });
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

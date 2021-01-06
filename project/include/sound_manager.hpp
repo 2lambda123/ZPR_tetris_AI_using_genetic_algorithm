@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace gentetris {
+namespace genetic_tetris {
 
 enum class Sound { TETRIS_THEME, CLICK, HARD_DROP, ROW_CLEARED };
 
@@ -46,6 +46,6 @@ private:
     std::vector<std::unique_ptr<sf::Sound> > playing_sounds_;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_SOUND_MANAGER_HPP

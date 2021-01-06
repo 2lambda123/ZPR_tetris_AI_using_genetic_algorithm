@@ -4,7 +4,7 @@
 #include <random>
 #include <ctime>
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class RandomNumberGenerator {
 public:

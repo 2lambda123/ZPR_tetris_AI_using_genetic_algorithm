@@ -7,7 +7,7 @@
 #include "controller/controller.hpp"
 #include "sound_manager.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 GameController::GameController(ObservableTetris &tetris_human, EvolutionaryStrategy &ai, GUI &gui)
     : Controller(gui),
@@ -149,4 +149,4 @@ void GameController::handlePlayerInput(const sf::Event &event) {
     }
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

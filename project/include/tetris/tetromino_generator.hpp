@@ -6,7 +6,7 @@
 
 #include "tetris/tetromino.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class TetrominoGenerator {
 public:
@@ -23,6 +23,6 @@ private:
     std::deque<Tetromino> queue_;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif

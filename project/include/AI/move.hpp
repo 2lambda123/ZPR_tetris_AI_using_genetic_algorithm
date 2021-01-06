@@ -7,7 +7,7 @@
 
 #include "tetris/tetris.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class Move {
 public:

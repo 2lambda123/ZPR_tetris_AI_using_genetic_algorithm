@@ -9,7 +9,7 @@
 #include "tetromino_generator.hpp"
 #include "utils.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class Tetris {
 public:
@@ -88,6 +88,6 @@ private:
     void generateTetromino() override;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif

@@ -12,7 +12,7 @@
 #include "gui/gui_utils.hpp"
 #include "tetris/tetris.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class GUI {
 public:
@@ -43,6 +43,6 @@ private:
     EvolveScreen evolve_screen_;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif

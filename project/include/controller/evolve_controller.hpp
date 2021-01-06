@@ -6,7 +6,7 @@
 
 #include "controller.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class EvolveController : public Controller {
 public:
@@ -30,6 +30,6 @@ private:
     std::thread ai_thread_;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_EVOLVE_CONTROLLER_HPP

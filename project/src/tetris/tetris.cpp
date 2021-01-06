@@ -13,7 +13,7 @@
 #include "tetris/tetromino.hpp"
 #include "tetris/wall_kicks.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 Tetris::Tetris(bool disable_drop_scores)
     : score_(0),
@@ -300,4 +300,4 @@ void ObservableTetris::generateTetromino() {
     }
 }
 
-}  // namespace gentetris
+}  // namespace genetic_tetris

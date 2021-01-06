@@ -3,7 +3,7 @@
 
 #include "controller.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class MenuController : public Controller {
 public:
@@ -16,6 +16,6 @@ public:
     void finish() override {}
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_MENU_CONTROLLER_HPP

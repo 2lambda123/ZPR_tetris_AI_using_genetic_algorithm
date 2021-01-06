@@ -5,7 +5,7 @@
 
 #include "event_manager.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 
 class Observer {

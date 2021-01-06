@@ -1,6 +1,6 @@
 #include "AI/ai_utils.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 RandomNumberGenerator::RandomNumberGenerator(): generator_(std::random_device{}()), dis_0_1(0.0, 1.0) {
 }

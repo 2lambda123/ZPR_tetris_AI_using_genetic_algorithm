@@ -5,7 +5,7 @@
 #include "event_manager.hpp"
 #include "gui/gui.hpp"
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class Controller {
 public:
@@ -21,6 +21,6 @@ protected:
     GUI& gui_;
 };
 
-}  // namespace gentetris
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_CONTROLLER_HPP

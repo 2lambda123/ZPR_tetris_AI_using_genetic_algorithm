@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-namespace gentetris {
+namespace genetic_tetris {
 
 class Tetromino {
 public:

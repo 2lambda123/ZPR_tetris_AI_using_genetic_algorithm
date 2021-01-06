@@ -2,21 +2,21 @@
 
 #include <event_manager.hpp>
 
-namespace gentetris {
+namespace genetic_tetris {
 
-gentetris::MenuScreen::MenuScreen(sf::RenderWindow& window) : Screen(window) {
+genetic_tetris::MenuScreen::MenuScreen(sf::RenderWindow& window) : Screen(window) {
     createPlayButton();
     createEvolveButton();
     createExitButton();
 }
 
-void gentetris::MenuScreen::update() {
+void genetic_tetris::MenuScreen::update() {
     play_button_.update();
     evolve_button_.update();
     exit_button_.update();
 }
 
-void gentetris::MenuScreen::draw() {
+void genetic_tetris::MenuScreen::draw() {
     window_.clear(BG_COLOR);
     window_.draw(play_button_);
     window_.draw(evolve_button_);
@@ -24,17 +24,17 @@ void gentetris::MenuScreen::draw() {
     window_.display();
 }
 
-void gentetris::MenuScreen::reset() {
+void genetic_tetris::MenuScreen::reset() {
 
 }
 
-void gentetris::MenuScreen::handleSfmlEvent(const sf::Event& event) {
+void genetic_tetris::MenuScreen::handleSfmlEvent(const sf::Event& event) {
     play_button_.handleEvent(event, window_);
     evolve_button_.handleEvent(event, window_);
     exit_button_.handleEvent(event, window_);
 }
 
-void gentetris::MenuScreen::createPlayButton() {
+void genetic_tetris::MenuScreen::createPlayButton() {
     play_button_.setPosition(sf::Vector2f(300, 600));
     play_button_.setSize(sf::Vector2f(200, 50));
     play_button_.setText("PLAY", font_);
@@ -42,7 +42,7 @@ void gentetris::MenuScreen::createPlayButton() {
         []() { EventManager::getInstance().addEvent(EventType::PLAY_BUTTON_CLICKED); });
 }
 
-void gentetris::MenuScreen::createEvolveButton() {
+void genetic_tetris::MenuScreen::createEvolveButton() {
     evolve_button_.setPosition(sf::Vector2f(300, 660));
     evolve_button_.setSize(sf::Vector2f(200, 50));
     evolve_button_.setText("EVOLVE", font_);
@@ -50,7 +50,7 @@ void gentetris::MenuScreen::createEvolveButton() {
         []() { EventManager::getInstance().addEvent(EventType::EVOLVE_BUTTON_CLICKED); });
 }
 
-void gentetris::MenuScreen::createExitButton() {
+void genetic_tetris::MenuScreen::createExitButton() {
     exit_button_.setPosition(sf::Vector2f(300, 720));
     exit_button_.setSize(sf::Vector2f(200, 50));
     exit_button_.setText("EXIT", font_);
