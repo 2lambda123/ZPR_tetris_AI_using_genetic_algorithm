@@ -1,7 +1,9 @@
 #ifndef GENETIC_TETRIS_CONTROLLER_HPP
 #define GENETIC_TETRIS_CONTROLLER_HPP
+
 #include <SFML/Window/Event.hpp>
 #include <event_manager.hpp>
+
 namespace gentetris {
 
 class Controller {
@@ -14,6 +16,6 @@ public:
     virtual void finish() = 0;
 };
 
-}
+}  // namespace gentetris
 
 #endif  // GENETIC_TETRIS_CONTROLLER_HPP
