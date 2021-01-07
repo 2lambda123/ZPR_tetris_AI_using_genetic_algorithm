@@ -2,10 +2,10 @@
 
 namespace genetic_tetris {
 
-const int Move::MIN_MOVE = -1;
-const int Move::MAX_MOVE = Tetris::GRID_WIDTH - 1;
-const int Move::MIN_ROT = 0;
-const int Move::MAX_ROT = 3;
+Move::Move() {
+    rotations_ = std::rand() % 4;
+    move_x_ = std::rand() % (Tetris::GRID_WIDTH + 1) - 1;
+}
 
 Move::Move(int moveX, int rotations) : move_x_(moveX), rotations_(rotations) {}
 
@@ -48,34 +48,54 @@ void Move::apply(Tetris &tetris, bool hard_drop) {
 }
 
 void Move::setMoveX(int value) { move_x_ = std::clamp(value, MIN_MOVE, MAX_MOVE); }
+
 void Move::setRotation(int value) { rotations_ = std::clamp(value, MIN_ROT, MAX_ROT); }
 
 void Move::incrementMoveX() {
-    if (move_x_ + 1 > MAX_MOVE)
+    if (move_x_ + 1 > MAX_MOVE) {
         move_x_ = MIN_MOVE;
-    else
+    } else {
         move_x_++;
+    }
 }
 
 void Move::decrementMoveX() {
-    if (move_x_ - 1 < MIN_MOVE)
+    if (move_x_ - 1 < MIN_MOVE) {
         move_x_ = MAX_MOVE;
-    else
+    } else {
         move_x_--;
+    }
 }
 
 void Move::incrementRotation() {
-    if (rotations_ + 1 > MAX_ROT)
+    if (rotations_ + 1 > MAX_ROT) {
         rotations_ = MIN_ROT;
-    else
+    } else {
         rotations_++;
+    }
 }
 
 void Move::decrementRotation() {
-    if (rotations_ - 1 < MIN_ROT)
+    if (rotations_ - 1 < MIN_ROT) {
         rotations_ = MAX_ROT;
-    else
+    } else {
         rotations_--;
+    }
+}
+
+int Move::calculateHoles(const Tetris::Grid &grid) {
+    int holes = 0;
+    int rows = grid.size();
+    int cols = grid[0].size();
+    for (int y = rows - 2; y >= 0; y--) {
+        for (int x = 0; x < cols; x++) {
+            if (grid[y][x] == Tetromino::Color::EMPTY &&
+                grid[y + 1][x] != Tetromino::Color::EMPTY) {
+                holes++;
+            }
+        }
+    }
+    return holes;
 }
 
 void Move::calculateGridProperties(const Tetris &tetris) {
@@ -92,10 +112,12 @@ void Move::calculateGridProperties(const Tetris &tetris) {
             if (grid[y][x] != Tetromino::Color::EMPTY) {
                 cumulative_height_ += y + 1;
                 cur_height = y + 1;
-                if (y + 1 > max_height_) max_height_ = y + 1;
+                if (y + 1 > max_height_) {
+                    max_height_ = y + 1;
+                }
                 break;
-            } else {
-                if (y < min_height) min_height = y;
+            } else if (y < min_height) {
+                min_height = y;
             }
         }
         if (x > 0) {
@@ -104,21 +126,6 @@ void Move::calculateGridProperties(const Tetris &tetris) {
         prev_height = cur_height;
     }
     relative_height_ = max_height_ - min_height;
-}
-
-int Move::calculateHoles(const Tetris::Grid &grid) {
-    int holes = 0;
-    int rows = grid.size();
-    int cols = grid[0].size();
-    for (int y = rows - 2; y >= 0; y--) {
-        for (int x = 0; x < cols; x++) {
-            if (grid[y][x] == Tetromino::Color::EMPTY &&
-                grid[y + 1][x] != Tetromino::Color::EMPTY) {
-                holes++;
-            }
-        }
-    }
-    return holes;
 }
 
 }  // namespace genetic_tetris

@@ -11,15 +11,13 @@ namespace genetic_tetris {
 
 class Move {
 public:
-    static const int MIN_MOVE;
-    static const int MAX_MOVE;
-    static const int MIN_ROT;
-    static const int MAX_ROT;
+    // TODO: why the hell do I need 'inline'? (everywhere else works without it) + warning
+    inline static const int MIN_MOVE = -1;
+    inline static const int MAX_MOVE = Tetris::GRID_WIDTH - 1;
+    inline static const int MIN_ROT = 0;
+    inline static const int MAX_ROT = 3;
 
-    Move() {
-        rotations_ = std::rand() % 4;
-        move_x_ = std::rand() % (Tetris::GRID_WIDTH + 1) - 1;
-    }
+    Move();
     Move(int moveX, int rotations);
 
     Move(const Move &other);
@@ -43,8 +41,9 @@ public:
     int getRoughness() const { return roughness_; }
 
 private:
+    static int calculateHoles(const Tetris::Grid &grid);
+
     void calculateGridProperties(const Tetris &tetris);
-    int calculateHoles(const Tetris::Grid &grid);
 
     int move_x_;
     int rotations_;
@@ -56,6 +55,6 @@ private:
     int roughness_ = 0;
 };
 
-}
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_MOVE_HPP

@@ -10,6 +10,7 @@ GameScreen::GameScreen(sf::RenderWindow& window, const Tetris& tetris_human,
     : Screen(window),
       tetris_human_(tetris_human),
       tetris_ai_(tetris_ai),
+      state_(State::STOP),
       board_human_(sf::Vector2f(10, 10),
                    sf::Vector2i(Tetris::GRID_WIDTH, Tetris::GRID_VISIBLE_HEIGHT),
                    TetrisBoard::TileProperties(30.0f, 0.5f)),
@@ -90,6 +91,18 @@ void GameScreen::handleSfmlEvent(const sf::Event& event) {
     generation_number_dialog_.handleEvent(event, window_);
 }
 
+void GameScreen::handleCustomEvent(EventType event) {
+    if (event == EventType::GENERATION_OUT_OF_BOUNDS) {
+        status_.setString(
+            "Generation number out of bounds. You may consider going back to evolve screen.");
+        status_clock_.restart();
+    } else if (event == EventType::GAME_STARTED) {
+        state_ = State::START;
+    }
+}
+
+int GameScreen::getNumberGenerations() const { return generation_number_dialog_.getValue(); }
+
 void GameScreen::createHumanScore() { human_score_ = createText(sf::Vector2f(10, 640), FONT_SIZE); }
 
 void GameScreen::createAIScore() { ai_score_ = createText(sf::Vector2f(480, 640), FONT_SIZE); }
@@ -110,9 +123,8 @@ void GameScreen::createStartRestartButton() {
     start_restart_button_.setPosition(sf::Vector2f(300, 400));
     start_restart_button_.setSize(sf::Vector2f(200, 50));
     start_restart_button_.setText("START", font_);
-    start_restart_button_.setOnClick([this]() {
-      EventManager::getInstance().addEvent(EventType::START_GAME_BUTTON_CLICKED);
-    });
+    start_restart_button_.setOnClick(
+        []() { EventManager::getInstance().addEvent(EventType::START_GAME_BUTTON_CLICKED); });
 }
 
 void GameScreen::createBackButton() {
@@ -121,16 +133,6 @@ void GameScreen::createBackButton() {
     back_button_.setText("BACK", font_);
     back_button_.setOnClick(
         []() { EventManager::getInstance().addEvent(EventType::BACK_BUTTON_CLICKED); });
-}
-void GameScreen::handleCustomEvent(EventType event) {
-    if (event == EventType::GENERATION_OUT_OF_BOUNDS) {
-        status_.setString(
-            "Generation number out of bounds. You may consider going back to evolve screen.");
-        status_clock_.restart();
-    }
-    else if (event == EventType::GAME_STARTED) {
-        state_ = State::START;
-    }
 }
 
 void GameScreen::createGenerationDialog() {

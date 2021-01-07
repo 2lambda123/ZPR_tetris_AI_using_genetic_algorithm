@@ -9,10 +9,10 @@
 
 namespace genetic_tetris {
 
-enum class Sound { TETRIS_THEME, CLICK, HARD_DROP, ROW_CLEARED };
-
 class SoundManager {
 public:
+    enum class Sound { TETRIS_THEME, CLICK, HARD_DROP, ROW_CLEARED };
+
     static SoundManager& getInstance();
 
     SoundManager(const SoundManager&) = delete;
@@ -22,15 +22,8 @@ public:
 
 private:
     typedef struct SoundProperties {
-        SoundProperties(std::string path, float volume, bool loop = false)
-            : path(std::move(path)), volume(volume), loop(loop), buffer(nullptr) {}
-        // TODO: comment about the awful constructor below
-        SoundProperties(const SoundProperties& sound_properties) {
-            path = sound_properties.path;
-            volume = sound_properties.volume;
-            loop = sound_properties.loop;
-            buffer = nullptr;
-        };
+        SoundProperties(std::string path, float volume, bool loop = false);
+        SoundProperties(const SoundProperties& sound_properties);
 
         std::string path;
         float volume;
@@ -38,7 +31,7 @@ private:
         std::unique_ptr<sf::SoundBuffer> buffer;
     } SoundProperties;
 
-    static std::unordered_map<Sound, SoundProperties> sounds_;
+    static std::unordered_map<Sound, SoundProperties>& getSounds();
 
     SoundManager();
     void garbageCollector();

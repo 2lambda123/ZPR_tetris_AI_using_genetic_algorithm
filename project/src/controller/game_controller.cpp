@@ -97,7 +97,7 @@ void GameController::handleCustomEvent(EventType e) {
 void GameController::humanTick(bool is_soft_drop) {
     tetris_human_.tick(is_soft_drop);
     if (tetris_human_.getLastTickClearedRowsCount()) {
-        sound_manager_.play(Sound::ROW_CLEARED);
+        sound_manager_.play(SoundManager::Sound::ROW_CLEARED);
     }
     game_clock_.restart();
     tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
@@ -126,7 +126,7 @@ void GameController::handlePlayerInput(const sf::Event &event) {
             case sf::Keyboard::Space:
             case sf::Keyboard::Numpad8:
                 tetris_human_.hardDrop(false);
-                sound_manager_.play(Sound::HARD_DROP);
+                sound_manager_.play(SoundManager::Sound::HARD_DROP);
                 hard_drop_lock_ = true;
                 game_clock_.restart();
                 break;

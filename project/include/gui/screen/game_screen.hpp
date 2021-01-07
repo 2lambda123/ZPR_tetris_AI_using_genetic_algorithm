@@ -10,10 +10,7 @@ namespace genetic_tetris {
 
 class GameScreen : public Screen {
 public:
-    enum class State {
-        START,
-        STOP
-    } state_ = State::STOP;
+    enum class State { START, STOP };
 
     GameScreen(sf::RenderWindow& window, const Tetris& tetris_human, const Tetris& tetris_ai);
     void update() override;
@@ -21,7 +18,7 @@ public:
     void reset() override;
     void handleSfmlEvent(const sf::Event& event) override;
     void handleCustomEvent(EventType event) override;
-    int getNumberGenerations() const { return generation_number_dialog_.getValue(); }
+    int getNumberGenerations() const;
 
 private:
     const sf::Time STATUS_PERSISTENCE_ = sf::seconds(1.0f);
@@ -39,6 +36,8 @@ private:
 
     const Tetris& tetris_human_;
     const Tetris& tetris_ai_;
+
+    State state_;
 
     TetrisBoard board_human_;
     TetrisBoard board_ai_;
@@ -61,6 +60,6 @@ private:
     sf::Clock status_clock_;
 };
 
-}
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_GAME_SCREEN_HPP

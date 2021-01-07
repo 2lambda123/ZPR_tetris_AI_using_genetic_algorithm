@@ -145,7 +145,7 @@ void Button::handleEvent(const sf::Event &e, const sf::Window &window) {
             on_click_();
             state_ = State::CLICKED;
             clock_.restart();
-            sound_manager_.play(Sound::CLICK);
+            sound_manager_.play(SoundManager::Sound::CLICK);
         }
     }
 }

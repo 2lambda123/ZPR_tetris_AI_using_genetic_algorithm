@@ -56,7 +56,6 @@ add_library(gui-lib
 add_library(ai-lib
         project/src/AI/evolutionary_strategy.cpp
         project/src/AI/move.cpp
-        project/src/AI/genome.cpp
         project/src/AI/ai_utils.cpp)
 
 target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window sfml-audio)

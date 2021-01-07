@@ -21,7 +21,7 @@ App::App()
       active_controller_(&menu_controller_) {}
 
 void App::run() {
-    sound_manager_.play(Sound::TETRIS_THEME);
+    sound_manager_.play(SoundManager::Sound::TETRIS_THEME);
     gui_.setActiveScreen(GUI::ScreenType::MENU);
     active_controller_ = &menu_controller_;
     while (state_ != State::CLOSED) {

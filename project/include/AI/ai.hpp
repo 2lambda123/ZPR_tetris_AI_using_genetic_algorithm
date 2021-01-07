@@ -15,7 +15,8 @@ namespace genetic_tetris {
 
 class AI : public Observer {
 public:
-    explicit AI(Tetris &tetris) : tetris_(tetris) {}
+    explicit AI(Tetris &tetris)
+        : tetris_(tetris), generator_(RandomNumberGenerator::getInstance()) {}
     ~AI() override = default;
 
     virtual void finish() { finish_ = true; }
@@ -25,10 +26,9 @@ public:
 
 protected:
     Tetris &tetris_;
+    RandomNumberGenerator &generator_;
 
     volatile bool finish_ = false;
-
-    inline static RandomNumberGenerator &generator_ = RandomNumberGenerator::getInstance();
 };
 
 }  // namespace genetic_tetris

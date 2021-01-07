@@ -17,45 +17,31 @@ public:
         EVOLVE,
     };
 
+    static Move generateBestMove(const Genome& genome, Tetris& tetris);
+
     explicit EvolutionaryStrategy(Tetris& tetris) : AI(tetris) {}
 
     void operator()(Mode mode);
 
-    void drop() override {
-        drop_ = true;
-        drop_cond_.notify_one();
-    }
-
-    void update(EventType e) override {
-        if (e == EventType::TETROMINO_DROPPED) {
-            smooth_drop_ = true;
-            drop();
-        }
-    }
-
+    void drop() override;
+    void update(EventType e) override;
     void finish() override;
-
     void tick();
 
-    bool isDroppingSmoothly() const { return is_dropping_smoothly_; }
+    bool isDroppingSmoothly() const;
+    std::string getInfo() const;
+    Genome getBest() const;
 
-    std::string getInfo();
+    void save();
 
-    Genome getBest() const {
-        Genome tmp = best_;
-        return tmp;
-    }
-
-    void save() {
-        saveToJSON(BESTS_GAME, generation_bests_);
-        EventManager::getInstance().addEvent(EventType::GENOMES_SAVED);
-    }
-
-    static Move generateBestMove(const Genome& genome, Tetris& tetris);
-
-    void setGenerationNumber(int value) { generation_number_ = value; }
+    void setGenerationNumber(int value);
 
 private:
+    enum class State {
+        STOP,
+        START,
+    };
+
     const std::size_t POP_SIZE = 50;
     const std::size_t SELECTED_TO_BREED = POP_SIZE / 2;
     const float MUTATION_RATE = 0.05f;
@@ -66,15 +52,13 @@ private:
     const std::string BESTS_GAME_DEFAULT = "res/default_bests_game.json";
     const std::string BESTS_EVOLVE = "res/bests_evolve.json";
 
-    enum class State {
-        STOP,
-        START,
-    } state_ = State::STOP;
+    static void saveToJSON(const std::string& file, std::vector<Genome>& genomes);
+    static std::vector<Genome> loadFromJSON(const std::string& file);
 
     void play();
     void evolve();
 
-    std::vector<Genome> next_generation(std::vector<Genome>& pop);
+    std::vector<Genome> nextGeneration(std::vector<Genome>& pop);
     std::vector<Genome> initialPop();
     std::vector<Genome> selection(std::vector<Genome>& pop);
     std::vector<Genome> crossoverAndMutation(const std::vector<Genome>& selected);
@@ -83,14 +67,13 @@ private:
     void mutate(Genome& genome);
     Genome breed(const std::vector<Genome>& selected);
 
-    void saveToJSON(const std::string& file, std::vector<Genome>& genomes);
-    std::vector<Genome> loadFromJSON(const std::string& file);
+    State state_ = State::STOP;
 
     Genome best_;
     std::vector<Genome> generation_bests_;
     float mean_fitness_ = 0.0f;
-    float score_sum = 0.0f;
-    int t = 0;
+    float score_sum_ = 0.0f;
+    int t_ = 0;
 
     std::mutex m_;
     std::condition_variable drop_cond_;
