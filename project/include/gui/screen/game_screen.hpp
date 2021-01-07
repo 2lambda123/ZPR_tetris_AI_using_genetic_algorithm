@@ -18,7 +18,8 @@ public:
     void reset() override;
     void handleSfmlEvent(const sf::Event& event) override;
     void handleCustomEvent(EventType event) override;
-    int getNumberGenerations() const;
+    int getPlayingGeneration() const;
+    void setAvailableGenerations(int value);
 
 private:
     const sf::Time STATUS_PERSISTENCE_ = sf::seconds(1.0f);
@@ -55,6 +56,7 @@ private:
 
     IncDecDialog generation_number_dialog_;
     sf::Text generation_text_;
+    int available_generations_ = 99;
 
     sf::Text status_;
     sf::Clock status_clock_;

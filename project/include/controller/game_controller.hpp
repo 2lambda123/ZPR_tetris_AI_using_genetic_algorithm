@@ -10,11 +10,12 @@
 
 namespace genetic_tetris {
 
-class GameController : public Controller {
+class GameController : public Controller, public Observer {
 public:
     enum class State { START, STOP } state_ = State::STOP;
 
     GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai, GUI& gui);
+    void update(EventType e) override;
 
     void update() override;
     void start() override;

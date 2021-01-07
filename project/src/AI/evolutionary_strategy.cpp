@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "exception.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 
@@ -26,7 +27,8 @@ Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris
                             genome.cumulative_height * (float)move.getCumulativeHeight() +
                             genome.relative_height * (float)move.getRelativeHeight() +
                             genome.holes * (float)move.getHoles() +
-                            genome.roughness * (float)move.getRoughness();
+                            genome.roughness * (float)move.getRoughness() +
+                            genome.rows_cleared * (float)tmp.getLastTickClearedRowsCount();
             assert(initial_best < fitness);
             if (fitness > best_fitness) {
                 best_fitness = fitness;
@@ -102,11 +104,11 @@ std::string EvolutionaryStrategy::getInfo() const {
 Genome EvolutionaryStrategy::getBest() const { return best_; }
 
 void EvolutionaryStrategy::save() {
-    saveToJSON(BESTS_GAME, generation_bests_);
+    saveToJSON(GENOMES_FILE, generation_bests_);
     EventManager::getInstance().addEvent(EventType::GENOMES_SAVED);
 }
 
-void EvolutionaryStrategy::setGenerationNumber(int value) { generation_number_ = value; }
+void EvolutionaryStrategy::setPlayingGeneration(int value) { playing_generation_ = value; }
 
 void EvolutionaryStrategy::saveToJSON(const std::string& file, std::vector<Genome>& genomes) {
     using namespace rapidjson;
@@ -145,7 +147,7 @@ std::vector<Genome> EvolutionaryStrategy::loadFromJSON(const std::string& file) 
     IStreamWrapper isw(ifs);
     Document d;
     d.ParseStream(isw);
-    assert(d.IsArray());
+    if (!d.IsArray()) throw GenomeFileNotFoundException();
     for (Value::ConstValueIterator itr = d.Begin(); itr != d.End(); ++itr) {
         Genome g;
         auto g_json = itr->GetObject();
@@ -162,26 +164,31 @@ std::vector<Genome> EvolutionaryStrategy::loadFromJSON(const std::string& file) 
 }
 
 void EvolutionaryStrategy::play() {
-    // TODO: are the assignments below necessary?
-    finish_ = false;
-    drop_ = false;
-    smooth_drop_ = false;
     state_ = State::START;
-    generation_bests_ = loadFromJSON(BESTS_GAME);
-    if (generation_bests_.empty()) {
-        generation_bests_ = loadFromJSON(BESTS_GAME_DEFAULT);
-    } else if (generation_bests_.size() <= (unsigned long)generation_number_) {
-        generation_number_ = (int)generation_bests_.size() - 1;
-        EventManager::getInstance().addEvent(EventType::GENERATION_OUT_OF_BOUNDS);
+    finish_ = drop_ = smooth_drop_ = false;
+
+    try {
+        generation_bests_ = loadFromJSON(GENOMES_FILE);
     }
+    catch (GenomeFileNotFoundException& e) {
+        available_generations_ = 0;
+    }
+    available_generations_ = generation_bests_.size();
+    if (available_generations_ < (unsigned long)playing_generation_) {
+        notifyObservers(EventType::GAME_START_FAILED);
+        EventManager::getInstance().addEvent(EventType::GENERATION_OUT_OF_BOUNDS);
+        return;
+    }
+
     while (!finish_) {
         std::unique_lock<std::mutex> lk(m_);
         drop_cond_.wait(lk, [this]() { return (drop_ && !is_dropping_smoothly_) || finish_; });
         if (finish_) {
+            lk.unlock();
             return;
         }
         if (drop_) {
-            Genome genome = generation_bests_[generation_number_];
+            Genome genome = generation_bests_[playing_generation_];
             Move move = generateBestMove(genome, tetris_);
             move.apply(tetris_, !smooth_drop_);
             if (smooth_drop_) {
@@ -203,7 +210,6 @@ void EvolutionaryStrategy::evolve() {
     while (!finish_) {
         pop = nextGeneration(pop);
     }
-    saveToJSON(BESTS_EVOLVE, generation_bests_);
 }
 
 std::vector<Genome> EvolutionaryStrategy::nextGeneration(std::vector<Genome>& pop) {

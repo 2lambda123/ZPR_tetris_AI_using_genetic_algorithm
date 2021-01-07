@@ -10,7 +10,7 @@
 
 namespace genetic_tetris {
 
-class EvolutionaryStrategy : public AI {
+class EvolutionaryStrategy : public AI, public Subject {
 public:
     enum class Mode {
         PLAY,
@@ -34,7 +34,9 @@ public:
 
     void save();
 
-    void setGenerationNumber(int value);
+    void setPlayingGeneration(int value);
+    int getAvailableGenerations() const { return generation_bests_.size(); }
+    bool getSuccess() const { return success_; }
 
 private:
     enum class State {
@@ -46,11 +48,9 @@ private:
     const std::size_t SELECTED_TO_BREED = POP_SIZE / 2;
     const float MUTATION_RATE = 0.05f;
     const float MUTATION_STEP = 0.2f;
-    const int MOVES_TO_SIMULATE = 40;
+    const int MOVES_TO_SIMULATE = 100;
 
-    const std::string BESTS_GAME = "res/bests_game.json";
-    const std::string BESTS_GAME_DEFAULT = "res/default_bests_game.json";
-    const std::string BESTS_EVOLVE = "res/bests_evolve.json";
+    const std::string GENOMES_FILE = "res/genomes.json";
 
     static void saveToJSON(const std::string& file, std::vector<Genome>& genomes);
     static std::vector<Genome> loadFromJSON(const std::string& file);
@@ -69,6 +69,8 @@ private:
 
     State state_ = State::STOP;
 
+    bool success_;
+
     Genome best_;
     std::vector<Genome> generation_bests_;
     float mean_fitness_ = 0.0f;
@@ -77,11 +79,12 @@ private:
 
     std::mutex m_;
     std::condition_variable drop_cond_;
-    bool drop_ = false;
-    bool smooth_drop_ = false;
-    bool is_dropping_smoothly_ = false;
+    bool drop_;// = false;
+    bool smooth_drop_;// = false;
+    bool is_dropping_smoothly_;// = false;
 
-    int generation_number_ = 0;
+    int playing_generation_;
+    int available_generations_;
 };
 
 }  // namespace genetic_tetris

@@ -2,6 +2,7 @@
 
 #include <event_manager.hpp>
 #include <iomanip>
+#include <iostream>
 
 namespace genetic_tetris {
 
@@ -94,14 +95,18 @@ void GameScreen::handleSfmlEvent(const sf::Event& event) {
 void GameScreen::handleCustomEvent(EventType event) {
     if (event == EventType::GENERATION_OUT_OF_BOUNDS) {
         status_.setString(
-            "Generation number out of bounds. You may consider going back to evolve screen.");
+            "Currently available generations: " + std::to_string(available_generations_));
         status_clock_.restart();
     } else if (event == EventType::GAME_STARTED) {
         state_ = State::START;
     }
 }
 
-int GameScreen::getNumberGenerations() const { return generation_number_dialog_.getValue(); }
+int GameScreen::getPlayingGeneration() const { return generation_number_dialog_.getValue(); }
+
+void GameScreen::setAvailableGenerations(int value) {
+    available_generations_ = value;
+}
 
 void GameScreen::createHumanScore() { human_score_ = createText(sf::Vector2f(10, 640), FONT_SIZE); }
 
@@ -140,7 +145,7 @@ void GameScreen::createGenerationDialog() {
     generation_text_.setString("generation");
     generation_number_dialog_.setFont(font_, (int)(FONT_SIZE * 0.75))
         .setPosition(sf::Vector2f(600, 740))
-        .setValueBounds(sf::Vector2i(0, 99))
+        .setValueBounds(sf::Vector2i(1, 99))
         .build();
 }
 

@@ -17,6 +17,7 @@ GameController::GameController(ObservableTetris &tetris_human, EvolutionaryStrat
       hard_drop_lock_(false) {
     tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
     soft_drop_interval_ = sf::seconds(DEFAULT_SOFT_DROP_INTERVAL_);
+    ai_.addObserver(this);
 }
 
 void GameController::update() {
@@ -57,12 +58,13 @@ void GameController::start() {
     game_clock_.restart();
     ai_clock_.restart();
     tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
-    ai_thread_ = std::thread([this]() { ai_(EvolutionaryStrategy::Mode::PLAY); });
     state_ = State::START;
+    ai_thread_ = std::thread([this]() {
+        ai_(EvolutionaryStrategy::Mode::PLAY);
+    });
 }
 
 void GameController::reset() {
-    finish();
     tetris_human_ = ObservableTetris();
     tetris_human_.addObserver(&ai_);
     ai_.resetTetris();
@@ -85,9 +87,10 @@ void GameController::handleSfmlEvent(const sf::Event &event) {
 
 void GameController::handleCustomEvent(EventType e) {
     if (e == EventType::START_GAME_BUTTON_CLICKED) {
-        ai_.setGenerationNumber(
-            dynamic_cast<GameScreen *>(gui_.getActiveScreen())->getNumberGenerations());
+        ai_.setPlayingGeneration(
+            dynamic_cast<GameScreen *>(gui_.getActiveScreen())->getPlayingGeneration());
         EventManager::getInstance().addEvent(EventType::GAME_STARTED);
+        finish();
         reset();
         gui_.reset();
         start();
@@ -142,6 +145,16 @@ void GameController::handlePlayerInput(const sf::Event &event) {
                 break;
         }
     }
+}
+void GameController::update(EventType e) {
+    if (e == EventType::GAME_START_FAILED && !ai_.getSuccess()) {
+        static_cast<GameScreen*>(gui_.getActiveScreen())->setAvailableGenerations(ai_.getAvailableGenerations());
+        state_ = State::STOP;
+        reset();
+        EventManager::getInstance().removeEvent(EventType::GAME_STARTED);
+        gui_.reset();
+    }
+
 }
 
 }  // namespace genetic_tetris

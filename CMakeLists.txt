@@ -56,7 +56,7 @@ add_library(gui-lib
 add_library(ai-lib
         project/src/AI/evolutionary_strategy.cpp
         project/src/AI/move.cpp
-        project/src/AI/ai_utils.cpp)
+        project/src/AI/ai_utils.cpp project/include/exception.hpp)
 
 target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window sfml-audio)
 target_link_libraries(ai-lib tetris-lib)

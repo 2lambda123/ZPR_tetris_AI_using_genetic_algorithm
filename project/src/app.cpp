@@ -93,6 +93,7 @@ void App::close() {
 void App::start() { active_controller_->start(); }
 
 void App::reset() {
+    active_controller_->finish();
     active_controller_->reset();
     gui_.reset();
 }

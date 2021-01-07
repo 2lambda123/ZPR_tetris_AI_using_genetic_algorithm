@@ -91,6 +91,7 @@ public:
     void update();
     void handleEvent(const sf::Event& e, const sf::Window& window);
     int getValue() const;
+    void setValue(int value);
 
 protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

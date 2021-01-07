@@ -190,6 +190,10 @@ void IncDecDialog::handleEvent(const sf::Event &e, const sf::Window &window) {
 
 int IncDecDialog::getValue() const { return value_; }
 
+void IncDecDialog::setValue(int value) {
+    value_ = value;
+}
+
 void IncDecDialog::build() {
     plus_button_.setSize(button_size_);
     minus_button_.setSize(button_size_);

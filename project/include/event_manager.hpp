@@ -19,6 +19,8 @@ enum class EventType {
     GENOMES_SAVED,
     GENERATION_OUT_OF_BOUNDS,
     GAME_STARTED,
+    GAME_START_FAILED,
+    GENERATIONS_UPDATED,
 };
 
 class EventManager {
@@ -39,6 +41,7 @@ public:
 
     void addEvent(const EventType& e) { events.push_back(e); }
     bool isEmpty() const { return events.empty(); }
+    void removeEvent(EventType event) { events.remove(event); }
 
 private:
     EventManager() = default;
