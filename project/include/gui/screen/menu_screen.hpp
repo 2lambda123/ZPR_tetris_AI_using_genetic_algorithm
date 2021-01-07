@@ -3,18 +3,18 @@
 
 #include "gui/gui_utils.hpp"
 #include "screen.hpp"
+
 namespace genetic_tetris {
 
 class MenuScreen : public Screen {
 public:
-    MenuScreen(sf::RenderWindow& window);
+    explicit MenuScreen(sf::RenderWindow& window);
     void update() override;
     void draw() override;
-    void reset() override;
+    void reset() override {}
     void handleSfmlEvent(const sf::Event& event) override;
-private:
-public:
-    void handleCustomEvent(EventType event) override;
+    void handleCustomEvent(EventType) override {}
+
 private:
     void createPlayButton();
     void createEvolveButton();
@@ -25,5 +25,6 @@ private:
     Button exit_button_;
 };
 
-}
+}  // namespace genetic_tetris
+
 #endif  // GENETIC_TETRIS_MENU_SCREEN_HPP

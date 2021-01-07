@@ -7,27 +7,29 @@
 
 namespace genetic_tetris {
 
-
 class Observer {
 public:
-    virtual void update(EventType e) = 0;
     virtual ~Observer() {}
+
+    virtual void update(EventType e) = 0;
 };
 
 class Subject {
 public:
+    virtual ~Subject() {}
+
     void addObserver(Observer* o) { obs_.push_back(o); }
+
     void notifyObservers(EventType e) {
         for (Observer* o : obs_) {
             o->update(e);
         }
     }
-    virtual ~Subject() {}
 
 private:
     std::vector<Observer*> obs_;
 };
 
-}
+}  // namespace genetic_tetris
 
 #endif

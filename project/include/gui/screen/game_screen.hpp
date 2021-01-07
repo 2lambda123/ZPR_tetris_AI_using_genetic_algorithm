@@ -24,7 +24,7 @@ public:
     int getNumberGenerations() const { return generation_number_dialog_.getValue(); }
 
 private:
-    const sf::Time STATUS_PERSISTANCE = sf::seconds(1.0f);
+    const sf::Time STATUS_PERSISTENCE_ = sf::seconds(1.0f);
 
     void createHumanScore();
     void createAIScore();

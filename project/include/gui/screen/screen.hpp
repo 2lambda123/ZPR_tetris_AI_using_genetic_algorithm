@@ -7,11 +7,12 @@ namespace genetic_tetris {
 
 class Screen {
 public:
-    Screen(sf::RenderWindow& window): window_(window) {
+    explicit Screen(sf::RenderWindow& window) : window_(window) {
         if (!font_.loadFromFile(FONT_FILE)) {
             throw std::runtime_error("Error loading font!");
         }
     }
+
     virtual void update() = 0;
     virtual void draw() = 0;
     virtual void reset() = 0;
@@ -35,6 +36,6 @@ protected:
     sf::Font font_;
 };
 
-}
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_SCREEN_HPP

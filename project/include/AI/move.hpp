@@ -49,11 +49,11 @@ private:
     int move_x_;
     int rotations_;
 
-    int max_height_;
-    int cumulative_height_;
-    int relative_height_;
-    int holes_;
-    int roughness_;
+    int max_height_ = 0;
+    int cumulative_height_ = 0;
+    int relative_height_ = 0;
+    int holes_ = 0;
+    int roughness_ = 0;
 };
 
 }

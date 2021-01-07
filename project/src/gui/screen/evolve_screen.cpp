@@ -25,7 +25,7 @@ void EvolveScreen::update() {
     start_stop_button_.update();
     save_button_.update();
     info_.setString(ai_.getInfo());
-    if (status_clock_.getElapsedTime() > STATUS_PERSISTANCE) {
+    if (status_clock_.getElapsedTime() > STATUS_PERSISTENCE_) {
         status_.setString("");
     }
 }
@@ -41,14 +41,23 @@ void EvolveScreen::draw() {
     window_.display();
 }
 
-void EvolveScreen::reset() {
-    board_ai_.reset();
-}
+void EvolveScreen::reset() { board_ai_.reset(); }
 
 void EvolveScreen::handleSfmlEvent(const sf::Event& event) {
     back_button_.handleEvent(event, window_);
     start_stop_button_.handleEvent(event, window_);
     save_button_.handleEvent(event, window_);
+}
+
+void EvolveScreen::handleCustomEvent(EventType event) {
+    if (event == EventType::GENOMES_SAVED) {
+        status_.setString("Genomes saved");
+        status_clock_.restart();
+    }
+}
+
+void EvolveScreen::createInfo() {
+    info_ = createText(sf::Vector2f(90, 570), (int)(FONT_SIZE * 0.65));
 }
 
 void EvolveScreen::createBackButton() {
@@ -66,6 +75,7 @@ void EvolveScreen::createStartStopButton() {
     start_stop_button_.setOnClick(
         []() { EventManager::getInstance().addEvent(EventType::START_EVOLVE_BUTTON_CLICKED); });
 }
+
 void EvolveScreen::createSaveButton() {
     save_button_.setPosition(sf::Vector2f(510, 800));
     save_button_.setSize(sf::Vector2f(200, 50));
@@ -76,16 +86,6 @@ void EvolveScreen::createSaveButton() {
 
 void EvolveScreen::createStatus() {
     status_ = createText(sf::Vector2f(10, 870), (int)(FONT_SIZE * 0.65));
-}
-
-void EvolveScreen::createInfo() {
-    info_ = createText(sf::Vector2f(90, 570), (int)(FONT_SIZE * 0.65));
-}
-void EvolveScreen::handleCustomEvent(EventType event) {
-    if (event == EventType::GENOMES_SAVED) {
-        status_.setString("Genomes saved");
-        status_clock_.restart();
-    }
 }
 
 }  // namespace genetic_tetris

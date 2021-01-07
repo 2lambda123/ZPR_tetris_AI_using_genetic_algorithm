@@ -24,10 +24,6 @@ void genetic_tetris::MenuScreen::draw() {
     window_.display();
 }
 
-void genetic_tetris::MenuScreen::reset() {
-
-}
-
 void genetic_tetris::MenuScreen::handleSfmlEvent(const sf::Event& event) {
     play_button_.handleEvent(event, window_);
     evolve_button_.handleEvent(event, window_);
@@ -57,6 +53,5 @@ void genetic_tetris::MenuScreen::createExitButton() {
     exit_button_.setOnClick(
         []() { EventManager::getInstance().addEvent(EventType::EXIT_BUTTON_CLICKED); });
 }
-void MenuScreen::handleCustomEvent(EventType event) {}
 
-}
+}  // namespace genetic_tetris

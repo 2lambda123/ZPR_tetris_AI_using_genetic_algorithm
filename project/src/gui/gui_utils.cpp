@@ -43,7 +43,7 @@ void TetrisBoard::setState(const Tetris::Grid &tetris_grid) {
             auto base_color = getTetrominoColorMap().at(tile_color);
             sf::Color result_color = base_color;
             if (state_finished_) {
-                result_color = base_color - FINISHED_HUE_CHANGE;
+                result_color = base_color - FINISHED_HUE_CHANGE_;
             }
             board_[mapped_y][x].setFillColor(result_color);
             ++x;
@@ -124,9 +124,9 @@ void Button::setText(const std::string &text, const sf::Font &font, int size) {
 }
 
 void Button::update() {
-    if (state_ == State::CLICKED && clock_.getElapsedTime() < CLICK_ANIMATION_TIME) {
-        text_.setFillColor(text_color_ - CLICK_HUE_CHANGE);
-        rect_.setFillColor(bg_color_ - CLICK_HUE_CHANGE);
+    if (state_ == State::CLICKED && clock_.getElapsedTime() < CLICK_ANIMATION_TIME_) {
+        text_.setFillColor(text_color_ - CLICK_HUE_CHANGE_);
+        rect_.setFillColor(bg_color_ - CLICK_HUE_CHANGE_);
     } else {
         state_ = State::NORMAL;
         text_.setFillColor(text_color_);
@@ -159,7 +159,7 @@ void IncDecDialog::draw(sf::RenderTarget &target, sf::RenderStates states) const
 }
 
 IncDecDialog::IncDecDialog()
-    : button_size_(BUTTONS_DEFAULT_SIZE), value_(0), font_size_(FONT_DEFAULT_SIZE_) {}
+    : button_size_(BUTTONS_DEFAULT_SIZE_), value_(0), font_size_(FONT_DEFAULT_SIZE_) {}
 
 IncDecDialog &IncDecDialog::setPosition(const sf::Vector2f &pos) {
     dialog_pos_ = pos;
@@ -195,9 +195,9 @@ void IncDecDialog::build() {
     minus_button_.setSize(button_size_);
     value_text_.setFont(font_);
     value_text_.setCharacterSize(font_size_);
-    value_text_.setPosition(dialog_pos_ + VALUE_TEXT_RELATIVE_POS);
-    plus_button_.setPosition(dialog_pos_ + PLUS_BUTTON_RELATIVE_POS);
-    minus_button_.setPosition(dialog_pos_ + MINUS_BUTTON_RELATIVE_POS);
+    value_text_.setPosition(dialog_pos_ + VALUE_TEXT_RELATIVE_POS_);
+    plus_button_.setPosition(dialog_pos_ + PLUS_BUTTON_RELATIVE_POS_);
+    minus_button_.setPosition(dialog_pos_ + MINUS_BUTTON_RELATIVE_POS_);
     plus_button_.setText("+", font_, font_size_);
     minus_button_.setText("-", font_, font_size_);
     value_ = std::clamp(value_, value_bounds_.x, value_bounds_.y);

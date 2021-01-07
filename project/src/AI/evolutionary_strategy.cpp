@@ -28,10 +28,10 @@ void EvolutionaryStrategy::play() {
     smooth_drop_ = false;
     state_ = State::START;
     generation_bests_ = loadFromJSON(BESTS_GAME);
-    if (generation_bests_.size() == 0)
+    if (generation_bests_.empty())
         generation_bests_ = loadFromJSON(BESTS_GAME_DEFAULT);
-    else if (generation_bests_.size() <= generation_number_) {
-        generation_number_ = generation_bests_.size() - 1;
+    else if (generation_bests_.size() <= (unsigned long)generation_number_) {
+        generation_number_ = (int)generation_bests_.size() - 1;
         EventManager::getInstance().addEvent(EventType::GENERATION_OUT_OF_BOUNDS);
     }
     while (!finish_) {
@@ -117,13 +117,13 @@ std::vector<Genome> EvolutionaryStrategy::loadFromJSON(const std::string& file) 
     for (Value::ConstValueIterator itr = d.Begin(); itr != d.End(); ++itr) {
         Genome g;
         auto g_json = itr->GetObject();
-        g.id = g_json["id"].GetDouble();
-        g.rows_cleared = g_json["rows_cleared"].GetDouble();
-        g.max_height = g_json["max_height"].GetDouble();
-        g.cumulative_height = g_json["cumulative_height"].GetDouble();
-        g.relative_height = g_json["relative_height"].GetDouble();
-        g.holes = g_json["holes"].GetDouble();
-        g.roughness = g_json["roughness"].GetDouble();
+        g.id = (long)g_json["id"].GetDouble();
+        g.rows_cleared = (float)g_json["rows_cleared"].GetDouble();
+        g.max_height = (float)g_json["max_height"].GetDouble();
+        g.cumulative_height = (float)g_json["cumulative_height"].GetDouble();
+        g.relative_height = (float)g_json["relative_height"].GetDouble();
+        g.holes = (float)g_json["holes"].GetDouble();
+        g.roughness = (float)g_json["roughness"].GetDouble();
         pop.push_back(g);
     }
     return pop;
@@ -136,20 +136,6 @@ void EvolutionaryStrategy::evolve() {
         pop = next_generation(pop);
     }
     saveToJSON(BESTS_EVOLVE, generation_bests_);
-}
-
-void EvolutionaryStrategy::evolve(const std::string& input_json, const std::string& output_json) {
-    t = 0;
-    std::vector<Genome> pop;
-    if (input_json != "") {
-        pop = loadFromJSON(input_json);
-        evaluation(pop);
-    } else
-        pop = initialPop();
-    while (!finish_) {
-        pop = next_generation(pop);
-    }
-    if (output_json != "") saveToJSON(output_json, pop);
 }
 
 std::vector<Genome> EvolutionaryStrategy::next_generation(std::vector<Genome>& pop) {
@@ -181,7 +167,7 @@ std::vector<Genome> EvolutionaryStrategy::selection(std::vector<Genome>& pop) {
     return selected;
 }
 
-std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(const std::vector<Genome> selected) {
+std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(const std::vector<Genome>& selected) {
     std::vector<Genome> next_pop(selected);
     std::vector<Genome> children;
     while (children.size() + SELECTED_TO_BREED < POP_SIZE - 1) {
@@ -246,7 +232,7 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
         if (tmp.isFinished()) {
             c.score = 0.0f;
         } else {
-            c.score = tmp.getScore();
+            c.score = (float)tmp.getScore();
         }
         assert(c.score >= 0.0f);
         score_sum += c.score;
@@ -264,10 +250,11 @@ Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris
             Move move(mx, rot);
             move.apply(tmp);
             if (tmp.isFinished()) continue;
-            float fitness = genome.max_height * move.getMaxHeight() +
-                            genome.cumulative_height * move.getCumulativeHeight() +
-                            genome.relative_height * move.getRelativeHeight() +
-                            genome.holes * move.getHoles() + genome.roughness * move.getRoughness();
+            float fitness = genome.max_height * (float)move.getMaxHeight() +
+                            genome.cumulative_height * (float)move.getCumulativeHeight() +
+                            genome.relative_height * (float)move.getRelativeHeight() +
+                            genome.holes * (float)move.getHoles() +
+                            genome.roughness * (float)move.getRoughness();
             assert(initial_best < fitness);
             if (fitness > best_fitness) {
                 best_fitness = fitness;

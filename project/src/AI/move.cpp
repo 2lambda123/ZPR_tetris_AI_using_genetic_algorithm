@@ -1,6 +1,5 @@
 #include "AI/move.hpp"
 
-#include <cassert>
 namespace genetic_tetris {
 
 const int Move::MIN_MOVE = -1;

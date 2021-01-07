@@ -39,7 +39,7 @@ public:
 private:
     using Board = std::vector<std::vector<sf::RectangleShape>>;
 
-    const sf::Color FINISHED_HUE_CHANGE = sf::Color(50, 50, 50, 0);
+    const sf::Color FINISHED_HUE_CHANGE_ = sf::Color(50, 50, 50, 0);
 
     bool state_finished_;
     Board board_;
@@ -60,8 +60,8 @@ protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
-    const sf::Time CLICK_ANIMATION_TIME = sf::seconds(0.1f);
-    const sf::Color CLICK_HUE_CHANGE = sf::Color(20, 20, 20, 0);
+    const sf::Time CLICK_ANIMATION_TIME_ = sf::seconds(0.1f);
+    const sf::Color CLICK_HUE_CHANGE_ = sf::Color(20, 20, 20, 0);
 
     enum class State {
         NORMAL,
@@ -96,11 +96,11 @@ protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
-    const sf::Vector2f PLUS_BUTTON_RELATIVE_POS = sf::Vector2f(0, -20);
-    const sf::Vector2f MINUS_BUTTON_RELATIVE_POS = sf::Vector2f(0, 24);
-    const sf::Vector2f VALUE_TEXT_RELATIVE_POS = sf::Vector2f(0, 0);
+    const sf::Vector2f PLUS_BUTTON_RELATIVE_POS_ = sf::Vector2f(0, -20);
+    const sf::Vector2f MINUS_BUTTON_RELATIVE_POS_ = sf::Vector2f(0, 24);
+    const sf::Vector2f VALUE_TEXT_RELATIVE_POS_ = sf::Vector2f(0, 0);
 
-    const sf::Vector2f BUTTONS_DEFAULT_SIZE = sf::Vector2f(20, 20);
+    const sf::Vector2f BUTTONS_DEFAULT_SIZE_ = sf::Vector2f(20, 20);
     const int FONT_DEFAULT_SIZE_ = 24;
 
     sf::Vector2f dialog_pos_;

@@ -54,7 +54,7 @@ void GameScreen::update() {
     if (state_ == State::STOP || tetris_human_.isFinished()) start_restart_button_.update();
     back_button_.update();
     generation_number_dialog_.update();
-    if (status_clock_.getElapsedTime() > STATUS_PERSISTANCE) {
+    if (status_clock_.getElapsedTime() > STATUS_PERSISTENCE_) {
         status_.setString("");
     }
 }

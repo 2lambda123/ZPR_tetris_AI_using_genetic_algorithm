@@ -11,10 +11,11 @@ namespace genetic_tetris {
 class EvolveScreen : public Screen {
 public:
     EvolveScreen(sf::RenderWindow& window, EvolutionaryStrategy& ai, const Tetris& tetris_ai);
+
     void update() override;
     void draw() override;
     void reset() override;
-    void handleSfmlEvent(const sf::Event &event) override;
+    void handleSfmlEvent(const sf::Event& event) override;
     void handleCustomEvent(EventType event) override;
 
     void createInfo();
@@ -24,7 +25,7 @@ public:
     void createStatus();
 
 private:
-    const sf::Time STATUS_PERSISTANCE = sf::seconds(1.0f);
+    const sf::Time STATUS_PERSISTENCE_ = sf::seconds(1.0f);
 
     EvolutionaryStrategy& ai_;
     const Tetris& tetris_ai_;
@@ -40,6 +41,6 @@ private:
     sf::Clock status_clock_;
 };
 
-}
+}  // namespace genetic_tetris
 
 #endif  // GENETIC_TETRIS_EVOLVE_SCREEN_HPP

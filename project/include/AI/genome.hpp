@@ -9,7 +9,7 @@ namespace genetic_tetris {
 
 class Genome {
 public:
-    Genome() {
+    Genome() : score(0) {
         id = next_id++;
         rows_cleared = generator_.random<-1, 1>();
         max_height = generator_.random<-1, 1>();
@@ -28,8 +28,8 @@ public:
     float roughness;
 
     float score;
-private:
 
+private:
     static RandomNumberGenerator& generator_;
 };
 

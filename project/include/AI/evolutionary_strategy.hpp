@@ -17,7 +17,7 @@ public:
         EVOLVE,
     };
 
-    EvolutionaryStrategy(Tetris& tetris) : AI(tetris) {}
+    explicit EvolutionaryStrategy(Tetris& tetris) : AI(tetris) {}
 
     void operator()(Mode mode);
 
@@ -73,12 +73,11 @@ private:
 
     void play();
     void evolve();
-    void evolve(const std::string& input_json, const std::string& output_json);
 
     std::vector<Genome> next_generation(std::vector<Genome>& pop);
     std::vector<Genome> initialPop();
     std::vector<Genome> selection(std::vector<Genome>& pop);
-    std::vector<Genome> crossoverAndMutation(const std::vector<Genome> selected);
+    std::vector<Genome> crossoverAndMutation(const std::vector<Genome>& selected);
     void evaluation(std::vector<Genome>& next_pop);
 
     void mutate(Genome& genome);
@@ -86,8 +85,6 @@ private:
 
     void saveToJSON(const std::string& file, std::vector<Genome>& genomes);
     std::vector<Genome> loadFromJSON(const std::string& file);
-
-    // TODO: move assignments to a constructor
 
     Genome best_;
     std::vector<Genome> generation_bests_;

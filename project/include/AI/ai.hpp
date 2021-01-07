@@ -15,8 +15,8 @@ namespace genetic_tetris {
 
 class AI : public Observer {
 public:
-    AI(Tetris &tetris) : tetris_(tetris) {}
-    virtual ~AI() {}
+    explicit AI(Tetris &tetris) : tetris_(tetris) {}
+    ~AI() override = default;
 
     virtual void finish() { finish_ = true; }
     virtual void drop() = 0;
