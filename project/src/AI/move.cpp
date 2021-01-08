@@ -42,7 +42,7 @@ void Move::apply(Tetris &tetris, bool hard_drop) {
         }
     }
     if (hard_drop) {
-        tetris.hardDrop();
+        tetris.hardDrop(true);
         calculateGridProperties(tetris);
     }
 }

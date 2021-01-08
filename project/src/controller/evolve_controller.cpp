@@ -26,7 +26,7 @@ void EvolveController::start() {
 
 void EvolveController::reset() {
     finish();
-    tetris_ai_ = Tetris(true);
+    tetris_ai_ = Tetris();
     state_ = State::STOP;
 }
 

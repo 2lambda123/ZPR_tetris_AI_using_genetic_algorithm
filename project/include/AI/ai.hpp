@@ -22,7 +22,7 @@ public:
     virtual void finish() { finish_ = true; }
     virtual void drop() = 0;
 
-    void resetTetris() { tetris_ = Tetris(true); }
+    void resetTetris() { tetris_ = Tetris(); }
 
 protected:
     Tetris &tetris_;

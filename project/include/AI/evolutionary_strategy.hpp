@@ -45,10 +45,9 @@ private:
     };
 
     const std::size_t POP_SIZE = 50;
-    const std::size_t SELECTED_TO_BREED = POP_SIZE / 2;
-    const float MUTATION_RATE = 0.05f;
+    const float MUTATION_RATE = 0.1f;
     const float MUTATION_STEP = 0.2f;
-    const int MOVES_TO_SIMULATE = 100;
+    const int MOVES_TO_SIMULATE = 400;
 
     const std::string GENOMES_FILE = "res/genomes.json";
 
@@ -61,7 +60,7 @@ private:
     std::vector<Genome> nextGeneration(std::vector<Genome>& pop);
     std::vector<Genome> initialPop();
     std::vector<Genome> selection(std::vector<Genome>& pop);
-    std::vector<Genome> crossoverAndMutation(const std::vector<Genome>& selected);
+    std::vector<Genome> crossoverAndMutation(std::vector<Genome>& selected);
     void evaluation(std::vector<Genome>& next_pop);
 
     void mutate(Genome& genome);

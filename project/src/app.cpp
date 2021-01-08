@@ -11,7 +11,7 @@ App::App()
     : event_manager_(EventManager::getInstance()),
       sound_manager_(SoundManager::getInstance()),
       tetris_human_(),
-      tetris_ai_(true),
+      tetris_ai_(),
       ai_(std::ref(tetris_ai_)),
       gui_(WINDOW_WIDTH_, WINDOW_HEIGHT_, FPS_, tetris_human_, tetris_ai_, ai_),
       game_controller_(tetris_human_, ai_, gui_),

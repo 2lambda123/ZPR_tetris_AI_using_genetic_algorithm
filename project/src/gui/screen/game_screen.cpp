@@ -145,7 +145,7 @@ void GameScreen::createGenerationDialog() {
     generation_text_.setString("generation");
     generation_number_dialog_.setFont(font_, (int)(FONT_SIZE * 0.75))
         .setPosition(sf::Vector2f(600, 740))
-        .setValueBounds(sf::Vector2i(1, 99))
+        .setValueBounds(sf::Vector2i(0, 99))
         .build();
 }
 
