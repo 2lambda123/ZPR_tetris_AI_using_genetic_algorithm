@@ -1,7 +1,7 @@
 #ifndef GENETIC_TETRIS_EVOLVE_SCREEN_HPP
 #define GENETIC_TETRIS_EVOLVE_SCREEN_HPP
 
-#include <AI/evolutionary_strategy.hpp>
+#include <AI/evolutionary_algo.hpp>
 #include <gui/gui_utils.hpp>
 
 #include "screen.hpp"
@@ -10,7 +10,7 @@ namespace genetic_tetris {
 
 class EvolveScreen : public Screen {
 public:
-    EvolveScreen(sf::RenderWindow& window, EvolutionaryStrategy& ai, const Tetris& tetris_ai);
+    EvolveScreen(sf::RenderWindow& window, EvolutionaryAlgo& ai, const Tetris& tetris_ai);
 
     void update() override;
     void draw() override;
@@ -18,6 +18,7 @@ public:
     void handleSfmlEvent(const sf::Event& event) override;
     void handleCustomEvent(EventType event) override;
 
+    // Helper functions for creating GUI elements
     void createInfo();
     void createBackButton();
     void createStartStopButton();
@@ -25,14 +26,17 @@ public:
     void createStatus();
 
 private:
+    /// How long GUI status should be displayed
     const sf::Time STATUS_PERSISTENCE_ = sf::seconds(1.0f);
 
-    EvolutionaryStrategy& ai_;
+    EvolutionaryAlgo& ai_;
     const Tetris& tetris_ai_;
 
     TetrisBoard board_ai_;
 
+    /// Evolutionary algorithm info
     sf::Text info_;
+    /// GUI status
     sf::Text status_;
     Button start_stop_button_;
     Button back_button_;

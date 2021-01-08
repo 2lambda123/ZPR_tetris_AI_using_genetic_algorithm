@@ -1,11 +1,11 @@
 #include "controller/evolve_controller.hpp"
 
-#include <AI/evolutionary_strategy.hpp>
+#include <AI/evolutionary_algo.hpp>
 #include <tetris/tetris.hpp>
 
 namespace genetic_tetris {
 
-EvolveController::EvolveController(Tetris& tetris_ai, EvolutionaryStrategy& ai, GUI& gui)
+EvolveController::EvolveController(Tetris& tetris_ai, EvolutionaryAlgo& ai, GUI& gui)
     : Controller(gui), tetris_ai_(tetris_ai), ai_(ai) {}
 
 void EvolveController::update() {
@@ -15,12 +15,12 @@ void EvolveController::update() {
     if (tetris_ai_.isFinished()) {
         tetris_ai_ = Tetris();
     }
-    auto move = EvolutionaryStrategy::generateBestMove(ai_.getBest(), tetris_ai_);
+    auto move = EvolutionaryAlgo::generateBestMove(ai_.getBest(), tetris_ai_);
     move.apply(tetris_ai_);
 }
 
 void EvolveController::start() {
-    ai_thread_ = std::thread([this]() { ai_(EvolutionaryStrategy::Mode::EVOLVE); });
+    ai_thread_ = std::thread([this]() { ai_(EvolutionaryAlgo::Mode::EVOLVE); });
     state_ = State::START;
 }
 

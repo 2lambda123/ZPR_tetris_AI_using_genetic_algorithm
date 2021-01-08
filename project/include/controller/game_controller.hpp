@@ -1,7 +1,7 @@
 #ifndef GENETIC_TETRIS_GAME_CONTROLLER_HPP
 #define GENETIC_TETRIS_GAME_CONTROLLER_HPP
 
-#include <AI/evolutionary_strategy.hpp>
+#include <AI/evolutionary_algo.hpp>
 #include <SFML/System/Clock.hpp>
 #include <tetris/tetris.hpp>
 
@@ -9,12 +9,14 @@
 #include "sound_manager.hpp"
 
 namespace genetic_tetris {
-
+/**
+ * Game screen controller
+ */
 class GameController : public Controller, public Observer {
 public:
     enum class State { START, STOP } state_ = State::STOP;
 
-    GameController(ObservableTetris& tetris_human, EvolutionaryStrategy& ai, GUI& gui);
+    GameController(ObservableTetris& tetris_human, EvolutionaryAlgo& ai, GUI& gui);
     void update(EventType e) override;
 
     void update() override;
@@ -26,6 +28,7 @@ public:
     void handleCustomEvent(EventType e) override;
 
 private:
+    /// Interval between next AI moves (when player has finished)
     const sf::Time AI_MOVE_INTERVAL_ = sf::seconds(0.1f);
     const sf::Time HARD_DROP_LOCK_DELAY_ = sf::seconds(0.25f);
     const float DEFAULT_SOFT_DROP_INTERVAL_ = 0.05f;
@@ -34,7 +37,7 @@ private:
     void handlePlayerInput(const sf::Event& event);
 
     ObservableTetris& tetris_human_;
-    EvolutionaryStrategy& ai_;
+    EvolutionaryAlgo& ai_;
 
     sf::Clock ai_clock_;
     sf::Clock game_clock_;

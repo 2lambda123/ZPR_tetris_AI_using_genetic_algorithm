@@ -54,9 +54,9 @@ add_library(gui-lib
         project/src/controller/evolve_controller.cpp)
 
 add_library(ai-lib
-        project/src/AI/evolutionary_strategy.cpp
+        project/src/AI/evolutionary_algo.cpp
         project/src/AI/move.cpp
-        project/src/AI/ai_utils.cpp project/include/exception.hpp)
+        project/src/AI/random_number_generator.cpp project/include/exception.hpp)
 
 target_link_libraries(gui-lib sfml-system sfml-graphics sfml-window sfml-audio)
 target_link_libraries(ai-lib tetris-lib)

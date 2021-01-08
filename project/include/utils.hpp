@@ -7,6 +7,9 @@
 
 namespace genetic_tetris {
 
+/**
+ * Abstract observer
+ */
 class Observer {
 public:
     virtual ~Observer() {}
@@ -14,6 +17,9 @@ public:
     virtual void update(EventType e) = 0;
 };
 
+/**
+ * Subject class for Observer.
+ */
 class Subject {
 public:
     virtual ~Subject() {}

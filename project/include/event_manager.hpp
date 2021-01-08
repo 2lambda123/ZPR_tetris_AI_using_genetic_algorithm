@@ -7,6 +7,9 @@
 
 namespace genetic_tetris {
 
+/**
+ * Enum specifying possible events in the application
+ */
 enum class EventType {
     TETROMINO_DROPPED,
     PLAY_BUTTON_CLICKED,
@@ -20,9 +23,11 @@ enum class EventType {
     GENERATION_OUT_OF_BOUNDS,
     GAME_STARTED,
     GAME_START_FAILED,
-    GENERATIONS_UPDATED,
 };
 
+/**
+ * Simple event manager.
+ */
 class EventManager {
 public:
     static EventManager& getInstance() {
@@ -33,6 +38,7 @@ public:
     EventManager(const EventManager&) = delete;
     EventManager operator=(const EventManager&) = delete;
 
+    /// Returns event from the front and removes it
     EventType pollEvent() {
         EventType e = events.front();
         events.pop_front();

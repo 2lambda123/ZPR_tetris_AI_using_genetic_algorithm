@@ -1,6 +1,6 @@
 #include "controller/game_controller.hpp"
 
-#include <AI/evolutionary_strategy.hpp>
+#include <AI/evolutionary_algo.hpp>
 #include <SFML/System/Clock.hpp>
 #include <tetris/tetris.hpp>
 
@@ -9,7 +9,7 @@
 
 namespace genetic_tetris {
 
-GameController::GameController(ObservableTetris &tetris_human, EvolutionaryStrategy &ai, GUI &gui)
+GameController::GameController(ObservableTetris &tetris_human, EvolutionaryAlgo &ai, GUI &gui)
     : Controller(gui),
       tetris_human_(tetris_human),
       ai_(ai),
@@ -60,7 +60,7 @@ void GameController::start() {
     tick_interval_ = sf::seconds((float)tetris_human_.getLevelSpeed());
     state_ = State::START;
     ai_thread_ = std::thread([this]() {
-        ai_(EvolutionaryStrategy::Mode::PLAY);
+        ai_(EvolutionaryAlgo::Mode::PLAY);
     });
 }
 

@@ -10,11 +10,16 @@
 
 #include "sound_manager.hpp"
 #include "tetris/tetris.hpp"
-
+/**
+ * This file contains helper classes used in GUI.
+ */
 namespace genetic_tetris {
 
 const std::map<Tetromino::Color, sf::Color>& getTetrominoColorMap();
 
+/**
+ * Class used to display tetris grid and next tetromino panel.
+ */
 class TetrisBoard {
 public:
     struct TileProperties {
@@ -46,6 +51,10 @@ private:
     sf::Vector2i board_tile_count_;
 };
 
+/**
+ * Custom button class.
+ * Provides with only most basic functionalities like custom click handlers, hue change on clicked.
+ */
 class Button : public sf::Drawable {
 public:
     Button();
@@ -81,6 +90,9 @@ private:
     std::function<void()> on_click_;
 };
 
+/**
+ * Counter dialog consisting of plus and minus buttons and counter value.
+ */
 class IncDecDialog : public sf::Drawable {
 public:
     IncDecDialog();

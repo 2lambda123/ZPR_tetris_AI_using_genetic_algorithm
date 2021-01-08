@@ -1,10 +1,10 @@
 #include "gui/screen/evolve_screen.hpp"
 
-#include <AI/evolutionary_strategy.hpp>
+#include <AI/evolutionary_algo.hpp>
 
 namespace genetic_tetris {
 
-EvolveScreen::EvolveScreen(sf::RenderWindow& window, EvolutionaryStrategy& ai,
+EvolveScreen::EvolveScreen(sf::RenderWindow& window, EvolutionaryAlgo& ai,
                            const Tetris& tetris_ai)
     : Screen(window),
       ai_(ai),

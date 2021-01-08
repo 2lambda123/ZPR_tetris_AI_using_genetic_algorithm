@@ -47,42 +47,6 @@ void Move::apply(Tetris &tetris, bool hard_drop) {
     }
 }
 
-void Move::setMoveX(int value) { move_x_ = std::clamp(value, MIN_MOVE, MAX_MOVE); }
-
-void Move::setRotation(int value) { rotations_ = std::clamp(value, MIN_ROT, MAX_ROT); }
-
-void Move::incrementMoveX() {
-    if (move_x_ + 1 > MAX_MOVE) {
-        move_x_ = MIN_MOVE;
-    } else {
-        move_x_++;
-    }
-}
-
-void Move::decrementMoveX() {
-    if (move_x_ - 1 < MIN_MOVE) {
-        move_x_ = MAX_MOVE;
-    } else {
-        move_x_--;
-    }
-}
-
-void Move::incrementRotation() {
-    if (rotations_ + 1 > MAX_ROT) {
-        rotations_ = MIN_ROT;
-    } else {
-        rotations_++;
-    }
-}
-
-void Move::decrementRotation() {
-    if (rotations_ - 1 < MIN_ROT) {
-        rotations_ = MAX_ROT;
-    } else {
-        rotations_--;
-    }
-}
-
 int Move::calculateHoles(const Tetris::Grid &grid) {
     int holes = 0;
     int rows = grid.size();

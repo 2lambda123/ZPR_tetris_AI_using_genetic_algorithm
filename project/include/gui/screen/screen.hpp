@@ -5,6 +5,9 @@
 
 namespace genetic_tetris {
 
+/**
+ * Base class for GUI screens
+ */
 class Screen {
 public:
     explicit Screen(sf::RenderWindow& window) : window_(window) {

@@ -9,7 +9,7 @@
 #include <controller/menu_controller.hpp>
 
 #include "AI/ai.hpp"
-#include "AI/evolutionary_strategy.hpp"
+#include "AI/evolutionary_algo.hpp"
 #include "event_manager.hpp"
 #include "gui/gui.hpp"
 #include "sound_manager.hpp"
@@ -17,6 +17,11 @@
 
 namespace genetic_tetris {
 
+/**
+ * Main class managing the application.
+ * It aggregates all the data and controls current state.
+ * Logic and displaying information is pushed to corresponding controllers.
+ */
 class App {
 public:
     App();
@@ -48,7 +53,7 @@ private:
     ObservableTetris tetris_human_;
     Tetris tetris_ai_;
 
-    EvolutionaryStrategy ai_;
+    EvolutionaryAlgo ai_;
 
     GUI gui_;
 

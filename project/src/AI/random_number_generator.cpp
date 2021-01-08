@@ -1,4 +1,4 @@
-#include "AI/ai_utils.hpp"
+#include "AI/random_number_generator.hpp"
 
 namespace genetic_tetris {
 

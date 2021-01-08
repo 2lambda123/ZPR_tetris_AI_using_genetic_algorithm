@@ -3,7 +3,7 @@
 namespace genetic_tetris {
 
 GUI::GUI(int width, int height, int fps, Tetris& human_tetris, Tetris& ai_tetris,
-         EvolutionaryStrategy& ai)
+         EvolutionaryAlgo& ai)
     : window_(sf::VideoMode(width, height), "Tetris AI"),
       menu_screen_(window_),
       game_screen_(window_, human_tetris, ai_tetris),

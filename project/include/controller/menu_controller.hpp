@@ -5,6 +5,11 @@
 
 namespace genetic_tetris {
 
+/**
+ * Menu screen controller.
+ * It is a dummy class used so we don't have to make
+ * additional checks for active_controller_ pointer
+ */
 class MenuController : public Controller {
 public:
     explicit MenuController(GUI& gui) : Controller(gui) {}

@@ -1,4 +1,4 @@
-#include "AI/evolutionary_strategy.hpp"
+#include "AI/evolutionary_algo.hpp"
 
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
@@ -13,7 +13,7 @@
 
 namespace genetic_tetris {
 
-Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris) {
+Move EvolutionaryAlgo::generateBestMove(const Genome& genome, Tetris& tetris) {
     Move best_move;
     float initial_best = -10000000.0f;
     float best_fitness = initial_best;
@@ -39,7 +39,7 @@ Move EvolutionaryStrategy::generateBestMove(const Genome& genome, Tetris& tetris
     return best_move;
 }
 
-void EvolutionaryStrategy::operator()(EvolutionaryStrategy::Mode mode) {
+void EvolutionaryAlgo::operator()(EvolutionaryAlgo::Mode mode) {
     finish_ = false;
     if (mode == Mode::EVOLVE) {
         evolve();
@@ -48,19 +48,19 @@ void EvolutionaryStrategy::operator()(EvolutionaryStrategy::Mode mode) {
     }
 }
 
-void EvolutionaryStrategy::drop() {
+void EvolutionaryAlgo::drop() {
     drop_ = true;
     drop_cond_.notify_one();
 }
 
-void EvolutionaryStrategy::update(EventType e) {
+void EvolutionaryAlgo::update(EventType e) {
     if (e == EventType::TETROMINO_DROPPED) {
         smooth_drop_ = true;
         drop();
     }
 }
 
-void EvolutionaryStrategy::finish() {
+void EvolutionaryAlgo::finish() {
     if (finish_) {
         return;
     }
@@ -73,7 +73,7 @@ void EvolutionaryStrategy::finish() {
     state_ = State::STOP;
 }
 
-void EvolutionaryStrategy::tick() {
+void EvolutionaryAlgo::tick() {
     if (is_dropping_smoothly_) {
         bool has_dropped = tetris_.tick(true);
         if (has_dropped) {
@@ -85,9 +85,9 @@ void EvolutionaryStrategy::tick() {
     }
 }
 
-bool EvolutionaryStrategy::isDroppingSmoothly() const { return is_dropping_smoothly_; }
+bool EvolutionaryAlgo::isDroppingSmoothly() const { return is_dropping_smoothly_; }
 
-std::string EvolutionaryStrategy::getInfo() const {
+std::string EvolutionaryAlgo::getInfo() const {
     std::stringstream string_stream;
     string_stream << "Generation " << t_ << ": " << std::endl;
     string_stream << "\tmean fitness: " << mean_fitness_ << std::endl;
@@ -101,16 +101,16 @@ std::string EvolutionaryStrategy::getInfo() const {
     return string_stream.str();
 }
 
-Genome EvolutionaryStrategy::getBest() const { return best_; }
+Genome EvolutionaryAlgo::getBest() const { return best_; }
 
-void EvolutionaryStrategy::save() {
+void EvolutionaryAlgo::save() {
     saveToJSON(GENOMES_FILE, generation_bests_);
     EventManager::getInstance().addEvent(EventType::GENOMES_SAVED);
 }
 
-void EvolutionaryStrategy::setPlayingGeneration(int value) { playing_generation_ = value; }
+void EvolutionaryAlgo::setPlayingGeneration(int value) { playing_generation_ = value; }
 
-void EvolutionaryStrategy::saveToJSON(const std::string& file, std::vector<Genome>& genomes) {
+void EvolutionaryAlgo::saveToJSON(const std::string& file, std::vector<Genome>& genomes) {
     using namespace rapidjson;
     std::cout << "Saving genomes to JSON: " << file << std::endl;
     Document d;
@@ -141,7 +141,7 @@ void EvolutionaryStrategy::saveToJSON(const std::string& file, std::vector<Genom
     genomes_json.Accept(writer);
 }
 
-std::vector<Genome> EvolutionaryStrategy::loadFromJSON(const std::string& file) {
+std::vector<Genome> EvolutionaryAlgo::loadFromJSON(const std::string& file) {
     using namespace rapidjson;
     std::cout << "Loading genomes from JSON: " << file << std::endl;
     std::vector<Genome> pop;
@@ -165,7 +165,7 @@ std::vector<Genome> EvolutionaryStrategy::loadFromJSON(const std::string& file) 
     return pop;
 }
 
-void EvolutionaryStrategy::play() {
+void EvolutionaryAlgo::play() {
     state_ = State::START;
     finish_ = drop_ = smooth_drop_ = false;
 
@@ -206,7 +206,7 @@ void EvolutionaryStrategy::play() {
     }
 }
 
-void EvolutionaryStrategy::evolve() {
+void EvolutionaryAlgo::evolve() {
     t_ = 0;
     auto pop = initialPop();
     while (!finish_) {
@@ -214,22 +214,22 @@ void EvolutionaryStrategy::evolve() {
     }
 }
 
-std::vector<Genome> EvolutionaryStrategy::nextGeneration(std::vector<Genome>& pop) {
+std::vector<Genome> EvolutionaryAlgo::nextGeneration(std::vector<Genome>& pop) {
     auto selected = selection(pop);
-    auto next_pop = crossoverAndMutation(selected);
+    auto next_pop = mutation(selected);
     evaluation(next_pop);
     std::cout << getInfo() << std::endl;
     t_++;
     return next_pop;
 }
 
-std::vector<Genome> EvolutionaryStrategy::initialPop() {
+std::vector<Genome> EvolutionaryAlgo::initialPop() {
     std::vector<Genome> initial_pop(POP_SIZE);
     evaluation(initial_pop);
     return initial_pop;
 }
 
-std::vector<Genome> EvolutionaryStrategy::selection(std::vector<Genome>& pop) {
+std::vector<Genome> EvolutionaryAlgo::selection(std::vector<Genome>& pop) {
     std::vector<Genome> selected;
     selected.reserve(POP_SIZE);
     best_ = *std::max_element(pop.begin(), pop.end(), [](const Genome& a, const Genome& b) {
@@ -251,7 +251,7 @@ std::vector<Genome> EvolutionaryStrategy::selection(std::vector<Genome>& pop) {
     return selected;
 }
 
-std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(std::vector<Genome>& selected) {
+std::vector<Genome> EvolutionaryAlgo::mutation(std::vector<Genome>& selected) {
     for (auto& genome : selected) {
         mutate(genome);
     }
@@ -260,8 +260,8 @@ std::vector<Genome> EvolutionaryStrategy::crossoverAndMutation(std::vector<Genom
     return selected;
 }
 
-void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
-    score_sum_ = 0.0f;
+void EvolutionaryAlgo::evaluation(std::vector<Genome>& next_pop) {
+    float score_sum = 0.0f;
     for (auto& c : next_pop) {
         Tetris tmp;
         Move best_move;
@@ -274,12 +274,12 @@ void EvolutionaryStrategy::evaluation(std::vector<Genome>& next_pop) {
             }
         }
         c.score = (float)tmp.getScore();
-        score_sum_ += c.score;
+        score_sum += c.score;
     }
-    mean_fitness_ = score_sum_ / POP_SIZE;
+    mean_fitness_ = score_sum / POP_SIZE;
 }
 
-void EvolutionaryStrategy::mutate(Genome& genome) {
+void EvolutionaryAlgo::mutate(Genome& genome) {
     auto mutate_gene = [this](float gene) {
         if (generator_.random_0_1() < MUTATION_RATE) {
             return gene + generator_.random<-1,1>() * MUTATION_STEP;
@@ -294,7 +294,7 @@ void EvolutionaryStrategy::mutate(Genome& genome) {
     genome.roughness = mutate_gene(genome.roughness);
 }
 
-Genome EvolutionaryStrategy::breed(const std::vector<Genome>& selected) {
+Genome EvolutionaryAlgo::breed(const std::vector<Genome>& selected) {
     Genome child;
     std::vector<Genome> parents;
     std::sample(selected.begin(), selected.end(), std::back_inserter(parents), 2,

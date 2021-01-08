@@ -18,12 +18,15 @@ public:
     void reset() override;
     void handleSfmlEvent(const sf::Event& event) override;
     void handleCustomEvent(EventType event) override;
+
     int getPlayingGeneration() const;
     void setAvailableGenerations(int value);
 
 private:
+    /// How long GUI status should be displayed
     const sf::Time STATUS_PERSISTENCE_ = sf::seconds(1.0f);
 
+    // Helper functions for creating GUI elements
     void createHumanScore();
     void createAIScore();
     void createHumanLevel();
@@ -54,6 +57,7 @@ private:
     Button start_restart_button_;
     Button back_button_;
 
+    /// Dialog used to specify number of generation playing against the player
     IncDecDialog generation_number_dialog_;
     sf::Text generation_text_;
     int available_generations_ = 99;

@@ -8,6 +8,11 @@
 
 namespace genetic_tetris {
 
+/**
+ * Interface for controller classes.
+ * Controllers are used to split logic into
+ * more manageable parts.
+ */
 class Controller {
 public:
     explicit Controller(GUI& gui) : gui_(gui) {}

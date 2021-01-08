@@ -14,6 +14,9 @@
 
 namespace genetic_tetris {
 
+/**
+ * Manages screen switching. Displaying is handled by Screen classes.
+ */
 class GUI {
 public:
     enum class ScreenType {
@@ -23,7 +26,7 @@ public:
     };
 
     GUI(int width, int height, int fps, Tetris& human_tetris, Tetris& ai_tetris,
-        EvolutionaryStrategy& ai);
+        EvolutionaryAlgo& ai);
     void update();
     void draw();
     void close();
