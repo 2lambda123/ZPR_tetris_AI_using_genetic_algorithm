@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #ifdef __linux__
 #define BOOST_TEST_DYN_LINK
 #endif
@@ -9,6 +13,8 @@
 #include "tetris/tetris.hpp"
 #include "tetris/tetromino.hpp"
 #include "tetris/tetromino_generator.hpp"
+
+using namespace genetic_tetris;
 
 BOOST_AUTO_TEST_CASE(tetrominoes_exist) {
     std::cout << "Test #1: All tetrominoes exist...\n";

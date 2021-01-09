@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "gui/screen/menu_screen.hpp"
 
 #include <event_manager.hpp>

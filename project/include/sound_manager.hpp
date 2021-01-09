@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #ifndef GENETIC_TETRIS_SOUND_MANAGER_HPP
 #define GENETIC_TETRIS_SOUND_MANAGER_HPP
 

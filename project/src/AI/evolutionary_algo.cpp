@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "AI/evolutionary_algo.hpp"
 
 #include <rapidjson/istreamwrapper.h>
@@ -292,28 +296,6 @@ void EvolutionaryAlgo::mutate(Genome& genome) {
     genome.relative_height = mutate_gene(genome.relative_height);
     genome.holes = mutate_gene(genome.holes);
     genome.roughness = mutate_gene(genome.roughness);
-}
-
-Genome EvolutionaryAlgo::breed(const std::vector<Genome>& selected) {
-    Genome child;
-    std::vector<Genome> parents;
-    std::sample(selected.begin(), selected.end(), std::back_inserter(parents), 2,
-                std::mt19937{std::random_device{}()});
-    auto gene_picker = [&](float gene_father, float gene_mother) {
-        float p = generator_.random<-1, 1>();
-        if (p >= 0.0f) {
-            return gene_father;
-        }
-        return gene_mother;
-    };
-    child.rows_cleared = gene_picker(parents[0].rows_cleared, parents[1].rows_cleared);
-    child.max_height = gene_picker(parents[0].max_height, parents[1].max_height);
-    child.cumulative_height =
-        gene_picker(parents[0].cumulative_height, parents[1].cumulative_height);
-    child.relative_height = gene_picker(parents[0].relative_height, parents[1].relative_height);
-    child.holes = gene_picker(parents[0].holes, parents[1].holes);
-    child.roughness = gene_picker(parents[0].roughness, parents[1].roughness);
-    return child;
 }
 
 }  // namespace genetic_tetris

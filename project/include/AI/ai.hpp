@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #ifndef GENETIC_AI_HPP
 #define GENETIC_AI_HPP
 

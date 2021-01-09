@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #include "tetris/wall_kicks.hpp"
 
 #include <vector>

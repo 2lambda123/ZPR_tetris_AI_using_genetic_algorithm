@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "app.hpp"
 
 #include <thread>

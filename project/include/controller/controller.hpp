@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #ifndef GENETIC_TETRIS_CONTROLLER_HPP
 #define GENETIC_TETRIS_CONTROLLER_HPP
 

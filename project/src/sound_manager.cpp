@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #include "sound_manager.hpp"
 
 #include <SFML/Audio/Sound.hpp>

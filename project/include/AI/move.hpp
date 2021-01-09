@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #ifndef GENETIC_TETRIS_MOVE_HPP
 #define GENETIC_TETRIS_MOVE_HPP
 

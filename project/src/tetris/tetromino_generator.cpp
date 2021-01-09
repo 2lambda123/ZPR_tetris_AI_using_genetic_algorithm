@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #include "tetris/tetromino_generator.hpp"
 
 #include <cstdlib>

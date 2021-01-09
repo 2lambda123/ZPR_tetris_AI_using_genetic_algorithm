@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #ifndef GENETIC_TETRIS_GAME_SCREEN_HPP
 #define GENETIC_TETRIS_GAME_SCREEN_HPP
 

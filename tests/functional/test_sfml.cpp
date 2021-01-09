@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include <SFML/Graphics.hpp>
 
 int main() {

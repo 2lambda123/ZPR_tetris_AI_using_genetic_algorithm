@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #ifndef TETRIS_HPP
 #define TETRIS_HPP
 

@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #ifndef GUI_UTILS_HPP
 #define GUI_UTILS_HPP
 

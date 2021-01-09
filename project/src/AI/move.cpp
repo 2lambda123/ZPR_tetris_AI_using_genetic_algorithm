@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "AI/move.hpp"
 
 namespace genetic_tetris {

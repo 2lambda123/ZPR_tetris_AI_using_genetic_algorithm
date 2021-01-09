@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #ifndef GENETIC_TETRIS_EVENT_MANAGER_HPP
 #define GENETIC_TETRIS_EVENT_MANAGER_HPP
 

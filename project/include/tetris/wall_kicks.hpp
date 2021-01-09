@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #ifndef WALL_KICKS_HPP
 #define WALL_KICKS_HPP
 

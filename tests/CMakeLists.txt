@@ -15,7 +15,7 @@ target_link_libraries(test_tetris Boost::unit_test_framework)
 target_link_libraries(test_ai Boost::unit_test_framework ai-lib)
 
 target_link_libraries(tetris_no_gui tetris-lib)
-target_link_libraries(tetris_gui_integration tetris-lib)
+target_link_libraries(tetris_gui_integration tetris-lib ai-lib)
 target_link_libraries(test_tetris tetris-lib)
 
 # copy /res folder to a folder containing binary

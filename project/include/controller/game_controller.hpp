@@ -1,3 +1,7 @@
+/*
+ * Authors: Damian Kolaska, Rafał Kulus
+ */
+
 #ifndef GENETIC_TETRIS_GAME_CONTROLLER_HPP
 #define GENETIC_TETRIS_GAME_CONTROLLER_HPP
 

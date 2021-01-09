@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "gui/gui_utils.hpp"
 
 #include <iostream>

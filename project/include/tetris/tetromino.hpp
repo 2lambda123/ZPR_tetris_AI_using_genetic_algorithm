@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #ifndef TETROMINO_HPP
 #define TETROMINO_HPP
 

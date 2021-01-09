@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "gui/screen/evolve_screen.hpp"
 
 #include <AI/evolutionary_algo.hpp>

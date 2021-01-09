@@ -1,11 +1,18 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "gui/gui.hpp"
 #include "tetris/tetris.hpp"
 
 int main() {
+    using namespace genetic_tetris;
     bool closed = false;
     sf::Clock clock;
-    GUI gui(800, 900);
     Tetris tetris;
+    EvolutionaryAlgo ai(tetris);
+    GUI gui(800, 900, 60, tetris, tetris, ai);
+    gui.setActiveScreen(GUI::ScreenType::GAME);
 
     clock.restart();
     while (!closed) {
@@ -17,7 +24,7 @@ int main() {
             tetris.tick();
             clock.restart();
         }
-        gui.update(tetris.getDisplayGrid(), tetris.getDisplayGrid());
+        gui.update();
         gui.draw();
     }
     return 0;

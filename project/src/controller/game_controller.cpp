@@ -1,3 +1,7 @@
+/*
+ * Authors: Damian Kolaska, Rafał Kulus
+ */
+
 #include "controller/game_controller.hpp"
 
 #include <AI/evolutionary_algo.hpp>

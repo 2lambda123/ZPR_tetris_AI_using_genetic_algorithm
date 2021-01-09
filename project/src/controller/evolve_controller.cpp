@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "controller/evolve_controller.hpp"
 
 #include <AI/evolutionary_algo.hpp>

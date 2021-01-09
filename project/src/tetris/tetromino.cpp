@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #include "tetris/tetromino.hpp"
 
 #ifdef _WIN32

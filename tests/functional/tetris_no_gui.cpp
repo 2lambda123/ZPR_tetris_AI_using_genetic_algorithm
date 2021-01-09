@@ -1,9 +1,13 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #include <iostream>
 
 #include "tetris/tetris.hpp"
 
 int main(){
-    Tetris tetris;
+    genetic_tetris::Tetris tetris;
     while(true){
         int o;
         std::cin>>o;

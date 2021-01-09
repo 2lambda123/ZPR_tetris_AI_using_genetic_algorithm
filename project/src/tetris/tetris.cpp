@@ -1,3 +1,7 @@
+/*
+ * Author: Rafał Kulus
+ */
+
 #include "tetris/tetris.hpp"
 
 #ifdef _WIN32

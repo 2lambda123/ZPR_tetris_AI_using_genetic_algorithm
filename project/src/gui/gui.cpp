@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "gui/gui.hpp"
 
 namespace genetic_tetris {

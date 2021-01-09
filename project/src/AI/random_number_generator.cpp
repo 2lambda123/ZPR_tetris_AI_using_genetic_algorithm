@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #include "AI/random_number_generator.hpp"
 
 namespace genetic_tetris {

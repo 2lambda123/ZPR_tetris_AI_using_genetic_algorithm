@@ -1,3 +1,7 @@
+/*
+ * Author: Damian Kolaska
+ */
+
 #ifndef OBSERVER_HPP
 #define OBSERVER_HPP
 
