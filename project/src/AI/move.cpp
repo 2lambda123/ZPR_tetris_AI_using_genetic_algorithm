@@ -47,7 +47,7 @@ void Move::apply(Tetris &tetris, bool hard_drop) {
     }
     if (hard_drop) {
         tetris.hardDrop(true);
-        calculateGridProperties(tetris);
+        calculateGridProperties(tetris.getRawGrid());
     }
 }
 
@@ -66,8 +66,7 @@ int Move::calculateHoles(const Tetris::Grid &grid) {
     return holes;
 }
 
-void Move::calculateGridProperties(const Tetris &tetris) {
-    auto grid = tetris.getRawGrid();
+void Move::calculateGridProperties(const Tetris::Grid &grid) {
     holes_ = calculateHoles(grid);
     max_height_ = cumulative_height_ = roughness_ = 0;
     int rows = grid.size();

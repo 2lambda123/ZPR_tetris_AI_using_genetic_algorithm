@@ -49,7 +49,6 @@ public:
     void finish() override;
     /// Performs genetic_tetris::Tetris::tick()
     void tick();
-    /// TODO
     bool isDroppingSmoothly() const;
 
     /**

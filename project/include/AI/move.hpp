@@ -47,7 +47,7 @@ private:
     static int calculateHoles(const Tetris::Grid &grid);
 
     /// Calculates grid properties after Move::apply
-    void calculateGridProperties(const Tetris &tetris);
+    void calculateGridProperties(const Tetris::Grid &grid);
 
     /// Move in x direction
     int move_x_;

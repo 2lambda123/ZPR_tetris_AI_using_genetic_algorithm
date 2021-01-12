@@ -29,6 +29,23 @@ public:
         holes = generator.random<-1, 1>();
         roughness = generator.random<-1, 1>();
     }
+    Genome(float rowsCleared, float maxHeight, float cumulativeHeight, float relativeHeight,
+           float holes, float roughness)
+        : rows_cleared(rowsCleared),
+          max_height(maxHeight),
+          cumulative_height(cumulativeHeight),
+          relative_height(relativeHeight),
+          holes(holes),
+          roughness(roughness) {
+        id = next_id++;
+    }
+    bool operator==(const Genome& rhs) const {
+        return rows_cleared == rhs.rows_cleared && max_height == rhs.max_height &&
+               cumulative_height == rhs.cumulative_height &&
+               relative_height == rhs.relative_height && holes == rhs.holes &&
+               roughness == rhs.roughness;
+    }
+    bool operator!=(const Genome& rhs) const { return !(rhs == *this); }
     /// Next genome id
     inline static long next_id = 0;
 
