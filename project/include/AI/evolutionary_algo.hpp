@@ -106,7 +106,7 @@ private:
     std::vector<Genome> nextGeneration(std::vector<Genome>& pop);
     /// Creates initial population
     std::vector<Genome> initialPop();
-    /// Performs selection
+    /// Performs tournament selection
     std::vector<Genome> selection(std::vector<Genome>& pop);
     /// Performs mutation on selected
     std::vector<Genome> mutation(std::vector<Genome>& selected);

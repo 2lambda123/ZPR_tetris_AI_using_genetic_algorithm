@@ -33,7 +33,6 @@ Move EvolutionaryAlgo::generateBestMove(const Genome& genome, Tetris& tetris) {
                             genome.holes * (float)move.getHoles() +
                             genome.roughness * (float)move.getRoughness() +
                             genome.rows_cleared * (float)tmp.getLastTickClearedRowsCount();
-            assert(initial_best < fitness);
             if (fitness > best_fitness) {
                 best_fitness = fitness;
                 best_move = move;
@@ -95,13 +94,14 @@ std::string EvolutionaryAlgo::getInfo() const {
     std::stringstream string_stream;
     string_stream << "Generation " << t_ << ": " << std::endl;
     string_stream << "\tmean fitness: " << mean_fitness_ << std::endl;
-    string_stream
-        << boost::format(
-               "\tbest: "
-               "{\n\t\tid=%8%\n\t\tscore=%1%\n\t\tmax_h=%2%\n\t\trows_cleared=%3%\n\t\tcumulative_h=%4%\n\t\t"
-               "relative_h=%5%\n\t\tholes=%6%\n\t\troughness=%7%)\n\t}") %
-               best_.score % best_.max_height % best_.rows_cleared % best_.cumulative_height %
-               best_.relative_height % best_.holes % best_.roughness % best_.id;
+    string_stream << boost::format(
+                         "\tbest: "
+                         "{\n\t\tid=%8%\n\t\tscore=%1%\n\t\tmax_h=%2%\n\t\trows_cleared=%3%"
+                         "\n\t\tcumulative_h=%4%\n\t\t"
+                         "relative_h=%5%\n\t\tholes=%6%\n\t\troughness=%7%)\n\t}") %
+                         best_.score % best_.max_height % best_.rows_cleared %
+                         best_.cumulative_height % best_.relative_height % best_.holes %
+                         best_.roughness % best_.id;
     return string_stream.str();
 }
 
@@ -175,8 +175,7 @@ void EvolutionaryAlgo::play() {
 
     try {
         generation_bests_ = loadFromJSON(GENOMES_FILE);
-    }
-    catch (GenomeFileNotFoundException& e) {
+    } catch (GenomeFileNotFoundException& e) {
         available_generations_ = 0;
     }
     available_generations_ = generation_bests_.size();
@@ -222,35 +221,30 @@ std::vector<Genome> EvolutionaryAlgo::nextGeneration(std::vector<Genome>& pop) {
     auto selected = selection(pop);
     auto next_pop = mutation(selected);
     evaluation(next_pop);
-    std::cout << getInfo() << std::endl;
     t_++;
+    std::cout << getInfo() << std::endl;
     return next_pop;
 }
 
 std::vector<Genome> EvolutionaryAlgo::initialPop() {
     std::vector<Genome> initial_pop(POP_SIZE);
     evaluation(initial_pop);
+    std::cout << getInfo() << std::endl;
     return initial_pop;
 }
 
 std::vector<Genome> EvolutionaryAlgo::selection(std::vector<Genome>& pop) {
     std::vector<Genome> selected;
     selected.reserve(POP_SIZE);
-    best_ = *std::max_element(pop.begin(), pop.end(), [](const Genome& a, const Genome& b) {
-                return a.score < b.score;
-             });
-    generation_bests_.push_back(best_);
     while (selected.size() < POP_SIZE - 1) {
         std::vector<Genome> fighters;
         std::sample(pop.begin(), pop.end(), std::back_inserter(fighters), 2,
                     std::mt19937{std::random_device{}()});
         if (fighters[0].score > fighters[1].score) {
             selected.push_back(fighters[0]);
-        }
-        else {
+        } else {
             selected.push_back(fighters[1]);
         }
-
     }
     return selected;
 }
@@ -260,7 +254,6 @@ std::vector<Genome> EvolutionaryAlgo::mutation(std::vector<Genome>& selected) {
         mutate(genome);
     }
     selected.push_back(best_);
-    assert(selected.size() == POP_SIZE);
     return selected;
 }
 
@@ -281,12 +274,15 @@ void EvolutionaryAlgo::evaluation(std::vector<Genome>& next_pop) {
         score_sum += c.score;
     }
     mean_fitness_ = score_sum / POP_SIZE;
+    best_ = *std::max_element(next_pop.begin(), next_pop.end(),
+                              [](const Genome& a, const Genome& b) { return a.score < b.score; });
+    generation_bests_.push_back(best_);
 }
 
 void EvolutionaryAlgo::mutate(Genome& genome) {
     auto mutate_gene = [this](float gene) {
         if (generator_.random_0_1() < MUTATION_RATE) {
-            return gene + generator_.random<-1,1>() * MUTATION_STEP;
+            return gene + generator_.random<-1, 1>() * MUTATION_STEP;
         }
         return gene;
     };
