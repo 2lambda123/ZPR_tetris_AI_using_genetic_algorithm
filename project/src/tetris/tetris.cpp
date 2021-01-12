@@ -1,5 +1,5 @@
 /*
- * Author: Rafał Kulus
+ * Author: Rafal Kulus
  */
 
 #include "tetris/tetris.hpp"
@@ -37,11 +37,6 @@ Tetris::Tetris(bool disable_drop_scores)
     calculateLevelSpeed();
 }
 
-/**
- * @param is_soft_drop indicates if the current tick was caused by a soft drop input
- * @return true if active tetromino has fallen "into place" and a new tetromino has been generated,
- * false otherwise
- */
 bool Tetris::tick(bool is_soft_drop) {
     cleared_rows_ = 0;
     if (is_finished_) {
@@ -238,9 +233,6 @@ void Tetris::addProgress() {
     }
 }
 
-/**
- * https://tetris.fandom.com/wiki/Tetris_Worlds#Gravity
- */
 void Tetris::calculateLevelSpeed() {
     double speed = pow(0.8 - ((level_ - 1) * 0.007), level_ - 1);
     level_speed_ = speed;

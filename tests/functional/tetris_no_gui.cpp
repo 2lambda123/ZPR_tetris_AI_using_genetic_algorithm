@@ -1,5 +1,5 @@
 /*
- * Author: Rafał Kulus
+ * Author: Rafal Kulus
  */
 
 #include <iostream>

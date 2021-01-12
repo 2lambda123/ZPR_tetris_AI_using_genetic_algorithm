@@ -180,7 +180,7 @@ void EvolutionaryAlgo::play() {
         available_generations_ = 0;
     }
     available_generations_ = generation_bests_.size();
-    if (available_generations_ <= (unsigned long)playing_generation_) {
+    if (available_generations_ <= playing_generation_) {
         notifyObservers(EventType::GAME_START_FAILED);
         EventManager::getInstance().addEvent(EventType::GENERATION_OUT_OF_BOUNDS);
         return;

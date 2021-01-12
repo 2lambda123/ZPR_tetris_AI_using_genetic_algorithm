@@ -1,5 +1,5 @@
 /*
- * Author: Rafał Kulus
+ * Author: Rafal Kulus
  */
 
 #include "tetris/tetromino.hpp"
@@ -62,25 +62,5 @@ const Tetromino::Squares& Tetromino::getSquares() const {
 }
 
 int Tetromino::getCurrentRotation() const { return current_rotation_; }
-
-std::string Tetromino::toString() const {
-    std::string str;
-    const int array_size = 4;
-    int array_squares[array_size][array_size] = {{0}};
-    for (const Square& square : getSquares()) {
-        array_squares[square.first][square.second] = 1;
-    }
-    for (int i = array_size - 1; i >= 0; --i) {
-        for (auto& column : array_squares) {
-            if (column[i] == 1) {
-                str += "#";
-            } else {
-                str += "-";
-            }
-        }
-        str += '\n';
-    }
-    return str;
-}
 
 }  // namespace genetic_tetris

@@ -49,7 +49,7 @@ public:
     void finish() override;
     /// Performs genetic_tetris::Tetris::tick()
     void tick();
-    /// TODO
+    /// Returns true if tetromino is in a state of being dropped. Used in PvAI game.
     bool isDroppingSmoothly() const;
 
     /**

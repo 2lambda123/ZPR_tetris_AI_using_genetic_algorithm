@@ -1,5 +1,5 @@
 /*
- * Author: Rafał Kulus
+ * Author: Rafal Kulus
  */
 
 #ifndef TETRIS_HPP
@@ -15,6 +15,9 @@
 
 namespace genetic_tetris {
 
+/**
+ * Main Tetris class. Game Engine.
+ */
 class Tetris {
 public:
     using Position = std::pair<int, int>;
@@ -30,22 +33,38 @@ public:
     static const int MAX_LEVEL = 15;
     static const int LINES_PER_LEVEL = 10;
 
+    /// Cleared one row at a time
     static const int SCORE_SINGLE = 100;
+    /// Cleared two rows at a time
     static const int SCORE_DOUBLE = 300;
+    /// Cleared three rows at a time
     static const int SCORE_TRIPLE = 500;
+    /// Cleared four rows at a time
     static const int SCORE_TETRIS = 800;
+    /// Per dropped line
     static const int SCORE_SOFT_DROP = 1;
+    /// Per dropped line
     static const int SCORE_HARD_DROP = 2;
 
+    /// disable_drop_scores can be set to true to disable score for soft and hard drops e.g. for AI
     explicit Tetris(bool disable_drop_scores = false);
+
+    /**
+     * @param is_soft_drop indicates if the current tick was caused by a soft drop input
+     * @return true if active tetromino has fallen "into place" and a new tetromino has been
+     * generated, false otherwise
+     */
     bool tick(bool is_soft_drop = false);
+
     void shiftLeft();
     void shiftRight();
     void hardDrop(bool tick_after_drop = true);
     void rotateCW();
     void rotateCCW();
+    /// Returns grid without current tetromino and ghost piece (used in AI calculations)
     Grid getRawGrid() const;
     Grid getDisplayGrid() const;
+    /// Returns grid as a string. Used for testing.
     std::string toString() const;
     bool isFinished() const;
     unsigned int getScore() const;
@@ -59,11 +78,13 @@ protected:
     virtual void generateTetromino();
 
 private:
+    /// Checks if specified position is valid for current tetromino
     bool isValidPosition(Position tetromino_position) const;
     Position getHardDropPosition() const;
     void clearLines();
     void addClearedLinesScore();
     void addProgress();
+    /// https://tetris.fandom.com/wiki/Tetris_Worlds#Gravity
     void calculateLevelSpeed();
     void rotate(bool ccw);
 

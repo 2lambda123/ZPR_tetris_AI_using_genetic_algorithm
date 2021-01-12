@@ -40,8 +40,6 @@ void GameScreen::update() {
     if (tetris_human_.isFinished() && !board_human_.isStateFinished())
         board_human_.setStateFinished(true);
     if (tetris_ai_.isFinished() && !board_ai_.isStateFinished()) board_ai_.setStateFinished(true);
-    // TODO: setting state happens in every frame even though it doesn't change that often.
-    //  Possible optimization to consider if we have time.
     board_human_.setState(tetris_human_.getDisplayGrid());
     board_ai_.setState(tetris_ai_.getDisplayGrid());
     next_tetromino_panel_.setTetrominoQueue(tetris_human_.getTetrominoQueue());
@@ -129,8 +127,8 @@ void GameScreen::createHumanLevelSpeed() {
 }
 
 void GameScreen::createStartRestartButton() {
-    start_restart_button_.setPosition(sf::Vector2f(300, 400));
-    start_restart_button_.setSize(sf::Vector2f(200, 50));
+    start_restart_button_.setPosition(sf::Vector2f(330, 400));
+    start_restart_button_.setSize(sf::Vector2f(140, 50));
     start_restart_button_.setText("START", font_);
     start_restart_button_.setOnClick(
         []() { EventManager::getInstance().addEvent(EventType::START_GAME_BUTTON_CLICKED); });

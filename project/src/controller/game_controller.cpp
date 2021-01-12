@@ -1,5 +1,5 @@
 /*
- * Authors: Damian Kolaska, Rafał Kulus
+ * Authors: Damian Kolaska, Rafal Kulus
  */
 
 #include "controller/game_controller.hpp"
@@ -152,7 +152,7 @@ void GameController::handlePlayerInput(const sf::Event &event) {
 }
 void GameController::update(EventType e) {
     if (e == EventType::GAME_START_FAILED && !ai_.getSuccess()) {
-        static_cast<GameScreen*>(gui_.getActiveScreen())->setAvailableGenerations(ai_.getAvailableGenerations());
+        dynamic_cast<GameScreen*>(gui_.getActiveScreen())->setAvailableGenerations(ai_.getAvailableGenerations());
         state_ = State::STOP;
         reset();
         EventManager::getInstance().removeEvent(EventType::GAME_STARTED);

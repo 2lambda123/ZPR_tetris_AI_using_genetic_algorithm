@@ -6,9 +6,6 @@
 
 #include <vector>
 
-/**
- * https://tetris.fandom.com/wiki/SRS#Wall_Kicks
- */
 namespace genetic_tetris::WallKicks {
 
 std::vector<std::pair<int, int> > getGenericWallKicks(int from, int to) {

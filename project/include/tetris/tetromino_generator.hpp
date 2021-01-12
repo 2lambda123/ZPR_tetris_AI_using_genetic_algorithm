@@ -1,5 +1,5 @@
 /*
- * Author: Rafał Kulus
+ * Author: Rafal Kulus
  */
 
 #ifndef TETROMINO_GENERATOR_HPP
@@ -14,7 +14,9 @@ namespace genetic_tetris {
 
 class TetrominoGenerator {
 public:
+    /// Number of next tetrominoes player can preview.
     static const unsigned int QUEUE_LENGTH = 4;
+    /// Returns all types of tetrominoes available in the game.
     static const std::vector<Tetromino>& getTetrominoes();
 
     TetrominoGenerator();
@@ -22,6 +24,7 @@ public:
     std::deque<Tetromino> getQueue() const;
 
 private:
+    /// Uses 7-bag Random Generator. https://tetris.fandom.com/wiki/Random_Generator
     void generateTetrominoes();
 
     std::deque<Tetromino> queue_;

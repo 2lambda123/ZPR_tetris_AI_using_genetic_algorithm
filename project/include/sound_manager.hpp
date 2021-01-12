@@ -1,5 +1,5 @@
 /*
- * Author: Rafał Kulus
+ * Author: Rafal Kulus
  */
 
 #ifndef GENETIC_TETRIS_SOUND_MANAGER_HPP
@@ -13,6 +13,9 @@
 
 namespace genetic_tetris {
 
+/**
+ * Simple Sound Manager, Singleton
+ */
 class SoundManager {
 public:
     enum class Sound { TETRIS_THEME, CLICK, HARD_DROP, ROW_CLEARED };

@@ -1,5 +1,5 @@
 /*
- * Authors: Damian Kolaska, Rafał Kulus
+ * Authors: Damian Kolaska, Rafal Kulus
  */
 
 #ifndef GENETIC_TETRIS_GAME_CONTROLLER_HPP
@@ -13,6 +13,7 @@
 #include "sound_manager.hpp"
 
 namespace genetic_tetris {
+
 /**
  * Game screen controller
  */
@@ -34,7 +35,9 @@ public:
 private:
     /// Interval between next AI moves (when player has finished)
     const sf::Time AI_MOVE_INTERVAL_ = sf::seconds(0.1f);
+    /// Delay after human player's hard drop so the lines won't clear instantly
     const sf::Time HARD_DROP_LOCK_DELAY_ = sf::seconds(0.25f);
+    /// soft_drop_interval_ is calculated as min(DEFAULT_SOFT_DROP_INTERVAL_, tick_interval_ / 2)
     const float DEFAULT_SOFT_DROP_INTERVAL_ = 0.05f;
 
     void humanTick(bool is_soft_drop = false);

@@ -35,7 +35,11 @@ void SoundManager::play(Sound sound) {
 SoundManager::SoundProperties::SoundProperties(std::string path, float volume, bool loop)
     : path(std::move(path)), volume(volume), loop(loop), buffer(nullptr) {}
 
-// TODO: comment about the awful constructor below
+/**
+ * This copy constructor does NOT copy buffer but it doesn't need to. This constructor is only
+ * needed to initially insert data into sounds_ map.
+ * @param sound_properties
+ */
 SoundManager::SoundProperties::SoundProperties(const SoundProperties& sound_properties) {
     path = sound_properties.path;
     volume = sound_properties.volume;

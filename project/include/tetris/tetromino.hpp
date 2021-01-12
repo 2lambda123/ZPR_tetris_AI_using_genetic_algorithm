@@ -1,5 +1,5 @@
 /*
- * Author: Rafał Kulus
+ * Author: Rafal Kulus
  */
 
 #ifndef TETROMINO_HPP
@@ -11,6 +11,9 @@
 
 namespace genetic_tetris {
 
+/**
+ * Class representing active (playable) tetromino.
+ */
 class Tetromino {
 public:
     using Pivot = std::pair<double, double>;
@@ -33,7 +36,6 @@ public:
     Shape getShape() const;
     const Squares& getSquares() const;
     int getCurrentRotation() const;
-    std::string toString() const;
 
 private:
     Color color_;
