@@ -1,9 +1,9 @@
-#ifdef __linux__
-#define BOOST_TEST_DYN_LINK
-#endif
+/*
+ * Author: Damian Kolaska
+ */
 
-#define BOOST_TEST_MODULE TestAI
 #include <boost/test/unit_test.hpp>
+
 #define private public
 #include "AI/ai.hpp"
 #include "AI/evolutionary_algo.hpp"
@@ -25,6 +25,8 @@ std::ostream& operator<<(std::ostream& os, const Tetris::Grid& grid) {
     }
     return os;
 }
+
+BOOST_AUTO_TEST_SUITE(ai)
 
 BOOST_AUTO_TEST_CASE(test_genome_serialization) {
     std::cout << "Test genome serialization" << std::endl;
@@ -67,3 +69,5 @@ BOOST_AUTO_TEST_CASE(test_move) {
     BOOST_REQUIRE(move.getHoles() == 1);
 
 }
+
+BOOST_AUTO_TEST_SUITE_END()

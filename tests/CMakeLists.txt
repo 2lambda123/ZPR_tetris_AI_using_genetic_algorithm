@@ -4,7 +4,8 @@ add_executable(tetris_gui_integration functional/tetris_gui_integration.cpp)
 
 add_executable(unit_tests unit/main.cpp
         unit/tetris.cpp
-        unit/tetromino_and_generator.cpp)
+        unit/tetromino_and_generator.cpp
+        unit/test_ai.cpp)
 
 include_directories(project/include)
 
@@ -12,7 +13,7 @@ target_link_libraries(test_sfml sfml-graphics)
 target_link_libraries(tetris_gui_integration gui-lib)
 
 target_link_libraries(unit_tests Boost::unit_test_framework)
-target_link_libraries(unit_tests tetris-lib)
+target_link_libraries(unit_tests tetris-lib ai-lib)
 
 target_link_libraries(tetris_no_gui tetris-lib)
 target_link_libraries(tetris_gui_integration tetris-lib ai-lib)
