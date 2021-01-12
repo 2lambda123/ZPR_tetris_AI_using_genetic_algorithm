@@ -16,7 +16,7 @@ make -j4
 `./app` to run main app <br>
 Tests are in `./tests/`
 ### Generating code documentation
-Go to `docs/` directory
+Go to `docs/` directory <br>
 From `docs/`
 ```sh
 doxygen config
