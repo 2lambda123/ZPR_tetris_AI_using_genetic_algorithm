@@ -16,14 +16,14 @@ make -j4
 `./app` to run main app <br>
 Tests are in `./tests/`
 ### Generating code documentation
-Go to *docs/* directory
-From *docs/*
+Go to `docs/` directory
+From `docs/`
 ```sh
 doxygen config
 ```
-This generates *html/* and *latex/* directories <br>
-To view documentation in html open *html/index.html* <br>
-To generate *pdf* go to *latex/* directory and run:
+This generates `html/` and `latex/` directories <br>
+To view documentation in html open `html/index.html` <br>
+To generate `pdf` go to `latex/` directory and run:
 ```sh
 make pdf
 ```
@@ -40,6 +40,8 @@ make pdf
 4. SFML <br>
    Download and put in `lib/win` (in project root) <br>
    https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-64-bit.zip
+5. Microsoft Visual C++ <br>
+   https://visualstudio.microsoft.com/pl/vs/features/cplusplus/
 ```sh
 mkdir build
 cd build
