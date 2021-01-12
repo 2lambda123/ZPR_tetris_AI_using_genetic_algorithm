@@ -68,7 +68,8 @@ public:
     int getAvailableGenerations() const { return generation_bests_.size(); }
     /**
      * Returns algorithm status for play() or evolve()
-     * @return true if everything was ok, false e.g. number of available generations was less than playing generation
+     * @return true if everything was ok, false e.g. number of available generations was less than
+     * playing generation
      */
     bool getSuccess() const { return success_; }
 
@@ -105,7 +106,7 @@ private:
     std::vector<Genome> nextGeneration(std::vector<Genome>& pop);
     /// Creates initial population
     std::vector<Genome> initialPop();
-    /// Performs selection
+    /// Performs tournament selection
     std::vector<Genome> selection(std::vector<Genome>& pop);
     /// Performs mutation on selected
     std::vector<Genome> mutation(std::vector<Genome>& selected);
