@@ -1,6 +1,5 @@
 build
 cmake-build*
-docs/*
 !docs/config
 .idea/
 .vscode
